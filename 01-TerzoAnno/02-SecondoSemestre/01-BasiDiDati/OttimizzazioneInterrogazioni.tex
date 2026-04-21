@@ -1,0 +1,69 @@
+%!TeX root = BasiDiDati.tex
+
+\chapter{Ottimizzazione di interrogazioni}
+Ogni interrogazione sottomessa al DBMS viene espressa in un linguaggio dichiarativo (es. SQL).\\[0.2ex]
+E' necessario, quindi, trovare un'equivalente espressione procedurale (es. algebra relazionale) per generare un piano di esecuzione.\\[0.2ex]
+L'espressione algebrica va ottimizzata rispetto alle caratteristche del DBMS a livello fisico e dalla base di dati corrente.
+
+\smallskip
+Le fasi di ottimizzazione di una query conistono in:
+\begin{enumerate}[itemsep=\smallskipamount]
+    \item \textbf{analisi lessicale e sintattita}: verifica che la query sia scritta correttamente
+    \item \textbf{ottimizzazione algebrica}: si basa sulle regole dell'algebra relazionale
+    \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+        \item anticipo delle selezioni
+        \item anticipo delle proiezioni
+    \end{itemize}
+    \item \textbf{ottimizzaione dipendente dai metodi di accesso}: si basa sulle statistcihe e sulle strutture fisiche (profili delle tabelle)
+    \item \textbf{generazione del codice}: si genera un piano di esecuzione per ottenere il risultato della query
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/ottimizzazione-query.png}
+    \caption{processo di ottimizzazione di una query}
+\end{figure}
+
+\section{Ottimizzazione dipendente dai metodi di accesso}
+Le operazioni tipiche di accesso supportate dal DBMS sono:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+    \item \textbf{scansione delle tuple di una tabella}
+    \item \textbf{ordinamento delle tuple}
+    \item \textbf{accesso diretto tramite indice}
+    \item \textbf{join con diverse implementazioni}
+\end{itemize}
+
+\subsection{Scansione sequenziale}
+L'operazione di scansione opera contestualmente altre operazioni:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item \textbf{scansione} + \textbf{proiezione} (senza eliminazione dei duplicati)
+    \item \textbf{scansione} + \textbf{selezione} (rispetto a un predicato semplice)
+    \item \textbf{scansione} + \textbf{inserimento/cancellazione/modifica}
+\end{itemize}
+
+\begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
+    \item \textcolor{red}{\textbf{costo scansione sequenziale}}: $\mathbf{NP(R)}$ (numero di pagine della relazione $\mathrm{R}$)
+\end{itemize}
+
+\subsection{Ordinamento}
+L'ordinamento viene utilizzato per:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item \textbf{ordinare il risultato di un'interrogazione} (clausola \texttt{ORDER BY})
+    \item \textbf{elimanre duplicati} (clausola \texttt{SELECT DISTINCT})
+    \item \textbf{raggruppare tuple} (clausola \texttt{GROUP BY})
+\end{itemize}
+
+L'ordinamento viene eseguito su memoria secondaria utilizzando l'algoritmo \textbf{Z-way-Sort-Merge}:
+\begin{enumerate}[itemsep=\smallskipamount]
+    \item \textcolor{red}{\textbf{sort interno}}:
+    \begin{enumerate}[itemsep=\smallskipamount]
+        \item si leggono una alla volta le pagine della tabella
+        \item le tuple di ogni pagina vengono ordinate facendo uso di un algoritmo di sort interno (es. quick-sort)
+        \item ogni apgina ordinata (run) viene scritta su memoria secondaria in un file yemporaneo 
+    \end{enumerate}
+    \item \textcolor{red}{\textbf{merge}}: vengono unite le rune in un'unica run
+\end{enumerate}
+
+\esempio{algoritmo Z-way-Sort-merge}{
+    Supponiamo di dover ordinare un input che consiste di una tabella di $\mathrm{NP}$ pagine e di avere a disposizione sono $\mathrm{NB}$ buffer in memoria centrale ($\mathrm{NB < NP}$).
+}
