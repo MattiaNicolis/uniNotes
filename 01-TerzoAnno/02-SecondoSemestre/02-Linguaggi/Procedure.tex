@@ -1,0 +1,63 @@
+%!Tex root = Linguaggi.tex
+
+\chapter{Procedure}
+L'uso delle procedure permette l'\textbf{astrazione del controllo}.
+
+\vario{Nota}{
+    Astrarre significa nascondere dettagli facendo emergere caratteristcihe comuni.
+}
+
+L'astrazione chiede di identificare le proposizioni importanti che si vuole descrivere al fine di concentrarsi che si vuole descrivere al fine di concentrarsi sulle questioni rilvanti e ignorare quelle non importanti.
+
+\smallskip
+Quando si parla di astrazione del controlllo ci sono, in realtà, due categorie di sottoprogrammi con nome nome che possiamo definire:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item \textbf{procedure} (no output)
+    \item \textbf{funzioni} (restituisce output)
+\end{itemize}
+
+\smallskip
+Partre importante del processo di astrazione consiste nel dare al raggruppamento un nome.\\[0.2ex]
+Il \textbf{nome} permette di rifersi all'astrazione senza conoscerne i dettagli, una solo le caratteristiche di interesse che ne hanno determinato il raggruppamento.\\[0.2ex]
+I \textbf{parametri} permettono l'astrazione di tante computazioni simili che cambiano di tante computazioni simili che cambiano solo per alcuni input a cui vengono applicate e che vengono abbreviate con un singolo nome.\\[0.2ex]
+Il \textbf{corpo} è ciò che viene valutato/eleborato/eseguito ogni volta che il nome viene richiamato.
+
+\smallskip
+Una procedura viene definita in tre fasi:
+\begin{enumerate}[itemsep=\smallskipamount]
+    \item \textbf{specifica}: descrizione dell'interfaccia della procedura/funzione
+    \begin{lstlisting}[language=C]
+        double P(int x) {
+            
+        }
+    \end{lstlisting}
+    \item \textbf{definizione}: descrizione del copro della procedura/funzione
+    \begin{lstlisting}[language=C]
+        {
+            double y;
+            //corpo procedura P
+            ...
+            (return y);
+        }
+    \end{lstlisting}
+    \item \textbf{uso}: chiamata della procedura/funzione per eseguire il codice
+    \begin{lstlisting}[language=C]
+        int n;
+        double z;
+        z = P(n); //chiamata della procedura
+    \end{lstlisting}
+\end{enumerate}
+
+Consideriamo il seguente codice:
+\begin{lstlisting}[language=C, caption=programma di esempio]
+    int foo(int n) {
+        int tmp = a;
+
+        if(tmp == 0)
+            return n;
+        else
+            return n + 1;
+    }
+\end{lstlisting}
+
+In questo caso la variabile \texttt{a} è un identificatore non locale, cioè un identificatore libero per cui di deve trovare il significato nel contesto.
