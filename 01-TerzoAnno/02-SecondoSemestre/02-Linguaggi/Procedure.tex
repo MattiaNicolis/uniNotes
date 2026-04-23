@@ -60,4 +60,33 @@ Consideriamo il seguente codice:
     }
 \end{lstlisting}
 
-In questo caso la variabile \texttt{a} è un identificatore non locale, cioè un identificatore libero per cui di deve trovare il significato nel contesto.
+In questo caso la variabile \texttt{a} è un identificatore non locale, cioè un identificatore libero per cui di deve trovare il significato nel contesto.\\[0.2ex]
+Il problema è che nel contesto del chiamante potrebbero esserci più definizioni di \texttt{a} e non è chiaro quale sia quella a cui si riferisce la procedura.\\[0.2ex]
+Di conseguenza, la regola di visibilità delle dichiarazioni non è più sufficiente per risolvere i riferimenti quando si usano le procedure se la procedura ha un ambiente non locale.
+
+\begin{mydef}{Ambiente di una procedura}
+    L'\textbf{ambiente di riferimento} di una procedura è l'insieme di tutti i nomi che sono visibili al comando.
+\end{mydef}
+
+L'ambiente di riferimento di una procedura è determinato da vaire tipologie di regole:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item \textbf{regole di scope} (statico o dinamico)
+    \item \textbf{regole di visibilità}: determinano quali dichiarazioni sono visibili in un certo punto del programma
+    \item \textbf{regole di binding} (shallow o deep): determinano a quale dichiarazione si riferisce un certo identificatore
+\end{itemize}
+
+\section{Regole di scope}
+Le regole di scoper possono essere distinte in due tipologie:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+    \item \textbf{scoper statico}: prevale il contesto di definizione.
+    
+    L'ambiente di riferimento è quello attivo al momento della definizione della procedura.
+    \item \textbf{scope dinamico}: prevale il contesto di esecuzione.
+    
+    L'ambiente di riferimento è quello attivo al momento della chiamata della procedeura.
+\end{itemize}
+
+\subsection{Scope statico}
+
+\subsection{Scope dinamico}
+ciao come stai
