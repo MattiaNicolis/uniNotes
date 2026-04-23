@@ -1,7 +1,0 @@
-BinWordsListener.class
-BinWordsBaseListener.class
-BinWordsParser$MainContext.class
-BinWordsParser.class
-BinWordsParser$BinContext.class
-BinWordsLexer.class
-antlr/App.class
