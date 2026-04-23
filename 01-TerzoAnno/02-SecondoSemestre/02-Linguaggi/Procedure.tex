@@ -87,6 +87,92 @@ Le regole di scoper possono essere distinte in due tipologie:
 \end{itemize}
 
 \subsection{Scope statico}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/scope-statico-grafico.png}
+\end{figure}
+
+Con lo scope statico il riferimento per \texttt{x} è \texttt{P}. ovvero si risale la catena di annidamento dei blocchi (\textbf{catena statica}), nota a tempo di compilazione.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/scope-statico.png}
+    \caption{catena di definizione}
+\end{figure}
+
+\begin{lstlisting}[language=C, caption={codice esempio con scope statico}]
+    {
+        int x = 0;
+
+        void pippo(int n) {
+            x = n + 1;
+        }
+
+        pippo(3);
+        write(x); //stampa in ogni caso 4
+
+        {
+            int x = 0;
+            pippo(3);
+            write(x);
+            //stampa 0 perche' pippo(3) va a modifica il primo valore
+            //di x, ma la write si riferisce all'ultima istanza (x = 0)
+        }
+
+        write(x); //stampa in ogni caso 4
+    }
+\end{lstlisting}
 
 \subsection{Scope dinamico}
-ciao come stai
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/scope-dinamico-grafico.png}
+\end{figure}
+
+Con lo scope dinamico il riferimento per \texttt{x} è \texttt{P2}. ovvero si risale la catena di chiamate dei blocchi (\textbf{catena dinamica}), nota a tempo di compilazione.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/scope-dinamico.png}
+    \caption{catena di definizione}
+\end{figure}
+
+\begin{lstlisting}[language=C, caption={codice esempio con scope dinamico}]
+    {
+        int x = 0;
+
+        void pippo(int n) {
+            x = n + 1;
+        }
+
+        pippo(3);
+        write(x); //stampa in ogni caso 4
+
+        {
+            int x = 0;
+            pippo(3);
+            write(x);
+            //stampa 4 perche' pippo(3) va a modifica il secondo valore
+            //di x
+        }
+
+        write(x); //stampa in ogni caso 4
+    }
+\end{lstlisting}
+
+\section{Visibilità delle dichiarazioni}
+Una dichiarazione può essere visibile:
+\begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
+    \item \textbf{a partire dalla dichiarazione e fino alla fine del blocco}
+    \begin{lstlisting}[language=C]
+        {
+            a := ...
+            .
+            .
+            .
+            int i := int //visibile da qui in giu'
+        }
+    \end{lstlisting}
+    \item \textbf{all'interno del blocco visibile sempre}
+\end{itemize}
