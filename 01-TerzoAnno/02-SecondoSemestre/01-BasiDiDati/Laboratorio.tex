@@ -1,212 +1,214 @@
 %!TeX root = BasiDiDati.tex
 
-  \chapter{Laboratorio}
-  PostgrSQL è un \textcolor{azzurrino}{\textbf{R}}elational \textcolor{azzurrino}{\textbf{D}}ata \textcolor{azzurrino}{\textbf{B}}ase \textcolor{azzurrino}{\textbf{M}}anagement \textcolor{azzurrino}{\textbf{S}}ystem, con alcune funzionalità orientate agli oggetti.
-  
-  L'interazione tra un utente (programmatore/utente finale) e le basi di dati gestite da PostgreSQL avviene secondo il modello client-server.
+\chapter{Laboratorio}
+PostgreSQL è un \textcolor{azzurrino}{\textbf{R}}elational \textcolor{azzurrino}{\textbf{D}}ata \textcolor{azzurrino}{\textbf{B}}ase \textcolor{azzurrino}{\textbf{M}}anagement \textcolor{azzurrino}{\textbf{S}}ystem con alcune funzionalità orientate agli oggetti.
 
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/ClientServer.png}
-  \end{figure}
+L'interazione tra un utente (programmatore/utente finale) e le basi di dati gestite da PostgreSQL avviene secondo il modello client-server.
 
-  \section{Comando \protect\texttt{CREATE TABLE}}
-  Il comando $\verb|CREATE TABLE|$ definisce uno schema di relazione e ne crea un'istanza vuota, specificando attributi, domini e vincoli.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/ClientServer.png}
+\end{figure}
 
-  La sintassi è:
-  \begin{sqlcode}
-    CREATE TABLE tabella(
-      attributo dominio [valoreDefault] {vincolo},
-      attributo dominio [valoreDefault] {vincolo},
-      {vincoloTabella}
-    );
-  \end{sqlcode}
+\section{Comando \protect\texttt{CREATE TABLE}}
+Il comando $\verb|CREATE TABLE|$ definisce uno schema di relazione e ne crea un'istanza vuota, specificando attributi, domini e vincoli.
 
-  dove:
+La sintassi è:
+\begin{lstlisting}[language=SQL]
+CREATE TABLE tabella(
+  attributo dominio [valoreDefault] {vincolo},
+  attributo dominio [valoreDefault] {vincolo},
+  {vincoloTabella}
+);
+\end{lstlisting}
+
+dove:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+  \item $\verb|[]|$: indicano parti opzionali
+  \item $\verb|[valoreDefault]|$: indica un eventuale valore di default
+  \item $\verb|{}|$: indica un elemento che può essere ripetuto 0 o più volte
+  \item $\verb|{vincolo}|$: indica eventuali (0 o più) vincoli per ogni attributo
+\end{itemize}
+
+\begin{esempiobox}{Utilizzo di \texttt{CREATE TABLE}}
+  \begin{lstlisting}[language=SQL]
+  CREATE TABLE Impiegato (
+    Matricola CHARACTER(6) PRIMARY KEY, 
+    Nome VARCHAR(20) NOT NULL, 
+    Cognome VARCHAR(20) NOT NULL,
+    Dipart VARCHAR(15), 
+    Stipendio NUMERIC(9) DEFAULT 0,
+    FOREIGN KEY(Dipart) 
+      REFERENCES Dipartimento(NomeDip),     -- vincolo di tabella
+    UNIQUE (Cognome,Nome)                   -- vincolo di tabella
+  );
+  \end{lstlisting}
+\end{esempiobox}
+
+\subsection{Identificatori}
+\definizione{identificatore}{
+  Un \textbf{identificatore} è una sequenza di caratteri che identifica un elemento del database (tabella, attributo, vincolo, ecc.).
+}
+
+Gli identificatori, in SQL, devono rispettare alcune regole:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+  \item iniziare con una lettera (UTF-8) o un underscore (\_)
+  \item possono contenere lettere, numeri (0-9) o underscore (\_)
+  \item non possono essere parole chiave riservate a SQL
+\end{itemize}
+
+\vario{Nota}{
+  Gli identificatori \textbf{non sono case sensitive}! (\texttt{idPersona} = \texttt{idpersona})
+}
+
+\subsection{Domini elementari}
+\definizione{domini elementari}{
+  I domini elementari (predefiniti) sono:
   \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-    \item $\verb|[]|$: indicano parti opzionali
-    \item $\verb|[valoreDefault]|$: indica un eventuale valore di default
-    \item $\verb|{}|$: indica un elemento che può essere ripetuto 0 o più volte
-    \item $\verb|{vincolo}|$: indica eventuali (0 o più) vincoli per ogni attributo
+    \item \textbf{caratteri}: singoli caratteri o stringhe anche di lunghezza variabile
+    \item \textbf{bit}: bit singoli (booleani) o stringhe di bit
+    \item \textbf{numeri esatti e approssimati}
+    \item \textbf{istanti temporali}
+    \item \textbf{intervalli temporali}
   \end{itemize}
+}
 
-  \begin{esempiobox}{Utilizzo di \texttt{CREATE TABLE}}
-    \begin{sqlcode}
-      CREATE TABLE Impiegato (
-        Matricola CHARACTER(6) PRIMARY KEY, 
-        Nome VARCHAR(20) NOT NULL, 
-        Cognome VARCHAR(20) NOT NULL,
-        Dipart VARCHAR(15), 
-        Stipendio NUMERIC(9) DEFAULT 0,
-        FOREIGN KEY(Dipart) 
-          REFERENCES Dipartimento(NomeDip),     /*vincolo di tabella*/
-        UNIQUE (Cognome,Nome)                   /*vincolo di tabella*/
-      );
-    \end{sqlcode}
-  \end{esempiobox}
+\subsubsection{Tipo carattere}
+Permette di rappresentare singoli caratteri oppure stringhe.
 
-  \subsection{Identificatori}
-  \definizione{identificatore}{
-    Un \textbf{identificatore} è una sequenza di caratteri che identifica un elemento del database (tabella, attributo, vincolo, ecc.).
-  }
+Un carattere o stringa di caratteri sono rappresentati tra apici ('):
+'a', 'Questa è una stringa'.
 
-  Gli identificatori, in SQL, devono rispettare alcune regole:
-  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
-    \item iniziare con una lettera (UTF-8) o un underscore (\_)
-    \item possono contenere lettere, numeri (0-9) o underscore (\_)
-    \item non possono essere parole chiave riservate a SQL
-  \end{itemize}
+La sintassi è:
+\begin{lstlisting}[language=SQL]
+CHARACTER [VARYFING] [(lunghezza)]
+\end{lstlisting}
 
-  \vario{Nota}{
-    Gli identificatori \textbf{sono case sensitive}! : \texttt{idPersona} e \texttt{idpersona} rappresentano un solo identificatore
-  }
-
-  \subsection{Domini elementari}
-  \definizione{domini elementari}{
-    I domini elementari (predefiniti) sono:
-    \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-      \item \textbf{caratteri}: singoli caratteri o stringhe anche di lunghezza variabile
-      \item \textbf{bit}: bit singoli (booleani) o stringhe di bit
-      \item \textbf{numeri esatti e approssimati}
-      \item \textbf{istanti temporali}
-      \item \textbf{intervalli temporali}
-    \end{itemize}
-  }
-
-  \subsubsection{Tipo carattere}
-  Permette di rappresentare singoli caratteri oppure stringhe.
-
-  Un carattere o stringa di caratteri sono rappresentati tra apici ('):
-  'a', 'Questa è una stringa'.
-
-  La sintassi è:
-  \begin{sqlcode}
-    CHARACTER [VARYFING] [(lunghezza)]
-  \end{sqlcode}
-
-  dove:
-  \begin{itemize}[label=$\triangleright$]
-    \item $\verb|lunghezza|$: può essere fissa o variabile
-    \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
-      \item $\verb|CHARACTER|$: carattere singolo
-      \item $\verb|CHARACTER(20)|$: stringa di lunghezza fissa (20 caratteri).
-      
-      Se la stringa è più corta di 20 caratteri, viene riempita con spazi a destra
-      \item $\verb|CHARACTER VARYFING(20)|$ o $\verb|VARCHAR(20)|$: stringa di lunghezza variabile (max. 20 caratteri)
-      \item $\verb|TEXT|$: stringa di lunghezza variabile senza limite fissato
-    \end{itemize}
-  \end{itemize}
-
-  \subsubsection{Tipo boolean}
-  Permette di rappresentare valori booleani (true o false), più lo stato nullo.
-  
-  La sintassi è:
-  \begin{sqlcode}
-    BOOLEAN
-  \end{sqlcode}
-
-  La rappresentazione dei valori booleani può essere:
-  \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-    \item $\verb|TRUE|$ o $\verb|FALSE|$
-    \item $\verb|t|$ o $\verb|f|$
-    \item $\verb|1|$ o $\verb|0|$
-    \item $\verb|yes|$ o $\verb|no|$
-    \item $\verb|NULL|$
-  \end{itemize}
-
-  \subsubsection{Tipo numerico esatto}
-  Permettono di rappresentare valori esatti: interi o con una parte decimale di lunghezza prefissata:
-  \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
-    \item \textbf{valori interi}:
-    \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
-      \item $\verb|SMALLINT|$: valori interi (2 bytes: da -32.768 (215) a +32.767 (215-1))
-      \item $\verb|INTEGER|$: valori interi (4 bytes: da -2147483648 (231) to +2147483647 (231-1))
-    \end{itemize}
-    \item \textbf{valori decimali}:
-    \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
-      \item $\verb|NUMERIC [(precisione [, scala])]|$:
-      \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-        \item $\verb|precisione|$: numero totale di cifre significative (cifre a sinistra e a destra della virgola)
-        \item $\verb|scala|$: numero di cifre dopo la virgola (vuoto = 0)
-      \end{itemize}
-    \item $\verb|DECIMAL [(precisione [, scala])]|$: equivalente al precedente
-    \end{itemize}
-  \end{itemize}
-
-  \esempio{tipo numerico esatto}{
-    NUMERIC(5,2) permette di rappresentare valori come 100.01, 100.999 (arrotondato a 101.00), ma non valori come 1000.01
-  }
-
-  \subsubsection{Tipo numerico approssimato}
-  Permettono di rappresentare valori in virgola mobile:
-  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
-    \item $\verb|REAL|$: precisione di 6 cifre decimali
-    \item $\verb|DOUBLE PRECISION|$: precisione di 15 cifre decimali
-  \end{itemize}
-
-  \smallskip
-  Ciascun numero è rappresentato da una coppia di valori: \textbf{mantissa} (numero frazionario) + \textbf{esponente} (numero intero).\\[0.2ex]
-  Il valore si ottiene moltiplicando la mantissa per la potenza di 10 con grado pari all'esponente:
-  \begin{itemize}[itemsep=\smallskipamount]
-    \item numero 0.17E16 corrisponde a $1,7 \times 10^{15}$
-    \item numero -0.4E-6 corrisponde a $-4 \times 10^{-7}$
-  \end{itemize}
-
-  \subsubsection{Istanti temporali}
-  Permettono di rappresentare istanti di tempo.
+dove:
+\begin{itemize}[label=$\triangleright$]
+  \item $\verb|lunghezza|$: può essere fissa o variabile
   \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
-    \item $\verb|DATE|$: istanti del tipo (anno, mese, giorno)
+    \item $\verb|CHARACTER|$: carattere singolo
+    \item $\verb|CHARACTER(20)|$: stringa di lunghezza fissa (20 caratteri).
     
-    Si rappresenta tra apici (es. $\verb|'2025-12-01'|$) e lo standard ISO prescrive il formato \texttt{YYYY-MM-DD}
-    \item $\verb|TIME [(precisione)][WITH TIME ZONE]|$: istanti del tipo (hour, minute, second)
-    \begin{itemize}[itemsep=\smallskipamount]
-      \item $\verb|precisione|$: numero cifre decimali per rappresentare frazioni del secondo
-      \item $\verb|WITH TIME ZONE|$: permette di specificare anche [+-] hour: minute, che rappresentano la differenza con l'ora di Greenwich, o nomeFusoOrario
+    Se la stringa è più corta di 20 caratteri, viene riempita con spazi a destra
+    \item $\verb|CHARACTER VARYFING(20)|$ o $\verb|VARCHAR(20)|$: stringa di lunghezza variabile (max. 20 caratteri)
+    \item $\verb|TEXT|$: stringa di lunghezza variabile senza limite fissato
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Tipo boolean}
+Permette di rappresentare valori booleani (true o false), più lo stato nullo.
+
+La sintassi è:
+\begin{lstlisting}[language=SQL]
+BOOLEAN
+\end{lstlisting}
+
+La rappresentazione dei valori booleani può essere:
+\begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+  \item $\verb|TRUE|$ o $\verb|FALSE|$
+  \item $\verb|t|$ o $\verb|f|$
+  \item $\verb|1|$ o $\verb|0|$
+  \item $\verb|yes|$ o $\verb|no|$
+  \item $\verb|NULL|$
+\end{itemize}
+
+\subsubsection{Tipo numerico esatto}
+Permettono di rappresentare valori esatti: interi o con una parte decimale di lunghezza prefissata:
+\begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
+  \item \textbf{valori interi}:
+  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item $\verb|SMALLINT|$: valori interi (2 bytes: da -32.768 (215) a +32.767 (215-1))
+    \item $\verb|INTEGER|$: valori interi (4 bytes: da -2147483648 (231) to +2147483647 (231-1))
+  \end{itemize}
+  \item \textbf{valori decimali}:
+  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item $\verb|NUMERIC [(precisione [, scala])]|$:
+    \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+      \item $\verb|precisione|$: numero totale di cifre significative (cifre a sinistra e a destra della virgola)
+      \item $\verb|scala|$: numero di cifre dopo la virgola (vuoto = 0)
     \end{itemize}
-    \item $\verb|TIMESTAMP [(precisione)][WITH TIME ZONE]|$: date + time
+  \item $\verb|DECIMAL [(precisione [, scala])]|$: equivalente al precedente
   \end{itemize}
+\end{itemize}
 
-  \subsubsection{Intervalli temporali}
-  Rappresenta un intervallo di tempo.
+\esempio{tipo numerico esatto}{
+  NUMERIC(5,2) permette di rappresentare valori come 100.01, 100.999 (arrotondato a 101.00), ma non valori come 1000.01
+}
 
-  La sintassi è:
-  \begin{sqlcode}
-    INTERVAL PrimaUnitaTempo [TO UltimaUnitaTempo]
-  \end{sqlcode}
+\subsubsection{Tipo numerico approssimato}
+Permettono di rappresentare valori in virgola mobile:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+  \item $\verb|REAL|$: precisione di 6 cifre decimali
+  \item $\verb|DOUBLE PRECISION|$: precisione di 15 cifre decimali
+\end{itemize}
 
-  dove:
-  \begin{itemize}[label=$\triangleright$]
-    \item $\verb|PrimaUnitàDiTempo|$ e $\verb|UltimaUnitàDiTempo|$: definiscono le unità di misura che devono essere utilizzate, dalla più precisa alla meno precisa
+\smallskip
+Ciascun numero è rappresentato da una coppia di valori: \textbf{mantissa} (numero frazionario) + \textbf{esponente} (numero intero).\\[0.2ex]
+Il valore si ottiene moltiplicando la mantissa per la potenza di 10 con grado pari all'esponente:
+\begin{itemize}[itemsep=\smallskipamount]
+  \item numero 0.17E16 corrisponde a $1,7 \times 10^{15}$
+  \item numero -0.4E-6 corrisponde a $-4 \times 10^{-7}$
+\end{itemize}
+
+\subsubsection{Istanti temporali}
+Permettono di rappresentare istanti di tempo.
+\begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
+  \item $\verb|DATE|$: istanti del tipo (anno, mese, giorno)
+  
+  Si rappresenta tra apici (es. $\verb|'2025-12-01'|$) e lo standard ISO prescrive il formato \texttt{YYYY-MM-DD}
+  \item $\verb|TIME [(precisione)][WITH TIME ZONE]|$: istanti del tipo (hour, minute, second)
+  \begin{itemize}[itemsep=\smallskipamount]
+    \item $\verb|precisione|$: numero cifre decimali per rappresentare frazioni del secondo
+    \item $\verb|WITH TIME ZONE|$: permette di specificare anche [+-] hour: minute, che rappresentano la differenza con l'ora di Greenwich, o nomeFusoOrario
   \end{itemize}
+  \item $\verb|TIMESTAMP [(precisione)][WITH TIME ZONE]|$: date + time
+\end{itemize}
 
-  L'insieme delle unità di misura è diviso in due insiemi distinti:
-  \begin{itemize}
-    \item Year-Month
-    \item Day-Hour–Minute-Second
-  \end{itemize}
+\subsubsection{Intervalli temporali}
+Rappresenta un intervallo di tempo.
 
-  \subsection{Domini definiti dall'utente}
-  Per creare un dominio si esegue il comando:
-  \begin{sqlcode}
-    CREATE DOMAIN nome AS tipoBase [valoreDefault][vincolo]
-  \end{sqlcode}
+La sintassi è:
+\begin{lstlisting}[language=SQL]
+INTERVAL PrimaUNitaTempo [TO UltimaUNitaTempo]
+\end{lstlisting}
 
-  dove:
-  \begin{itemize}[label=$\triangleright$]
-    \item $\verb|CREATE DOMAIN|$: definisce un dominio, utilizzabile in definizioni di relazioni, anche con vincoli e valori di default.
-  \end{itemize}
+dove:
+\begin{itemize}[label=$\triangleright$]
+  \item $\verb|PrimaUnitàDiTempo|$ e $\verb|UltimaUnitàDiTempo|$: definiscono le unità di misura che devono essere utilizzate, dalla più precisa alla meno precisa
+\end{itemize}
 
-  Il dominio può essere definito a partire da un dominio elementare oppure da un altro dominio definito dall'utente.
+L'insieme delle unità di misura è diviso in due insiemi distinti:
+\begin{itemize}
+  \item Year-Month
+  \item Day-Hour–Minute-Second
+\end{itemize}
 
-  \begin{esempiobox}{Comando \texttt{CRETATE DOMAIN}}
-    \begin{sqlcode}
-      CREATE DOMAIN giorniSettimana AS CHARACTER(3)
-        CHECK (VALUE IN ('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'));
+\subsection{Domini definiti dall'utente}
+Per creare un dominio si esegue il comando:
+\begin{lstlisting}[language=SQL]
+CREATE DOMAIN nome AS tipoBase [valoreDefault][vincolo]
+\end{lstlisting}
 
-      CREARE DOMAIN Voto AS SMALLINT DEFAULT NULL
-        CHECK (value >= 18 AND value <= 30);
-    \end{sqlcode}
-  \end{esempiobox}
+dove:
+\begin{itemize}[label=$\triangleright$]
+  \item $\verb|CREATE DOMAIN|$: definisce un dominio, utilizzabile in definizioni di relazioni, anche con vincoli e valori di default.
+\end{itemize}
+
+Il dominio può essere definito a partire da un dominio elementare oppure da un altro dominio definito dall'utente.
+
+\begin{esempiobox}{Comando \texttt{CRETATE DOMAIN}}
+  \begin{lstlisting}[language=SQL]
+  CREATE DOMAIN giorniSettimana AS CHARACTER(3)
+    CHECK (VALUE IN ('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'));
+
+  CREATE DOMAIN Voto AS SMALLINT DEFAULT NULL
+    CHECK (value >= 18 AND value <= 30);
+  \end{lstlisting}
+\end{esempiobox}
+
+  %----fino a qui
 
   \subsection{Vincoli intrarelazionali}
   I vincoli interrelazionali sono vincoli che si applicano a livello di relazione, cioè a una singola tabella.
@@ -215,37 +217,37 @@
   \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
     \item $\verb|NOT NULL|$: valore nullo non è ammesso per l'attributo, quindi il valore deve sempre essere specificato, o si assegna un valore di default
     \item $\verb|UNIQUE|$: definisce (super)chiavi
-    \begin{sqlcode}
+    \begin{lstlisting}[language=SQL]
       Nome VARCHAR(20),
       Cognome VARCHAR(20),
       UNIQUE(Nome,Cognome)
 
-      /* impone che non ci siano due righe che abbiano uguale sia il nome che il cognome*/
-    \end{sqlcode}
+      -- impone che non ci siano due righe che abbiano uguale sia il nome che il cognome
+    \end{lstlisting}
 
-    \begin{sqlcode}
+    \begin{lstlisting}[language=SQL]
       Nome VARCHAR(20) UNIQUE,
       Cognome VARCHAR(20) UNIQUE
 
       /* impone che non ci siano due righe che abbiano lo stesso nome o lo stesso cognome*/ 
-    \end{sqlcode}
+    \end{lstlisting}
     \item $\verb|PRIMARY KEY|$: chiave primaria (una sola, implica NOT NULL) 
-    \begin{sqlcode}
+    \begin{lstlisting}[language=SQL]
       matricola CHAR (6) PRIMARY KEY;
       /* se unico componente della chiave primaria*/
-    \end{sqlcode}
+    \end{lstlisting}
 
-    \begin{sqlcode}
+    \begin{lstlisting}[language=SQL]
       nome VARCHAR(20),
       cognome VARCHAR(20),
       PRIMARY KEY(nome, cognome)
 
       /* Se la chiave primaria ha piu attributi */
-    \end{sqlcode}
+    \end{lstlisting}
     \item $\verb|CHECK|$: specifica un vincolo generico che deve soddisfare le tuple della tabella. 
     
     Viene soddisfatto se la sua espressione è vera o nulla.
-    \begin{sqlcode}
+    \begin{lstlisting}[language=SQL]
       CREATE TABLE Impiegato (
         matricola CHAR(6) PRIMARY KEY,
         nome VARCHAR(20) NOT NULL,
@@ -256,7 +258,7 @@
         UNIQUE( cognome, nome ),
         CHECK( nome <> cognome )      /* check di tabella */
       )
-    \end{sqlcode}
+    \end{lstlisting}
   \end{itemize}
 
   \subsection{Vincoli interrelazionali}
