@@ -1,0 +1,13 @@
+{
+    "tabella": {
+        "24/02/2016_%_StipendioTris":
+        {"importo":0.1, "data":"24/02/2016", "voce": "S...tris"},
+        "27/02/2016_%_Affitto":
+        {"importo":-0.3, "data":"27/02/2016", "voce": "Affitto"},
+        "24/02/2016_%_StipendioBis":
+        {"importo":0.1, "data":"24/02/2016", "voce": "Sti...Bis"},
+        "24/02/2016_%_Stipendio":
+        {"importo":0.1, "data":"24/02/2016", "voce": "Stipendio"}
+    },
+    "ultimaModifica": "2026-04-15T1:06.50.899597"
+}
