@@ -76,6 +76,26 @@
   \end{tcolorbox}
   \vspace{5pt}%
 }
+%===========================================
+% --- AMBIENTE ESERCIZIO D ---
+\newcommand{\esercizio}[2]{%
+  \vspace{10pt}%
+  \begin{tcolorbox}[
+    colback=green!5!white,    % Sfondo verde chiarissimo
+    colframe=green!40!black,   % Bordo verde scuro
+    title=\textbf{Esercizio: #1},
+    coltitle=white,           % Titolo bianco
+    fonttitle=\bfseries,
+    arc=3mm,                  % Angoli leggermente più arrotondati
+    boxrule=1.5pt,            % Spessore bordo
+    enhanced,                 % Abilita opzioni avanzate
+    breakable,                % Fondamentale per esercizi lunghi
+    shadow={2pt}{-2pt}{0pt}{black!20!white} % Ombra leggera per profondità
+  ]
+  #2
+  \end{tcolorbox}
+  \vspace{10pt}%
+}
 
 %===========================================
 % --- AMBIENTE VARIO ---
@@ -168,65 +188,17 @@ colback=blue!3!white, % Azzurrino chiarissimo per lo sfondo
 colframe=blue!50!black,   % Bordo blu più scuro e marcato
 sharp corners,    % Rimuove i bordi arrotondati (angoli vivi)
 boxrule=0.8pt, % Spessore standard dei bor
-leftrule=4pt,       % Bordo sinistro più spesso (stile tipico dei blocchi di codice)
+%leftrule=4pt,       % Bordo sinistro più spesso (stile tipico dei blocchi di codice)
 top=0pt,       % Rimuove la riga vuota interna superiore
 bottom=0pt,   % Rimuove la riga vuota interna inferiore
-left=4pt, % Leggero margine per non attaccare il testo al bordo spesso
-right=4pt,
+left=0pt, % Leggero margine per non attaccare il testo al bordo spesso
+right=1pt,
 enhanced,
 breakable,
 listing only,
 listing options={style=SQLstyle},
 #1
 }
-
-\definecolor{pgBg}{RGB}{28, 28, 28}        % Sfondo scuro
-\definecolor{pgKeyword}{RGB}{214, 126, 114} % Rosa (begin, update, where, set, and)
-\definecolor{pgIdent}{RGB}{145, 188, 218}   % Azzurro (CONTO, saldo, filiale, numero)
-\definecolor{pgValue}{RGB}{160, 190, 100}   % Verde (1200, '005', 15, 205)
-\definecolor{pgSymbols}{RGB}{200, 200, 200} % Grigio chiaro per simboli (; = - +)
-
-\lstnewenvironment{sqlcode}[1][]
-{
-    \lstset{
-        language=SQL,
-        inputencoding=utf8,         % Forza la lettura in UTF-8
-        extendedchars=true,         % Permette caratteri fuori dai primi 127 ASCII
-        backgroundcolor=\color{pgBg},
-        basicstyle=\small\ttfamily\color{pgSymbols},
-        identifierstyle=\color{pgIdent},
-        keywordstyle=\color{pgKeyword},
-        stringstyle=\color{pgValue},
-        frame=none,
-        framerule=0pt,
-        framesep=8pt,
-        xleftmargin=5pt,
-        gobble=6,
-        literate={0}{{\color{pgValue}0}}{1}
-                 {1}{{\color{pgValue}1}}{1}
-                 {2}{{\color{pgValue}2}}{1}
-                 {3}{{\color{pgValue}3}}{1}
-                 {4}{{\color{pgValue}4}}{1}
-                 {5}{{\color{pgValue}5}}{1}
-                 {6}{{\color{pgValue}6}}{1}
-                 {7}{{\color{pgValue}7}}{1}
-                 {8}{{\color{pgValue}8}}{1}
-                 {9}{{\color{pgValue}9}}{1}
-                 {=}{{\color{pgSymbols}=}}{1}
-                 {;}{{\color{pgSymbols};}}{1}
-                 % Mappatura manuale per evitare l'errore UTF-8
-                 {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1 {:}{{:}}1 
-                 {È}{{\`E}}1 {é}{{\'e}}1 {|}{{\textbar}}1 {\{}{{\textbraceleft}}1 {\}}{{\textbraceright}}1 {\_}{{\textunderscore}}1
-                 { }{{~}}1, % Questo risolve il maledetto errore "A0" (spazio unificatore)
-        morekeywords={begin, transaction, update, set, where, and, commit, work, end },
-        showstringspaces=false,
-        breaklines=true,
-        #1
-    }
-}
-{}
-
-
 
 \newtcblisting{codiceJava}[1][]{%
   colback=orange!5!white,   % Arancione molto tenue
