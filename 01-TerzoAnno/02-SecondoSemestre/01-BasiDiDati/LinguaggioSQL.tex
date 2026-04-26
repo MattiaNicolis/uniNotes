@@ -1,14 +1,14 @@
 %!TeX root = BasiDiDati.tex
 
 \chapter{Linguaggio SQL}
-Il termine SQL in origine era l'acronimo di \textbf{S}tructured \textbf{Q}uery \textbf{L}anguage, ma ad oggi è diventato un nome proprio.
+Il termine SQL in origine era l'acronimo di \textcolor{azzurrino}{\textbf{S}}tructured \textcolor{azzurrino}{\textbf{Q}}uery \textcolor{azzurrino}{\textbf{L}}anguage, ma a oggi è diventato un nome proprio.
 
 \definizione{linguaggio SQL}{
   \raggedright
-  Il \textbf{linguaggio di interrogazione SQL} permette di:
+  Il linguaggio di interrogazione SQL permette di:
   \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
     \item \textbf{definire delle strutture dati e i vincoli di integrità}: \textcolor{azzurrino}{\textbf{D}}ata \textcolor{azzurrino}{\textbf{D}}efinition \textcolor{azzurrino}{\textbf{L}}anguage
-    \item \textbf{manipolare i dati} (inserimento, aggiornamento e cancellazione): \textcolor{azzurrino}{\textbf{D}}ata \textcolor{azzurrino}{\textbf{M}}anipilation \textcolor{azzurrino}{\textbf{L}}anguage
+    \item \textbf{manipolare dati} (inserimento, aggiornamento e cancellazione): \textcolor{azzurrino}{\textbf{D}}ata \textcolor{azzurrino}{\textbf{M}}anipolation \textcolor{azzurrino}{\textbf{L}}anguage
     \item \textbf{interrogare}: \textcolor{azzurrino}{\textbf{D}}ata \textcolor{azzurrino}{\textbf{Q}}uery \textcolor{azzurrino}{\textbf{L}}anguage
   \end{itemize}
 }
@@ -44,7 +44,7 @@ SQL permette, quindi, di descrivere le interrogazioni in modo astratto e ad alto
 
 \section{Clausola \protect\texttt{SELECT}}
 La sintassi dell’istruzione $\verb|SELECT|$ è:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 SELECT [DISTINCT]
 [ * | expression [[ AS ] output_name ] [, ...] ]
 [ FROM from_item [, ...] ]
@@ -53,7 +53,7 @@ SELECT [DISTINCT]
       [ HAVING condition [, ...] ]
       [ { UNION | INTERSECT | EXCEPT } [ DISTINCT ] other_select ]
         [ ORDER BY expression [ ASC | DESC | USING operator ] ]
-\end{lstlisting}
+\end{codiceSQL}
 
 dove:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
@@ -64,12 +64,12 @@ dove:
 \end{itemize}
 
 \bigskip
-La struttura dell’istruzione è la seguente:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 SELECT attributo
 FROM tabella
   [WHERE condizione]
-\end{lstlisting}
+\end{codiceSQL}
 
 $\verb|SELECT|$, $\verb|FROM|$ e $\verb|WHERE|$ sono chiamate \textcolor{azzurrino}{\textbf{clausole}}.
 
@@ -82,62 +82,62 @@ Il risultato dell‘interrogazione è una tabella con una riga per ogni riga pro
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/tabella-impiegato.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
   $\boldsymbol{\mathrm{Q_1}}$\textbf{: estrarre lo stipendio degli impiegati di cognome 'Rossi'}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT Stipendio
-  FROM Impiegato
-    WHERE Cognome = 'Rossi';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Stipendio
+FROM Impiegato
+  WHERE Cognome = 'Rossi';
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrogazione è la seguente tabella:
   \begin{center}
-    \includegraphics[width=0.2\textwidth]{images/select-impiegato.png}
+    \includegraphics[width=0.15\textwidth]{images/select-impiegato.png}
   \end{center}
 \end{esempiobox}
 
 \bigskip
 Il simbolo $\verb|*|$ permette di  indicare tutti gli attributi delle tabelle.
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 SELECT *
 FROM tabella;
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{esempiobox}{Interrogazione con \texttt{SELECT *}}
   Consideriamo la seguente tabella:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/tabella-impiegato.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
   $\boldsymbol{\mathrm{Q_2}}$\textbf{: estrarre lo stipendio degli impiegati di cognome 'Rossi'}
-  \begin{lstlisting}[language=SQL]
-  SELECT *
-  FROM Impiegato
-    WHERE Cognome = 'Rossi';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT *
+FROM Impiegato
+  WHERE Cognome = 'Rossi';
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrogazione è la seguente tabella:
   \begin{center}
-    \includegraphics[width=0.6\textwidth]{images/select-all-impiegato.png}
+    \includegraphics[width=0.7\textwidth]{images/select-all-impiegato.png}
   \end{center}
 \end{esempiobox}
 
 \section{Clasuola \protect\texttt{FROM}}
 La clausola $\verb|FROM|$ specifica le tabelle da cui estrarre i dati.
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 FROM from_item [, ...]
-\end{lstlisting}
+\end{codiceSQL}
 
 dove $\verb|from_item|$ può essere una delle seguenti clausole:
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
@@ -173,34 +173,34 @@ dove $\verb|from_item|$ può essere una delle seguenti clausole:
   \smallskip
   $\boldsymbol{\mathrm{Q_3}}$\textbf{: estrarre i nomi e il cognome degli impiegati e le città in cui lavorano}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT Impiegato.Nome, Impiegato.Cognome, Dipartimento.Citta
-  FROM Impiegato, Dipartimento
-    WHERE Impiegato.Dipart = Dipartimento.Nome
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Impiegato.Nome, Impiegato.Cognome, Dipartimento.Citta
+FROM Impiegato, Dipartimento
+  WHERE Impiegato.Dipart = Dipartimento.Nome
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrogazione è la seguente tabella:
   \begin{center}
-    \includegraphics[width=0.4\textwidth]{images/from-impiegato-dipartimento.png}
+    \includegraphics[width=0.5\textwidth]{images/from-impiegato-dipartimento.png}
   \end{center}
 \end{esempiobox}
 
 \section{Clausola \protect\texttt{WHERE}}
-La sintassi è:
+La sintassi dell'istruzione è:
 
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 WHERE condition
-\end{lstlisting}
+\end{codiceSQL}
 
 La clausola $\verb|WHERE|$ ammette come argomento un’espressione booleana costruita combinando predicati semplici con gli operatori $\verb|AND|$, $\verb|OR|$ e $\verb|NOT|$:
 \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-  \item \textbf{AND}: seleziona le righe in cui tutti i predicati sono veri
-  \item \textbf{OR}: seleziona le righe in cui almeno un predicato è vero
-  \item \textbf{NOT}: seleziona le righe in cui il predicato è falso
+  \item \texttt{AND}: seleziona le righe in cui tutti i predicati sono veri
+  \item \texttt{OR}: seleziona le righe in cui almeno un predicato è vero
+  \item \texttt{NOT}: seleziona le righe in cui il predicato è falso
 \end{itemize}
 
-Ciascun predicato semplice usa gli operatori $\verb|=|$, $\verb|<>| (\verb|<>| \Leftrightarrow \neq)$, $\verb|<|$, $\verb|>|$, $\verb|<=|$, $\verb|>=|$ per confrontare un’espressione costruita a partire dal valore di un attributo con un valore costante, oppure un’altra espressione.
+Ciascun predicato semplice usa gli operatori $\verb|=|$, $\verb|<>| (\verb|<>| \Leftrightarrow \neq)$, $\verb|<|$, $\verb|>|$, $\verb|<=|$, $\verb|>=|$ per confrontare un’espressione costruita a partire dal valore di un attributo con un valore costante oppure un’altra espressione.
 
 \begin{esempiobox}{Interrogazione con \texttt{WHERE}}
   Consideriamo le seguenti tabelle:
@@ -220,16 +220,16 @@ Ciascun predicato semplice usa gli operatori $\verb|=|$, $\verb|<>| (\verb|<>| \
 
   \smallskip
   $\boldsymbol{\mathrm{Q_4}}$\textbf{: estrarre i nomi e il cognome degli impiegati che lavorano nell'ufficio 20 del dipartimento Ammistrazione}
-  \begin{lstlisting}[language=SQL]
-  SELECT Nome, Cognome
-  FROM Impiegato
-    WHERE Ufficio = 20 AND Dipart = 'Amministrazione';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Nome, Cognome
+FROM Impiegato
+  WHERE Ufficio = 20 AND Dipart = 'Amministrazione';
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrrogazione è la seguente tabella:
   \begin{center}
-    \includegraphics[width=0.3\textwidth]{images/where-impiegato-dipartimento.png}
+    \includegraphics[width=0.25\textwidth]{images/where-impiegato-dipartimento.png}
   \end{center}
 \end{esempiobox}
 
@@ -259,17 +259,17 @@ I caratteri speciali per il confronto sono:
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q_5}}$\textbf{: estrarre gli impiegati che hanno un cognome che ha una "o" in seconda posizione e finisce con una "i"}
-  \begin{lstlisting}[language=SQL]
-  SELECT *
-  FROM Impiegato
-  WHERE Cogmome LIKE '_o%i'; 
-  \end{lstlisting}
+  $\boldsymbol{\mathrm{Q_5}}$\textbf{: estrarre gli impiegati che hanno un cognome con una "o" in seconda posizione e finisce con una "i"}
+\begin{codiceSQL}
+SELECT *
+FROM Impiegato
+WHERE Cogmome LIKE '_o%i'; 
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrogazione è la seguente tabella:
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/like-impiegato-dipartimento.png}
+    \includegraphics[width=0.55\textwidth]{images/like-impiegato-dipartimento.png}
   \end{center}
 \end{esempiobox}
 
@@ -296,11 +296,11 @@ La sintassi delle espressioni regolari è:
 
   \smallskip
   $\boldsymbol{\mathrm{Q_6}}$\textbf{: estrarre gli studenti con cognome che inizia con 'A' o 'B', o 'D', o 'N' e finisce con 'a}
-  \begin{lstlisting}[language=SQL]
-  SELECT cognome, nome, citta
-  FROM Studente
-    WHERE cognome SIMILAR TO '[ABDN]{1}%a';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT cognome, nome, citta
+FROM Studente
+  WHERE cognome SIMILAR TO '[ABDN]{1}%a';
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrogazione sono le righe evidenziate in giallo.
@@ -309,10 +309,10 @@ La sintassi delle espressioni regolari è:
 \subsection{Operatore \texttt{BETWEEN}}
 L’operatore \texttt{BETWEEN} consente di verificare se un valore è compreso tra due valori estremi (inclusi). 
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 condition BETWEEN value1 AND value2  
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{esempiobox}{Interrogazione con \texttt{BETWEEN}}
   Consideriamo la seguente tabella:
@@ -324,11 +324,11 @@ condition BETWEEN value1 AND value2
 
   \smallskip
   $\boldsymbol{\mathrm{Q_7}}$\textbf{: estrarre tutti gli studenti che hanno matricola tra 'IN0002' e 'IN0004'}
-  \begin{lstlisting}[language=SQL]
-  SELECT cognome, nome, citta
-  FROM Studente
-    WHERE matricola BETWEEN 'IN0002' AND 'IN0004';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT cognome, nome, citta
+FROM Studente
+  WHERE matricola BETWEEN 'IN0002' AND 'IN0004';
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrogazione sono le righe evidenziate in giallo.
@@ -336,12 +336,12 @@ condition BETWEEN value1 AND value2
 
 
 \subsection{Operatore \texttt{IN}}
-Nella clausola $\verb|WHERE|$ può apparire l'operatore $\verb|[NOT] IN|$ per testare l'appartenenza di un valore ad un insieme. 
+Nella clausola $\verb|WHERE|$ può apparire l'operatore $\verb|[NOT] IN |$ per testare l'appartenenza di un valore ad un insieme. 
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 WHERE attributo [NOT] IN (valore, [, ...]);
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{esempiobox}{Interrogazione con \texttt{IN}}
   Consideriamo la seguente tabella:
@@ -353,11 +353,11 @@ WHERE attributo [NOT] IN (valore, [, ...]);
 
   \smallskip
   $\boldsymbol{\mathrm{Q_8}}$\textbf{: estrarre tutti gli studenti che hanno matricola nell'elenco 'IN0001', 'IN0003' e 'IN0005'}
-  \begin{lstlisting}[language=SQL]
-  SELECT cognome, nome, matricola
-  FROM Studente
-    WHERE matricola IN ('IN0001', 'IN0003', 'IN0005');  
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT cognome, nome, matricola
+FROM Studente
+  WHERE matricola IN ('IN0001', 'IN0003', 'IN0005');  
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell’interrogazione sono le righe evidenziate in giallo.
@@ -368,18 +368,18 @@ WHERE attributo [NOT] IN (valore, [, ...]);
 Per verificare se un attributo ha un valore nullo o meno si utilizza il predicato $\verb|IS NULL|$ che ritorna true se l’attributo ha valore nullo (oppure $\verb|IS NOT NULL|$):
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item $\verb|IS NULL|$: ritorna true se l'attributo ha valore nullo
-  \item $\verb|IS NOT NULL|$: è la negazione, ritorna true se l'attributo ha valore diverso da nullo
+  \item $\verb|IS NOT NULL|$:ritorna true se l'attributo ha valore diverso da nullo
 \end{itemize}
 
 \smallskip
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 WHERE attributo IS [NOT] NULL;
-\end{lstlisting}
+\end{codiceSQL}
 
 \smallskip
 SQL-2 implementa la logica a 3 valori:
-\begin{itemize}[itemsep=\smallskipamount]
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
   \item predicato semplice restituisce il valore $\verb|NULL|$ quando un qualsiasi termine del predicato ha valore nullo
   \item predicato $\verb|IS NULL|$ è un'eccezione, restituendo sempre il valore vero oppure false, mai il valore $\verb|NULL|$
 \end{itemize}
@@ -389,30 +389,29 @@ SQL-2 implementa la logica a 3 valori:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/tabella-studenti-isNull.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-studenti-isNull.png}
   \end{center}
 
   \smallskip
   $\boldsymbol{\mathrm{Q_9}}$\textbf{: estrarre tutti gli studenti che non hanno una città}
-  \begin{lstlisting}[language=SQL]
-  SELECT cognome, nome, citta
-  FROM Studente
-    WHERE citta IS NULL;  
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT cognome, nome, citta
+FROM Studente
+  WHERE citta IS NULL;  
+\end{codiceSQL}
 
   \smallskip
   Il risultato dell'interrogazione sono le righe evidenziate in giallo.
 \end{esempiobox}
 
-\section{Gestione dei duplicati in SQL}
-Siccome la rimozione delle righe duplicate è un'operazione costosa, SQL le mantiene di default. 
-
+\section{Clausola \texttt{DISTINCT}}
+La rimozione delle righe duplicate è un'operazione costosa, perciò, SQL le mantiene di default.\\[0.2ex]
 Per togliere i duplicati si può utilizzare la parola chiave $\verb|DISTINCT|$ dopo $\verb|SELECT|$:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 SELECT DISTINCT colonna
 FROM tabella
   WHERE condizione;
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{esempiobox}{Interrogazione con \texttt{DISTINCT}}
   Consideriamo la seguente tabella:
@@ -424,25 +423,30 @@ FROM tabella
 
   \smallskip
   $\boldsymbol{\mathrm{Q_{10}}}$\textbf{: estrarre le città delle persone in cui il cognome è Rossi}
-  \begin{lstlisting}[language=SQL]
-  SELECT Citta
-  FROM Persona
-    WHERE Cognome = 'Rossi';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Citta
+FROM Persona
+  WHERE Cognome = 'Rossi';
+\end{codiceSQL}
 
   \smallskip
   L'output di questa interrogazione è la tabella:
   \begin{center}
-    \includegraphics[width=0.2\textwidth]{images/distinct-persona.png}
+    \includegraphics[width=0.15\textwidth]{images/no-distinct-persona.png}
   \end{center}
 
+  \smallskip
   Per togliere i duplicati si può utilizzare la parola chiave $\verb|DISTINCT|$ dopo $\verb|SELECT|$:
-  \begin{lstlisting}[language=SQL]
-  SELECT DISTINCT Citta
-  FROM Persona
-    WHERE Cognome = 'Citta';
-  \end{lstlisting}
-  %foto
+\begin{codiceSQL}
+SELECT DISTINCT Citta
+FROM Persona
+  WHERE Cognome = 'Citta';
+\end{codiceSQL}
+
+  L’output di questa interrogazione è la tabella:
+  \begin{center}
+    \includegraphics[width=0.15\textwidth]{images/distinct-persona.png}
+  \end{center}
 \end{esempiobox}
 
 \section{Clausola \texttt{JOIN}}
@@ -454,11 +458,11 @@ In SQL, le interrogazioni con la clausola \verb|JOIN| si possono definire in due
 
 \smallskip
 La clausola \verb|FROM| ammette come argomento:
-\begin{lstlisting}[language=SQL]
-  tabella [[AS] name] [, ...]
-\end{lstlisting}
+\begin{codiceSQL}
+tabella [[AS] name] [, ...]
+\end{codiceSQL}
 
-Si è visto che se sono presenti due o più nomi di tabelle, si esegue il prodotto cartesiano tra tutte le tabelle e lo schema del risultato
+Si è visto che se sono presenti due o più nomi di tabelle si esegue il prodotto cartesiano tra tutte le tabelle e lo schema del risultato
 può contenere tutti gli attributi del prodotto cartesiano.\\[0.2ex]
 Il prodotto cartesiano di due o più tabelle è un $\verb|CROSS JOIN|$.
 
@@ -474,19 +478,19 @@ A partire da SQL-2, esistono altri tipi di \texttt{JOIN}:
   \item $\verb|RIGH [OUTER] JOIN|$: restituisce
   \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
     \item tutte le righe della tabella di destra e sinistra che soddisfano la condizione di $\verb|join|$
-    \item $\verb|null|$ per le righe della tabella di sinistra che non soddifisfano la condizione di di $\verb|join|$
+    \item $\verb|null|$ per le righe della tabella di sinistra che non soddifisfano la condizione di $\verb|join|$
   \end{itemize}
   \item $\verb|FULL [OUTER] JOIN|$: restituisce
   \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
     \item tutte le righe di entrambe le tabelle
-    \item $\verb|null|$ per le righe che non soddifisfano la condizione di di $\verb|join|$
+    \item $\verb|null|$ per le righe che non soddifisfano la condizione di $\verb|join|$
   \end{itemize}
 \end{itemize}
 
-In generale, la sintassi è:
-\begin{lstlisting}[language=SQL]
+In generale, la sintassi dell'istruzione è:
+\begin{codiceSQL}
 tabella [NATURAL] join_type table_name [ ON condition [, ...]]
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{itemize}[label=$\triangleright$]
   \item $\verb|condition|$: espressione booleana che seleziona le tuple del $\verb|join|$ da aggiungere al risultato
@@ -494,27 +498,26 @@ tabella [NATURAL] join_type table_name [ ON condition [, ...]]
 
 \smallskip
 Le tuple selezionate possono essere poi filtrate con la condizione della clausola $\verb|WHERE|$.
-
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{images/Join.png}
+  \includegraphics[width=0.8\textwidth]{images/Join.png}
 \end{figure}
 
 \subsection{Clausola \texttt{INNER JOIN}}
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 tabella [ INNER ] JOIN tabella ON join_condition [, ...]
-\end{lstlisting}
+\end{codiceSQL}
 
 Rappresenta il tradizionale $\theta$ $\verb|join|$ dell’algebra relazionale.\\[0.2ex]
 Combina ciascuna riga $\mathrm{r_1}$ di $\mathrm{table_1}$ con ciascuna riga di $\mathrm{table_2}$ che soddisfa la condizione della clausola $\verb|ON|$.
 
 \begin{esempiobox}{Interrogazione con \texttt{INNER JOIN}}
-  \begin{lstlisting}[language=SQL]
-  SELECT I.cognome, R.nomeRep, R.sede
-  FROM Impiegato AS I
-  INNER JOIN Reparto AS R ON I.nomeRep = R.nomeRep;
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT I.cognome, R.nomeRep, R.sede
+FROM Impiegato AS I
+INNER JOIN Reparto AS R ON I.nomeRep = R.nomeRep;
+\end{codiceSQL}
 
   \begin{center}
     \includegraphics[width=0.5\textwidth]{images/tabellina.png}
@@ -522,23 +525,23 @@ Combina ciascuna riga $\mathrm{r_1}$ di $\mathrm{table_1}$ con ciascuna riga di 
 \end{esempiobox}
 
 \subsection{Clausola \texttt{LEFT OUTER JOIN}}
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 tabella LEFT [ OUTER ] JOIN tabella ON join_condition [, ...]
-\end{lstlisting}
+\end{codiceSQL}
 
 Si esegue un $\verb|INNER JOIN|$.\\[0.2ex]
-Poi, per ciascuna riga $\mathrm{r_1}$ di $\mathrm{table_1}$ che non soddisfa la condizione con qualsiasi riga di $\mathrm{table_2}$, si aggiunge una riga al risultato con i valori di $\mathrm{r_1}$ e assegnando $\verb|NULL|$ agli altri attributi.
+Poi, per ciascuna riga $\mathrm{r_1}$ di $\mathrm{table_1}$ che non soddisfa la condizione con qualsiasi riga di $\mathrm{table_2}$, si aggiunge una riga al risultato con i valori di $\mathrm{r_1}$ e si assegna $\verb|NULL|$ agli altri attributi.
 
 \begin{esempiobox}{Interrogazione con \texttt{LEFT [OUTER] JOIN}}
-  \begin{lstlisting}[language=SQL]
-  INSERT INTO Reparto (nomerep, sede, telefono)
-  VALUES ('Finanza', 'Padova', '02 8028888');
+\begin{codiceSQL}
+INSERT INTO Reparto (nomerep, sede, telefono)
+VALUES ('Finanza', 'Padova', '02 8028888');
 
-  SELECT R.nomeRep, I.cognome
-  FROM Reparto AS R
-  LEFT OUTER JOIN Impiegato AS I ON I.nomerep = R.nomerep;
-  \end{lstlisting}
+SELECT R.nomeRep, I.cognome
+FROM Reparto AS R
+LEFT OUTER JOIN Impiegato AS I ON I.nomerep = R.nomerep;
+\end{codiceSQL}
 
   \begin{center}
     \includegraphics[width=0.4\textwidth]{images/tabellina2.png}
@@ -553,10 +556,10 @@ Poi, per ciascuna riga $\mathrm{r_1}$ di $\mathrm{table_1}$ che non soddisfa la 
 }
 
 \subsection{Clausola \texttt{RIGHT OUTER JOIN}}
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 tabella RIGHT [ OUTER ] JOIN tabella ON join_condition [, ...]
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{esempiobox}{Interrogazione con \texttt{RIGHT [OUTER] JOIN}}
   \begin{lstlisting}[language=SQL]
@@ -571,19 +574,19 @@ tabella RIGHT [ OUTER ] JOIN tabella ON join_condition [, ...]
 \end{esempiobox}
 
 \subsection{Clausola \texttt{FULL OUTER JOIN}}
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'istruzione è:
+\begin{codiceSQL}
 tabella FULL [ OUTER ] JOIN tabella ON join_condition [, ...]
-\end{lstlisting}
+\end{codiceSQL}
 
 È equivalente a:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 INNER JOIN + LEFT OUTER JOIN + RIGHT OUTER JOIN
-\end{lstlisting}
+\end{codiceSQL}
 
 Non è equivalente a $\verb|CROSS JOIN|$.
 
-\section{Uso di variabili (alias)}
+\section{Clausola \texttt{AS}}
 SQL permette di associare un nome alternativo (alias) alle tabelle che compaiono nella clausola $\verb|FROM|$.\\[0.2ex]
 Il nome viene usato per far riferimento alla tabella nel contesto dell’interrogazione per diversi motivi:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
@@ -600,26 +603,26 @@ Il nome viene usato per far riferimento alla tabella nel contesto dell’interro
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q_{14}}}$\textbf{: estrarre tutti gli impiegati che hanno lo stesso cognome, ma nome diverso del dipartimento Produzione}
-  \begin{lstlisting}[language=SQL]
-  SELECT I1.Cognome, I2.Cognome
-  FROM Impiegato I1, Impiegato I2
-    WHERE I1.Cogmome = I2.Cognome AND
-      I1.Nome <> I2.Cognome AND
-      I2.Dipart = 'Produzione';
-  \end{lstlisting}
+  $\boldsymbol{\mathrm{Q_{11}}}$\textbf{: estrarre tutti gli impiegati che hanno lo stesso cognome, ma nome diverso del dipartimento Produzione}
+\begin{codiceSQL}
+SELECT I1.Cognome, I2.Cognome
+FROM Impiegato I1, Impiegato I2
+  WHERE I1.Cogmome = I2.Cognome AND
+    I1.Nome <> I2.Cognome AND
+    I2.Dipart = 'Produzione';
+\end{codiceSQL}
 
   \smallskip
-  Questa interrogazione confronta ciascuna riga di Impiegato con tutte le righe di Impiegato associate al dipartimento Produzione.
+  Questa interrogazione confronta ciascuna riga di \texttt{Impiegato} con tutte le righe di \texttt{Impiegato} associate al dipartimento \texttt{Produzione}.
 
   \smallskip
-  Si può immaginare che al momento della definizione dell’alias vengano create due copie della tabella Impiegato, ciascuna associata ad una delle due variabili $\mathrm{i_1}$ e $\mathrm{i_2}$.
+  Si può immaginare che al momento della definizione dell’alias vengano create due copie della tabella Impiegato, ciascuna associata ad una delle due variabili \texttt{I1} e \texttt{I2}.
 
   \smallskip
-  Le due copie contengono tutte le righe di Impiegato.
+  Le due copie contengono tutte le righe di \texttt{Impiegato}.
 
   \smallskip
-  Sulla copia $\mathrm{i_2}$ vengono selezionate solo le righe del dipartimento 'Produzione'.
+  Sulla copia \texttt{I2} vengono selezionate solo le righe del dipartimento \texttt{'Produzione'}.
 
   \smallskip
   \begin{center}
@@ -631,10 +634,10 @@ Il nome viene usato per far riferimento alla tabella nel contesto dell’interro
 Una relazione è un insieme di tuple non ordinato, però, sorge spesso il bisogno di costruire un ordine sulle righe.\\[0.2ex]
 SQL permette di specificare un ordinamento (ascendente o discendente) sulle righe dell‘output grazie alla clausola $\verb|ORDER BY|$ che chiude l‘interrogazione.
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'interrogazione è:
+\begin{codiceSQL}
 ORDER BY attributo [{ ASC | DESC }] [, ... ]
-\end{lstlisting}
+\end{codiceSQL}
 
 Le righe vengono ordinate per il primo attributo nell'elenco, a parità di valore del primo attributo si usa il secondo e così via in sequenza.
 
@@ -645,18 +648,18 @@ Di default l'ordinamento è $\verb|ASC|$.
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.3\textwidth]{images/tabella-persone.png}
+    \includegraphics[width=0.25\textwidth]{images/tabella-persone.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q_{15}}}$\textbf{: estrarre il nome, l'età e il reddito delle persone con meno di 30 anni in ordine alfabetico}
+  $\boldsymbol{\mathrm{Q_{12}}}$\textbf{: estrarre il nome, l'età e il reddito delle persone con meno di 30 anni in ordine alfabetico}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT Nome, Eta, Reddito
-  FROM Persone
-    WHERE Eta < 30
-      ORDER BY Eta;
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Nome, Eta, Reddito
+FROM Persone
+  WHERE Eta < 30
+    ORDER BY Eta;
+\end{codiceSQL}
 \end{esempiobox}
 
 \begin{esempiobox}{Interrogazione con \texttt{ORDER BY}}
@@ -664,114 +667,139 @@ Di default l'ordinamento è $\verb|ASC|$.
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q11.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-automobile.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q_{16}}}$\textbf{: estrarre il contenuto della tabella Automobile ordinato in base alla marca (discendente) e al modello}
+  $\boldsymbol{\mathrm{Q_{13}}}$\textbf{: estrarre il contenuto della tabella Automobile ordinato in base alla marca (discendente) e al modello}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT *
-  FROM Automobile
-    ORDER BY Marca DESC, Modello;
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT *
+FROM Automobile
+  ORDER BY Marca DESC, Modello;
+\end{codiceSQL}
+
+  L’output di questa interrogazione è la tabella:
+  \begin{center}
+    \includegraphics[width=0.55\textwidth]{images/orderBy-automobile.png}
+  \end{center}
 \end{esempiobox}
 
 \section{Operazioni insiemistiche}
 SQL mette a disposizione degli operatori insiemistci:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 SELECT
   { UNION | INTERSECT | EXCEPT 
   [ALL] SELECT }
-\end{lstlisting}
+\end{codiceSQL}
 
-Gli operatori insiemistici, al contrario del resto del linguaggio, assumono come default di eseguire un'eliminazione dei duplicati, a meno che si usi $\verb|ALL|$.\\[0.2ex]
-Sono sufficienti domini compatibili ed ugual numero di attributi.\\[0.2ex]
+Gli operatori insiemistici, al contrario del resto del linguaggio, eseguono di default l'eliminazione dei duplicati, a meno che si usi $\verb|ALL|$.\\[0.2ex]
+Sono sufficienti domini compatibili e lo stesso numero di attributi.\\[0.2ex]
 La corrispondenza si basa sulla posizione e se i nomi degli attributi sono diversi di solito il sistema usa il nome del primo operando.
 
-\subsection{Unione}
-\begin{esempiobox}{Interrogazione con unione}
+\subsection{Operatore \texttt{UNION}}
+\begin{esempiobox}{Interrogazione con \texttt{UNION}}
   Consideriamo la seguente tabella:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q12.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: estrarre i nomi e i cognomi degli impiegati}
+  $\boldsymbol{\mathrm{Q}_{14}}$\textbf{: estrarre i nomi e i cognomi degli impiegati}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT Nome
-  FROM Impiegato
-  UNION
-  SELECT Cognome
-  FROM Impiegato
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Nome
+FROM Impiegato
+UNION
+SELECT Cognome
+FROM Impiegato
+\end{codiceSQL}
+
+  L'output di questa interrrogazione è:
+  \begin{center}
+    \includegraphics[width=0.15\textwidth]{images/unione-impiegato.png}
+  \end{center}
 \end{esempiobox}
 
-\begin{esempiobox}{Interrogazione con unione}
+\begin{esempiobox}{Interrogazione con \texttt{UNION}}
   Consideriamo la seguente tabella:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q13.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: etrarre i nomi e i cognomi degli impiegati eccetto quelli del dipartimento Amministrazione mantenendo i duplicati}
+  $\boldsymbol{\mathrm{Q}_{15}}$\textbf{: etrarre i nomi e i cognomi degli impiegati eccetto quelli del dipartimento Amministrazione mantenendo i duplicati}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT Nome
-  FROM Impiegato
-    WHERE Diaprt <> 'Amministrazione'
-  UNION ALL
-  SELECT Cognome
-  FROM Impiegato
-    WHERE Diaprt <> 'Amministrazione';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Nome
+FROM Impiegato
+  WHERE Diaprt <> 'Amministrazione'
+UNION ALL
+SELECT Cognome
+FROM Impiegato
+  WHERE Diaprt <> 'Amministrazione';
+\end{codiceSQL}
+
+  L'output di questa interrrogazione è:
+  \begin{center}
+    \includegraphics[width=0.15\textwidth]{images/unione-impiegato2.png}
+  \end{center}
 \end{esempiobox}
 
-\subsection{Intersezione}
-\begin{esempiobox}{Interrogazione con intersezione}
+\subsection{Operatore \texttt{INTERSECT}}
+\begin{esempiobox}{Interrogazione con \texttt{INTERSECT}}
   Consideriamo la seguente tabella:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q14.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: estrarre i cognomi degli impiegati che sono anche nomi}
+  $\boldsymbol{\mathrm{Q}_{16}}$\textbf{: estrarre i cognomi degli impiegati che sono anche nomi}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT Nome
-  FROM Impiegato
-  INTERSECT
-  SELECT Cognome
-  FROM Impiegato;
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Nome
+FROM Impiegato
+INTERSECT
+SELECT Cognome
+FROM Impiegato;
+\end{codiceSQL}
+
+  L'output di questa interrrogazione è:
+  \begin{center}
+    \includegraphics[width=0.2\textwidth]{images/intersect-impiegato.png}
+  \end{center}
 \end{esempiobox}
 
-\subsection{Differenza}
+\subsection{Operatore \texttt{EXCEPT}}
 \begin{esempiobox}{Interrogazione con differenza}
   Consideriamo la seguente tabella:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q15.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: estrarre i nomi degli impiegati che non sono cognomi di qualche impiegato}
+  $\boldsymbol{\mathrm{Q}_{17}}$\textbf{: estrarre i nomi degli impiegati che non sono cognomi di qualche impiegato}
 
-  \begin{lstlisting}[language=SQL]
-  SELECT Nome
-  FROM Impiegato
-  EXCEPT
-  SELECT Cognome
-  FROM Impiegato;
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Nome
+FROM Impiegato
+EXCEPT
+SELECT Cognome
+FROM Impiegato;
+\end{codiceSQL}
+
+  L'output di questa interrrogazione è:
+  \begin{center}
+    \includegraphics[width=0.15\textwidth]{images/except-impiegato.png}
+  \end{center}
 \end{esempiobox}
 
 \section{Operatori aggregati}
@@ -780,15 +808,15 @@ Gli operatori di aggregazione permettono di valutare proprietà che dipendono da
 \subsection{Operatore \texttt{COUNT}}
 L'operatore $\verb|COUNT|$ conta il numero di righe di una tabella o il numero di valori di uno o più attributi.
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'interrogazione è:
+\begin{codiceSQL}
 COUNT ( < * | [DISTINCT | ALL] ListaAttributi > )
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
     \item $\verb|*|$: conta il numero di righe della tabella
     \item $\verb|DISTINCT ListaAttributi|$: conta il numero di valori diversi degli attributi ListaAttributi
-    \item $\verb|ALL ListaAttributi|$: conta il numero di righe che hanno valori diversi da NULL negli attributi in ListaAttributi (default)
+    \item $\verb|ALL ListaAttributi|$: conta il numero di righe che hanno valori diversi da \texttt{NULL} negli attributi in ListaAttributi (default)
 \end{itemize}
 
 \begin{esempiobox}{Interrogazione con \texttt{COUNT}}
@@ -796,16 +824,18 @@ COUNT ( < * | [DISTINCT | ALL] ListaAttributi > )
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q16.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: estrarre il numero di impiegati del dipartimento di Produzione}
-  \begin{lstlisting}[language=SQL]
-  SELECT COUNT(*)
-  FROM Impiegato
-    WHERE Diaprt = 'Produzione';
-  \end{lstlisting}
+  $\boldsymbol{\mathrm{Q}_{18}}$\textbf{: estrarre il numero di impiegati del dipartimento di Produzione}
+\begin{codiceSQL}
+SELECT COUNT(*)
+FROM Impiegato
+  WHERE Diaprt = 'Produzione';
+\end{codiceSQL}
+
+  L'output di questa interrogazione è: \texttt{2}.
 \end{esempiobox}
 
 \begin{esempiobox}{Interrogazione con \texttt{COUNT}}
@@ -813,90 +843,96 @@ COUNT ( < * | [DISTINCT | ALL] ListaAttributi > )
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q17.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: estrarre il numero di valori diversi dell'attributo Stipendio fra tutte le righe di Impiegato}
-  \begin{lstlisting}[language=SQL]
-  SELECT COUNT(DISTINCT Stipendio)
-  FROM Impiegato;
-  \end{lstlisting}
+  $\boldsymbol{\mathrm{Q}_{19}}$\textbf{: estrarre il numero di valori diversi dell'attributo Stipendio fra tutte le righe di Impiegato}
+\begin{codiceSQL}
+SELECT COUNT(DISTINCT Stipendio)
+FROM Impiegato;
+\end{codiceSQL}
+
+  L'output di questa interrogazione è: \texttt{6}.
 \end{esempiobox}
 
 \subsection{Operatore \texttt{SUM}}
-L'operatore $\verb|SUM|$ estituisce la somma dei valori posseduti dall’espressione.
+L'operatore $\verb|SUM|$ restituisce la somma dei valori posseduti dall’espressione.
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'interrogazione è:
+\begin{codiceSQL}
 SUM ( < * | [DISTINCT | ALL] ListaAttributi > )
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{esempiobox}{Interrogazione con \texttt{SUM}}
   Consideriamo la seguente tabella:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q19.png}
+    \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: estrarre la somma degli stipendi del dipartimento Amministrazione}
-  \begin{lstlisting}[language=SQL]
-  SELECT SUM(Stipendio)
-  FROM Impiegato
-    WHERE Dipart = 'Amministrazione';
-  \end{lstlisting}
+  $\boldsymbol{\mathrm{Q}_{20}}$\textbf{: estrarre la somma degli stipendi del dipartimento Amministrazione}
+\begin{codiceSQL}
+SELECT SUM(Stipendio)
+FROM Impiegato
+  WHERE Dipart = 'Amministrazione';
+\end{codiceSQL}
+
+  L'output di questa interrogazione è: \texttt{125}.
 \end{esempiobox}
 
 \subsection{Operatore \texttt{MAX/MIN}}
 Gli operatori $\verb|MIN|$ e $\verb|MAX|$ restituiscono rispettivamente il massimo e il minimo dei valori posseduti dall’espressione.
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'interrogazione è:
+\begin{codiceSQL}
 <MAX | MIN> ( [DISTINCT | ALL] ListaAttributi )
-\end{lstlisting}
+\end{codiceSQL}
 
 \subsection{Operatore \texttt{AVG}}
 L'operatore $\verb|AVG|$ restiusce la media dei valori.
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'interrogazione è:
+\begin{codiceSQL}
 AVG ( [DISTINCT | ALL] ListaAttributi )
-\end{lstlisting}
+\end{codiceSQL}
 
 \begin{esempiobox}{Interrogazione con \texttt{MIN, MAX, AVG}}
   Consideriamo la seguente tabella:
 
   \smallskip
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q20.png}
+    \includegraphics[width=0.5\textwidth]{images/tabella-impiegato.png}
   \end{center}
 
   \smallskip
-  $\boldsymbol{\mathrm{Q}}$\textbf{: estrarre gli Stipendi minimi, massimi e medi fra quelli di tutti gli impiegati}
-  \begin{lstlisting}[language=SQL]
-  SELECT MIN(Stipendio), MAX(Stipendio), AVG(Stipendio)
-  FROM Impiegato;
-  \end{lstlisting}
+  $\boldsymbol{\mathrm{Q}_{21}}$\textbf{: estrarre gli Stipendi minimi, massimi e medi fra quelli di tutti gli impiegati}
+\begin{codiceSQL}
+SELECT MIN(Stipendio), MAX(Stipendio), AVG(Stipendio)
+FROM Impiegato;
+\end{codiceSQL}
+
+  L'output di questa interrogazione è: \texttt{36}, \texttt{80}, \texttt{50.625}.
 \end{esempiobox}
 
 \vario{Nota}{
   \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item $\texttt{SUM}$ e $\texttt{AVG}$ ammettono come argomento solo espressioni che rappresentano valori numerici o intervalli di tempo
-  \item $\texttt{MAX}$ e $\texttt{MIN}$ ammettono come argomento solo espressioni su cui è definito un ordinamento (quindi anche stringhe)
+  \item $\texttt{MAX}$ e $\texttt{MIN}$ ammettono come argomento solo espressioni su cui è definito un ordinamento (anche stringhe)
   \item $\texttt{DISTINCT}$ elimina i duplicati
   \item $\texttt{ALL}$ trascura solo i valori nulli
 \end{itemize}
 }
 
 \begin{esempiobox}{ATTENZIONE}
-  \begin{lstlisting}[language=SQL]
-  SELECT Cognone, Nome, MAX(I.Stipendio)
-  FROM Impiegato AS I
-  JOIN Diparmento AS D ON I.Dipart = D.Nome
-    WHERE D.Citta = 'Milano';
-  \end{lstlisting}
+\begin{codiceSQL}
+SELECT Cognone, Nome, MAX(I.Stipendio)
+FROM Impiegato AS I
+JOIN Diparmento AS D ON I.Dipart = D.Nome
+  WHERE D.Citta = 'Milano';
+\end{codiceSQL}
 
   \textcolor{black!60!red}{\textbf{La seguente interrogazione non è corretta!}}
   
@@ -904,7 +940,7 @@ AVG ( [DISTINCT | ALL] ListaAttributi )
   Gli operatori aggregati non sono un meccanismo di selezione, ma solo funzioni che restituiscono un valore quando sono applicate ad un insieme.
 
   \smallskip
-  Cognome e Nome restituiscono un valore per ogni tupla selezionata, mentre $\texttt{MAX}$ restituisce un valore unico per tutto l’insieme.
+  \texttt{Cognome} e \texttt{Nome} restituiscono un valore per ogni tupla selezionata, mentre \texttt{MAX} restituisce un valore unico per tutto l’insieme.
 
   \smallskip
   Per risolvere questa situazione serve il meccanismo di \textbf{raggruppamento}.
@@ -912,7 +948,7 @@ AVG ( [DISTINCT | ALL] ListaAttributi )
 
 
 \section{Clausola \texttt{GROUP BY}}
-Gli operatori aggregate possono essere applicati separatamente a sottoinsiemi di righe.\\[0.2ex]
+Gli operatori aggregati possono essere applicati separatamente a sottoinsiemi di righe.\\[0.2ex]
 La clausola $\verb|GROUP BY|$ permette di specificare come dividere le tabelle in sottoinsiemi.\\[0.2ex]
 La clausola permette di specificare un insieme di attributi e l’interrogazione raggrupperà le righe che possiedono gli stessi valori per questo insieme di attributi.
 
@@ -921,53 +957,54 @@ Consideriamo la seguente tabella:
 
 \smallskip
 \begin{center}
-  \includegraphics[width=0.5\textwidth]{images/Q22.png}
+  \includegraphics[width=0.6\textwidth]{images/tabella-impiegato.png}
 \end{center}
 
 \smallskip
-$\boldsymbol{\mathrm{Q}}$\textbf{: estrarre la somma degli stipendi di tutti gli impiegati dallo stesso dipartimento}
-\begin{lstlisting}[language=SQL]
+$\boldsymbol{\mathrm{Q}_{22}}$\textbf{: estrarre la somma degli stipendi di tutti gli impiegati dallo stesso dipartimento}
+\begin{codiceSQL}
 SELECT Dipart, SUM(Stipendio)
 FROM Impiegato
   GROUP BY Diaprt;
-\end{lstlisting}
+\end{codiceSQL}
 \end{esempiobox}
 
 \smallskip
-In una interrogazione che fa uso della clausola $\verb|GROUP BY|$ può comparire come argomento della $\verb|SELECT|$ solo un sottoinsieme degli attributi usati nella clausola $\verb|GROUP BY|$, oppure, operatori di aggregazione.
+In un'interrogazione che fa uso della clausola $\verb|GROUP BY|$ può comparire come argomento della $\verb|SELECT|$ solo un sottoinsieme degli attributi usati nella clausola $\verb|GROUP BY|$, oppure, operatori di aggregazione.
 
 \subsection{Clausola \texttt{HAVING}}
 È possibile applicare delle selezioni ai gruppi generati tramite la clausola $\verb|GROUP BY|$.\\[0.2ex]
 La clausola $\verb|HAVING|$ permette di specificare delle condizioni che devono essere soddisfatte dai gruppi generati dopo l’esecuzione del raggruppamento tramite $\verb|GROUP BY|$.
 
-La sintassi è:
-\begin{lstlisting}[language=SQL]
+La sintassi dell'interrogazione è:
+\begin{codiceSQL}
 SELECT Dipart, SUM(Stipendio) AS SommaStipendi
 FROM Impiegato
   GROUP BY Dipart
     HAVING SUM(Stipendio) > 100;
-\end{lstlisting}
+\end{codiceSQL}
 
 Dopo aver eseguito i raggruppamenti, vengono mantenuti solo i gruppi che soddisfano la condizione specificata nella clausola $\verb|HAVING|$.
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/esempio.png}
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/esempio.png}
 \end{figure}
 
 \begin{esempiobox}{OSSERVAZIONE}
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-  \item clausola $\texttt{WHERE}$ applica delle selezioni su singole righe, \textcolor{purple}{\textbf{prima}} dell’eventuale raggruppamento tramite $\texttt{GROUP BY}$
-  \item clausola $\texttt{HAVING}$ applica delle selezioni su gruppi, generati a \textcolor{purple}{\textbf{seguito}} dell’esecuzione del raggruppamento tramite $\texttt{GROUP BY}$
+  \item clausola $\texttt{WHERE}$ applica delle selezioni su singole righe \textcolor{purple}{\textbf{prima}} dell’eventuale raggruppamento tramite $\texttt{GROUP BY}$
+  \item clausola $\texttt{HAVING}$ applica delle selezioni su gruppi generati a \textcolor{purple}{\textbf{seguito}} dell’esecuzione del raggruppamento tramite $\texttt{GROUP BY}$
 \end{itemize}
 
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 SELECT Dipart
 FROM Impiegato
-  WHERE Ufficio = 20 -- seleziona righe raggruppate
-    GROUP BY Dipart  -- forma gruppi con righe selezionate
-      HAVING AVG(Stipendio) > 25; -- seleziona gruppi del risultato
+  WHERE Ufficio = 20 --seleziona righe raggruppate
+    GROUP BY Dipart  --forma gruppi con righe selezionate
+      HAVING AVG(Stipendio) > 25; --seleziona gruppi del risultato
   \end{lstlisting}
+\end{codiceSQL}
 \end{esempiobox}
 
 \section{Interrogazioni nidificate}
@@ -988,31 +1025,39 @@ Consideriamo la seguente tabella:
 
 \smallskip
 \begin{center}
-  \includegraphics[width=0.5\textwidth]{images/Q24.png}
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/tabella-impiegato.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/tabella-dipartimento.png}
+  \end{minipage}
 \end{center}
 
 \smallskip
-$\boldsymbol{\mathrm{Q}}$\textbf{: estrarre i dipartimenti in cui non lavorano persone di cognome Rossi}
-\begin{lstlisting}[language=SQL]
-SELCET Nome
+$\boldsymbol{\mathrm{Q}_{23}}$\textbf{: estrarre i dipartimenti in cui non lavorano persone di cognome Rossi}
+\begin{codiceSQL}
+SELECET Nome
 FROM Diparmento
   WHERE Nome <> ALL (
     SELECT Dipart
     FROM Impiegato
       WHERE Cognome = 'Rossi'
   );
-\end{lstlisting}
+\end{codiceSQL}
 
 \smallskip
 Questo equivale a:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 SELECT Nome
 FROM Dipartimento
 EXCEPT
 SELECT Dipart
 FROM Impiegato
 WHERE Cognome = 'Rossi';
-\end{lstlisting}
+\end{codiceSQL}
 \end{esempiobox}
 
 \vario{ATTENZIONE!}{
@@ -1027,19 +1072,19 @@ L’interrogazione nidificata dovrà essere \textbf{valutata separatamente per c
 
 \subsection{Clausola \texttt{EXISTS}}
 L'operatore logico $\verb|EXISTS|$ riceve come parametro un'interrogazione nidificata e restituisce il valore vero solo se l'interrogazione fornisce un risultato non vuoto.\\[0.2ex]
-Questo operatore può essere usato in modo significativo soloquando si ha un passaggio di binding tra la query esterna e quella interna.
+Questo operatore può essere usato in modo significativo solo quando si ha un passaggio di binding tra la query esterna e quella interna.
 
 \begin{esempiobox}{Interrogazione con \texttt{EXISTS}}
 Consideriamo la seguente tabella:
 
 \smallskip
 \begin{center}
-  \includegraphics[width=0.5\textwidth]{images/Q25.png}
+  \includegraphics[width=0.6\textwidth]{images/tabella-persona.png}
 \end{center}
 
 \smallskip
-$\boldsymbol{\mathrm{Q}}$\textbf{: estrarre le persone che hanno degli omonimi (stesso nome e cognome, ma codice fiscale diverso)}
-\begin{lstlisting}[language=SQL]
+$\boldsymbol{\mathrm{Q}_{24}}$\textbf{: estrarre le persone che hanno degli omonimi (stesso nome e cognome, ma codice fiscale diverso)}
+\begin{codiceSQL}
 SELECT *
 FROM Persona AS P
   WHERE EXISTS (
@@ -1049,7 +1094,7 @@ FROM Persona AS P
       P1.Cognome = P.Cognome AND
       P1.CodFiscale <> P.CodFiscale
   );
-\end{lstlisting}
+\end{codiceSQL}
 \end{esempiobox}
 
 \subsection{Clausola \texttt{SELECT}}
@@ -1060,23 +1105,15 @@ Le interrogazioni nidificate possono essere specificate anche come elemento dell
 }
 
 \begin{esempiobox}{Interrogazione con \texttt{SELECT}}
-Consideriamo la seguente tabella:
-
-\smallskip
-\begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q27.png}
-\end{center}
-
-\smallskip
-$\boldsymbol{\mathrm{Q}}$\textbf{: estrarre per ogni cantante il numero di canzoni di cui è autore}
-\begin{lstlisting}[language=SQL]
-  SELECT DISTINCT Nome, NumCanzoni = (
-    SELECT COUNT(*)
-    FROM Autore AS A
-      WHERE A.Nome = C.Nome
-  )
-  FROM Cantante AS C;
-\end{lstlisting}
+$\boldsymbol{\mathrm{Q}_{25}}$\textbf{: estrarre per ogni cantante il numero di canzoni di cui è autore}
+\begin{codiceSQL}
+SELECT DISTINCT Nome, NumCanzoni = (
+  SELECT COUNT(*)
+  FROM Autore AS A
+    WHERE A.Nome = C.Nome
+)
+FROM Cantante AS C;
+\end{codiceSQL}
 \end{esempiobox}
 
 
@@ -1085,16 +1122,8 @@ Le interrogazioni nidificate possono essere utilizzate nella clausola $\verb|FRO
 È possibile creare una catena di interrogazioni, dove ciascuna interrogazione utilizza il risultato della precedente come una tabella di base.
 
 \begin{esempiobox}{Interrogazione con \texttt{FROM}}
-Consideriamo la seguente tabella:
-
-\smallskip
-\begin{center}
-    \includegraphics[width=0.5\textwidth]{images/Q28.png}
-\end{center}
-
-\smallskip
-$\boldsymbol{\mathrm{Q}}$\textbf{: estrarre per ogni cantante che è anche autore di canzoni il numero di canzoni di cui è rispettivamente interprete e autore}
-\begin{lstlisting}[language=SQL]
+$\boldsymbol{\mathrm{Q}_{26}}$\textbf{: estrarre per ogni cantante che è anche autore di canzoni il numero di canzoni di cui è rispettivamente interprete e autore}
+\begin{codiceSQL}
 SELECT DISTINCT C.Nome, C.NumCantate, A.NumScritte
 FROM (
   SELECT Nome, COUNT(*) AS NumCantate
@@ -1104,5 +1133,5 @@ JOIN (
   SELECT Nome, COUNT(*) AS NumScritte
   FROM Autore
 ) AS A ON C.Nome = A.Nome;
-\end{lstlisting}
+\end{codiceSQL}
 \end{esempiobox}

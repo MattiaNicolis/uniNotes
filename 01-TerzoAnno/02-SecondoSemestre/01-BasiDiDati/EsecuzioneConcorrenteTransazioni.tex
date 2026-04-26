@@ -31,8 +31,8 @@ Nella \textbf{perdita di aggiornamento} gli effetti di una transazione concorren
     Consieriamo le seguenti transazioni:
     \[
         \begin{aligned}
-            \mathrm{t_1}: \quad \texttt{BOT}; \quad \mathrm{r_1(x)}; \quad \mathrm{x = x + 1}; \quad \mathrm{w_1(x)}; \quad \texttt{COMMIT}; \quad \texttt{EOT}\\
-            \mathrm{t_2}: \quad \texttt{BOT}; \quad \mathrm{r_2(x)}; \quad \mathrm{x = x + 1}; \quad \mathrm{w_2(x)}; \quad \texttt{COMMIT}; \quad \texttt{EOT}
+            t_1:\; & bot; \; r_1(x); \; x = x + 1; \; w_1(x); \; commit; \; eot \\
+            t_2:\; & bot; \; r_2(x); \; x = x + 1; \; w_2(x); \; commit; \; eot
         \end{aligned}
     \]
 
@@ -50,8 +50,8 @@ Nella \textbf{lettura inconsistente} gli accessi sucessivi ad uno stesso dato al
     Consieriamo le seguenti transazioni:
     \[
         \begin{aligned}
-            \mathrm{t_1}: \quad \texttt{BOT}; \quad \mathrm{r_1(x)}; \quad \mathrm{r_1'(x)}; \quad \mathrm{w_1(x)}; \quad \texttt{COMMIT}; \quad \texttt{EOT}\\
-            \mathrm{t_2}: \quad \texttt{BOT}; \quad \mathrm{r_2(x)}; \quad \mathrm{x = x + 1}; \quad \mathrm{w_2(x)}; \quad \texttt{COMMIT}; \quad \texttt{EOT}
+            t_1:\; & bot; \; r_1(x); \; r_1'(x); \; commit; \; eot \\
+            t_2:\; & bot; \; r_2(x); \; x = x + 1; \; w_2(x); \; commit; \; eot
         \end{aligned}
     \]
 
@@ -69,8 +69,8 @@ Nella \textbf{lettura sporca} viene letto un dato che rappresenta uno stato inte
     Consieriamo le seguenti transazioni:
     \[
         \begin{aligned}
-            \mathrm{t_1}: \quad \texttt{BOT}; \quad \mathrm{r_1(x)}; \quad \texttt{COMMIT}; \quad \texttt{EOT}\\
-            \mathrm{t_2}: \quad \texttt{BOT}; \quad \mathrm{r_2(x)}; \quad \mathrm{x = x + 1}; \quad \mathrm{w_2(x)}; \quad \dots \quad \texttt{ABORT}
+            t_1:\; & bot; \; r_1(x); \; commit; \; eot \\
+            t_2:\; & bot; \; r_2(x); \; x = x + 1; \; w_2(x); \; \ldots abort;
         \end{aligned}
     \]
 
@@ -88,12 +88,17 @@ L'\textbf{aggiornamento fantasma} consiste nell'osservazione di uno stato interm
     Consieriamo le seguenti transazioni:
     \[
         \begin{aligned}
-            \text{risorse}: \mathrm{x}, \mathrm{y}, \mathrm{z}\\
-            \text{vincoli}: \mathrm{x + y + z = 100}\\
-            \mathrm{t_1}: \quad \texttt{BOT}; \quad \mathrm{r_1(y)}; \quad \mathrm{r_1(x)}; \quad \mathrm{r_1(s)}; \quad \mathrm{s = x + y +z}; \quad \texttt{EOT}\\
-            \mathrm{t_2}: \quad \texttt{BOT}; \quad \mathrm{r_2(y)}; \quad \mathrm{y = y + 10}; \quad \mathrm{z = z - 10}; \quad \mathrm{w_2(x)}; \quad \mathrm{w_2(z)}; \quad \texttt{COMMIT} \quad \texttt{EOT}
+        Risorse &: x, y, z \\
+        Vincoli &: x + y + z = 100 \\
         \end{aligned}
-    \]
+    \] 
+    \[
+        \begin{aligned}
+        t_1:\; & bot; \; r_1(y); \; r_1(x); \; r_1(z); \; s = x + y + z; \; eot \\
+        t_2:\; & bot; \; r_2(y); \; y = y + 10; \; r_2(z); \; z = z - 10; \; w_2(y); \; w_2(z);
+        \; commit; \; eot
+        \end{aligned}
+    \] 
 
     Simuliamo l'esecuzione concorrente di $\mathrm{t_1}$ e $\mathrm{t_2}$:
     \begin{figure}[H]
@@ -166,8 +171,817 @@ Di conseguenza, vengono tolti dagli schedule tutte le operazioni delle transazio
     \]
 }
 
-\subsection{Conflict-serializzabile}
+\definizione{view-equivalenza}{
+    Due schedule S1 e S2 sono view-equivalenti (s1 S2) se possiedono le stesse relazioni LEGGE\_DA e SCRITTURE\_FINALI.
+}
+
+\definizione{viwe-serializzabilità}{
+    Uno schedule S è viwe-serializzabile (VSR) se esiste uno schedule seriale s' tale che S S'.
+
+    \vario{Attenzione}{
+        Gli schedule seriale S' si generano considerando tutte le possibili permutazioni delle transazioni (non delle operazioni delle transazioni) che compaiono in S.
+
+        inoltre, non si deve cambiare l'ordine delle operazioni di ciascuna transazione perchè ciò significherebbe modificare la transazione.
+    }
+}
+
+Gli schedule corrispondenti alle anomalie di:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item perdita di aggiornamento
+    \item letture inconsistenti
+    \item aggiornamenti fantasmi
+\end{itemize}
+
+non sono view-serializzabili.\\[0.2ex]
+Inoltre, l'algoritmo per il test di view-equivalenza tra due schedule è di complessità lineare. mentre per il test di view-serializzabilità di uno schedule è di complessità esponenziale.
+
+\smallskip
+In conclusione si è osservato che la view-serializzabilità richiede l'ipotesi di commit-proiezione, e algoritmi di complessità troppo elevata, quindi, non è applicabile nei sistemi reali.
+
+\esercizio{perdita di aggiornamento}{
+    Consideriamo le seguenti transazioni:
+  \[
+  \begin{aligned}
+    t_1:\; & r_1(x); \; w_1(x) \\
+    t_2:\; & r_2(x); \; w_2(x)
+  \end{aligned}
+  \] 
+  Eseguite con lo schedule:
+  \[
+    S_{pa} = r_1(x); \; r_2(x); \; w_2(x); \; w_1(x);
+  \] 
+  Questo schedule è view serializzabile?
+
+  \vspace{1em}
+  \noindent
+  Calcoliamo le relazioni:
+  \begin{itemize}
+    \item \texttt{LEGGE\_DA}\( (S_{pa}) = \varnothing \)
+    \item \texttt{SCRITTURE\_FINALI}\( (S_{pa}) = \{ w_1(x) \} \)
+  \end{itemize}
+  
+  \vspace{1em}
+  \noindent
+  Bisogna generare tutti i possibili schedule seriali per determinare se
+  esiste uno schedule seriale \( S' \) tale che \( S_{pa} \approx_V S' \).
+  Gli schedule seriali sono:
+  \begin{itemize}
+    \item \( S_{12} = r_1(x); \; w_1(x); \; r_2(x); \; w_2(x); \) 
+      \begin{itemize}
+        \item \texttt{LEGGE\_DA}\( (S_{12}) = \{ (r_2(x), w_1(x)) \} \)
+        \item \texttt{SCRITTURE\_FINALI}\( (S_{12}) = \{ w_1(x) \} \)
+      \end{itemize}
+      Osserviamo che \( S_{pa} \not\approx_V S_{12} \)
+
+    \item \( S_{21} = r_2(x); \; w_2(x); \; r_1(x); \; w_1(x); \) 
+      \begin{itemize}
+        \item \texttt{LEGGE\_DA}\( (S_{21}) = \{ (r_1(x), w_2(x)) \} \)
+        \item \texttt{SCRITTURE\_FINALI}\( (S_{21}) = \{ w_1(x) \} \)
+      \end{itemize}
+      Osserviamo che \( S_{pa} \not\approx_V S_{21} \)
+  \end{itemize}
+  Avendo provato per tutte le possibili permutazioni si può dire che lo schedule
+  \( S_{pa} \) \textbf{non è view-serializzabile}.
+}
+
+\esercizio{lettura inconsistente}{
+    Consideriamo le seguenti transazioni:
+  \[
+  \begin{aligned}
+    t_1:\; & r_1(x); \; w_1(x); \; r_1(y); \; w_1(y) \\
+    t_2:\; & r_2(z); \; r_2(x); \; w_2(x); \; w_2(z)
+  \end{aligned}
+  \] 
+  Eseguite con lo schedule:
+  \[
+    S_1 = r_1(x); \; w_1(x); \; r_2(z); \; r_1(y); \; w_1(y); \; r_2(x); \; w_2(x); \;
+    w_2(z);
+  \] 
+  Questo schedule è view serializzabile?
+
+  \vspace{1em}
+  \noindent
+  Calcoliamo le relazioni:
+  \begin{itemize}
+    \item \texttt{LEGGE\_DA}\( (S_1) = \left\{ (r_2(x), w_1(x)) \right\} \)
+    \item \texttt{SCRITTURE\_FINALI}\( (S_1) = \left\{ w_2(x), w_1(y), w_2(z) \right\} \)
+  \end{itemize}
+
+  \vspace{1em}
+  \noindent
+  Bisogna generare tutti i possibili schedule seriali per determinare se
+  esiste uno schedule seriale \( S' \) tale che \( S_1 \approx_V S' \).
+  Gli schedule seriali sono:
+  \begin{itemize}
+    \item \( S_{12} = t_1 t_2 \) 
+
+    \item \( S_{21} = t_2 t_1 \) 
+  \end{itemize}
+  Al posto di creare tutte le permutazioni degli schedule seriali, cerchiamo di
+  osservare le relazioni LEGGE\_DA e SCRITTURE\_FINALI per capire se \( S_1 \) è
+  view-equivalente ad \( S_{12} \) o \( S_{21} \).
+
+  Dalla presenza di \( w_2(x) \) nelle scritture finali di \( S_1 \) si nota che
+  \( t_1 < t_2 \) perchè \( w_2(x) \) è l'ultima scrittura di \( x \) in \( S_1 \), 
+  e questa operazione viene eseguita solo da \( t_2 \) e di conseguenza va eseguita
+  dopo \( t_1 \). Da ciò sappiamo che sicuramente \( S_1 \not\approx_V S_{21} \) e
+  ci rimane da controllare soltanto se \( S_1 \approx_V S_{12} \):
+  \[
+    S_{12} = r_1(x); \; w_1(x); \; r_1(y); \; w_1(y); \; r_2(z); \; r_2(x); \; w_2(x); \;
+    w_2(z);
+  \] 
+  \begin{itemize}
+    \item \texttt{LEGGE\_DA}\( (S_{12}) = \left\{ (r_2(x), w_1(x)) \right\} \)
+    \item \texttt{SCRITTURE\_FINALI}\( (S_{12}) = \left\{ w_2(x), w_1(y), w_2(z) \right\} \)
+  \end{itemize}
+  Osserviamo che \( S_1 \approx_V S_{12} \) e quindi \( S_1 \) è view-serializzabile.
+}
+
+\esercizio{}{
+    Consideriamo le seguenti transazioni:
+  \[
+  \begin{aligned}
+    t_1:\; & r_1(x); \; w_1(x); \; r_1(y); \; w_1(y) \\
+    t_2:\; & r_2(z); \; r_2(x); \; w_2(x); \; w_2(z)
+  \end{aligned}
+  \] 
+  Eseguite con lo schedule:
+  \[
+    S_1 = r_1(x); \; w_1(x); \; r_2(z); \; r_1(y); \; w_1(y); \; r_2(x); \; w_2(x); \;
+    w_2(z);
+  \] 
+  Questo schedule è view serializzabile?
+
+  \vspace{1em}
+  \noindent
+  Calcoliamo le relazioni:
+  \begin{itemize}
+    \item \texttt{LEGGE\_DA}\( (S_1) = \left\{ (r_2(x), w_1(x)) \right\} \)
+    \item \texttt{SCRITTURE\_FINALI}\( (S_1) = \left\{ w_2(x), w_1(y), w_2(z) \right\} \)
+  \end{itemize}
+
+  \vspace{1em}
+  \noindent
+  Bisogna generare tutti i possibili schedule seriali per determinare se
+  esiste uno schedule seriale \( S' \) tale che \( S_1 \approx_V S' \).
+  Gli schedule seriali sono:
+  \begin{itemize}
+    \item \( S_{12} = t_1 t_2 \) 
+
+    \item \( S_{21} = t_2 t_1 \) 
+  \end{itemize}
+  Al posto di creare tutte le permutazioni degli schedule seriali, cerchiamo di
+  osservare le relazioni LEGGE\_DA e SCRITTURE\_FINALI per capire se \( S_1 \) è
+  view-equivalente ad \( S_{12} \) o \( S_{21} \).
+
+  Dalla presenza di \( w_2(x) \) nelle scritture finali di \( S_1 \) si nota che
+  \( t_1 < t_2 \) perchè \( w_2(x) \) è l'ultima scrittura di \( x \) in \( S_1 \), 
+  e questa operazione viene eseguita solo da \( t_2 \) e di conseguenza va eseguita
+  dopo \( t_1 \). Da ciò sappiamo che sicuramente \( S_1 \not\approx_V S_{21} \) e
+  ci rimane da controllare soltanto se \( S_1 \approx_V S_{12} \):
+  \[
+    S_{12} = r_1(x); \; w_1(x); \; r_1(y); \; w_1(y); \; r_2(z); \; r_2(x); \; w_2(x); \;
+    w_2(z);
+  \] 
+  \begin{itemize}
+    \item \texttt{LEGGE\_DA}\( (S_{12}) = \left\{ (r_2(x), w_1(x)) \right\} \)
+    \item \texttt{SCRITTURE\_FINALI}\( (S_{12}) = \left\{ w_2(x), w_1(y), w_2(z) \right\} \)
+  \end{itemize}
+  Osserviamo che \( S_1 \approx_V S_{12} \) e quindi \( S_1 \) è view-serializzabile.
+}
+
+\esercizio{view\_serializzabilita}{
+    Consideriamo le seguenti transazioni:
+  \[
+    \begin{aligned}
+      t_1:\; & r_1(x); \; w_1(x); \; w_1(y) \\
+      t_2:\; & r_2(y); \; r_2(x) \\
+      t_3:\; & w_3(x); \; r_3(y); \; w_3(y)
+    \end{aligned}
+  \] 
+  \[
+    S_2 = r_1(x); \; w_1(x); \; w_3(x); \; r_2(y); \; r_3(y); \; w_3(y); \; w_1(y); \;
+    r_2(x)
+  \] 
+  Questo schedule è view serializzabile?
+
+  \vspace{1em}
+  \noindent
+  Calcoliamo le relazioni:
+  \begin{itemize}
+    \item \texttt{LEGGE\_DA}\( (S_2) = \left\{ (r_2(x), w_3(x)) \right\} \)
+    \item \texttt{SCRITTURE\_FINALI}\( (S_2) = \left\{ w_3(x), w_1(y) \right\} \)
+  \end{itemize}
+
+  \vspace{1em}
+  \noindent
+  Siccome ci sono 6 possibili permutazioni vediamo se è possibile scartarne alcune
+  a priori.
+  \begin{itemize}
+    \item L'insieme \texttt{SCRITTURE\_FINALI}\( (S_2) \) implica:
+      \begin{itemize}
+        \item \( t_1 < t_3 \) perchè \( w_3(x) \) è l'ultima scrittura di \( x \) in
+          \( S_2 \) e questa operazione viene eseguita solo da \( t_3 \) e di
+          conseguenza va eseguita dopo \( t_1 \)
+
+        \item \( t_3 < t_1 \) perchè \( w_1(y) \) è l'ultima scrittura di \( y \) in
+          \( S_2 \) e questa operazione viene eseguita solo da \( t_1 \) e di
+          conseguenza va eseguita dopo \( t_3 \)
+      \end{itemize}
+      Si osserva che \( t_1 < t_3 \) e \( t_3 < t_1 \) è una contraddizione, cioè
+      non esiste uno schedule seriale che le rispetti entrambe e quindi si
+      può concludere che \( S_2 \) \textbf{non è view-serializzabile}.
+
+    \item L'insieme \texttt{LEGGE\_DA}\( (S_2) \) implica:
+      \begin{itemize}
+        \item \( t_3 < t_2 \) perchè \( r_2(x) \) (in \( t_2 \)) legge da \( w_3(x) \)
+          (in \( t_3 \)) e quindi \( (r_2(x), w_3(x)) \in \texttt{LEGGE\_DA} \) 
+
+        \item \( t_1 < t_3 \) per garantire \( (r_1(x), w_3(x)) \notin \texttt{LEGGE\_DA} \)
+        \item \( t_2 < t_3 \) per garantire \( (r_2(x), w_3(x)) \in \texttt{LEGGE\_DA} \)
+        \item \( t_2 < t_1 \) per garantire \( (r_2(x), w_1(x)) \notin \texttt{LEGGE\_DA} \)
+        \item \( t_3 < t_1 \) per garantire \( (r_3(x), w_1(x)) \notin \texttt{LEGGE\_DA} \)
+      \end{itemize}
+      Si osserva che \( t_1 < t_3 \) e \( t_3 < t_1 \) è una contraddizione, quindi
+      si può concludere che \( S_2 \) \textbf{non è view-serializzabile}.
+  \end{itemize}
+}
+
+\esercizio{view\_serializzabilita\_2}{
+    Consideriamo le seguenti transazioni:
+  \[
+    \begin{aligned}
+      t_1:\; & r_1(x); \; w_1(x); \; w_1(y); \; w_1(z) \\
+      t_2:\; & r_2(x); \; w_2(x) \\
+      t_3:\; & r_3(x); \; w_3(y); \; w_3(x) \\
+      t_4:\; & r_4(z) \\
+      t_5:\; & w_5(x); \; w_5(y); \; r_5(z)
+    \end{aligned}
+  \] 
+  eseguite con lo schedule:
+  \[
+    \begin{aligned}
+      S_3 =& r_1(x); \; r_2(x); \; w_2(x); \; r_3(x); \; r_4(z); \; w_1(x); \; w_3(y); \;
+      w_3(x); \; w_1(y); \\
+          &\; w_5(x); \; w_1(z); \; w_5(y); \; r_5(z)
+    \end{aligned}
+  \] 
+  Questo schedule è view serializzabile?
+
+  \vspace{1em}
+  \noindent
+  Calcoliamo le relazioni:
+  \begin{itemize}
+    \item \texttt{LEGGE\_DA}\( (S_3) = \left\{ (r_3(x), w_2(x)), (r_5(z), w_1(z)) \right\} \)
+    \item \texttt{SCRITTURE\_FINALI}\( (S_3) = \left\{ w_5(x), w_5(y), w_1(z) \right\} \)
+  \end{itemize}
+
+  \vspace{1em}
+  \noindent
+  Le permutazioni di tutte le transazioni sono \( 5! \) e quindi è necessario cercare
+  di scartarne alcune:
+  \begin{itemize}
+    \item Considerando \texttt{SCRITTURE\_FINALI}\( (S_3) \) si ha che:
+      \begin{itemize}
+        \item \( w_5(x) \Rightarrow t_2 < t_5,\; t_1 < t_5,\; t_3 < t_5 \) 
+        \item \( w_5(y) \Rightarrow t_3 < t_5,\; t_1 < t_5\) 
+      \end{itemize}
+      Da queste informazioni non si rilevano contraddizioni, quindi si procede con
+      l'analisi di \texttt{LEGGE\_DA}\( (S_3) \).
+
+    \item Considerando \texttt{LEGGE\_DA}\( (S_3) \) si ha che:
+      \begin{itemize}
+        \item \( (r_3(x), w_2(x)) \Rightarrow t_2 < t_3 \)
+        \item \( (r_5(z), w_1(z)) \Rightarrow t_1 < t_5 \)
+      \end{itemize}
+      Da queste informazioni non si rilevano contraddizioni, quindi si procede
+      osservando cosa \textbf{non compare} nell'insieme \texttt{LEGGE\_DA}\( (S_3) \):
+      \begin{itemize}
+        \item \( (r_1(x), w_2(x)) \notin \texttt{LEGGE\_DA}(S_3) \Rightarrow
+           t_1 < t_2 \)
+
+         \item \( (r_1(x), w_3(x)) \notin \texttt{LEGGE\_DA}(S_3) \Rightarrow
+           t_1 < t_3 \)
+
+         \item \( (r_1(x), w_5(x)) \notin \texttt{LEGGE\_DA}(S_3) \Rightarrow
+           t_1 < t_5 \)
+
+         \item \( (r_2(x), w_1(x)) \notin \texttt{LEGGE\_DA}(S_3) \Rightarrow
+           t_2 < t_1 \) Questo è in contraddizione con \( t_1 < t_2 \)
+           e si può concludere che \( S_3 \) \textbf{non è view-serializzabile}.
+       \end{itemize}
+  \end{itemize}
+}
+
+\subsection{Conflict-equivalenza}
+\definizione{conflitto}{
+    Dato uno schedule S, si dice che una coppia di operazioni (ai, aj), dove ai e aj compaiono nello schedule S, rappresentano un conflitto se:
+    \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+        \item appartengono a transazioni diverse (i j)
+        \item entrambe operano sulla stessa risorsa
+        \item almeno una di esse è un'operzaione di scrittura
+        \item ai comapare in S prima di aj
+    \end{itemize}
+}
+
+\definizione{conflit-equivalenza}{
+    Due schedule S1 e S2 sono conflit-equivalenti (S1 S2) se possiedono le stesse operazioni e gli stessi conflitti, cioè se le operazioni in conflittp sono nello stesso rdine nei due schedule.
+}
+
+\definizione{conflict-serializzabile}{
+    Uno schedule S è conflit-serializzabile (CSR) se esiste uno schedule seriale S' tale che S S'.
+}
+
+L'algoritmo per il test di conflit-serializzabilità di uno schedule è di complessità linerare.\\[0.2ex]
+Dato il seguente schedule S:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item si costruisce il grafp dei conflitti GN,A dove:
+    \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+        \item N = t1 ... tn è l'insieme delle transazioni di S
+        \item (ti, tj) in (appartiene) A se esiste almeno un conflitto (ai, aj) in S
+    \end{itemize}
+    \item se il grafo è aciclico, allora S è conflit-serializzabile
+    
+    \vario{Dimostrazione}{
+        \begin{enumerate}[itemsep=\medskipamount]
+            \item se S è CSR, cioè esiste uno schdeule S seriale tale che S Sc allora il suo grafo è aciclico.
+            
+            \smallskip
+            \textbf{Ipotesi}: le transazioni di Sr sono ordinate:
+            \[
+                t_1, t_2, \dots, t_n
+            \]
+
+            Poichè S Sr, allora Sr ha tutti i conflitti di S con operazioni esattamente nello stesso ordine.
+
+            Quindi nel grafo dei conflitti di Sr, ci possono essere solo archi (i,j) con i<j, e questo vuol dire che non possono esserci cicli poichè un ciclo richiederebbe un arco (i, j) con j > i che è impossibile.
+
+            Siccome S Sr, allora hanno lo stesso grafo dei conflitti e, quindi, anche il grafo dei conflitti di S è aciclico.
+            \item se il grafo S è aciclico, allora S è CSR cioè esiste uno schdeule Sr seriale tale che S Sr e, quindi, S e Sr hanno gli stessi conflitti e, quindi, lo stesso grafo.
+            
+            \smallskip
+            \textbf{Ipotesi}: il grafo dei conflitti di S è aciclico e, quindi, esiste un ordinamento topologico, cioè un'enumerazione dei nodi tale che il garfo contiene solo archi (i, j) con i < j.
+
+            Utilizzando questo ordinamento toplogico possiamo definire un ordine delle transazioni che produce lo stesso grafo e, quindi, siccome le transazioni sono ordinate s ha uno schdeule seriale.
+        \end{enumerate}
+    }
+\end{itemize}
+
+Richede comunque l'ipotesi di commit-proiezione.
+
+\esempio{perdita di aggiornamento}{
+    Consideriamo le seguenti transazioni:
+  \[
+    \begin{aligned}
+      t_1:\; & r_1(x); \; w_1(x) \\
+      t_2:\; & r_2(x); \; w_2(x)
+    \end{aligned}
+  \] 
+  Eseguite con lo schedule:
+  \[
+    S_{pa}:\; r_1(x); \; r_2(x); \; w_2(x); \; w_1(x);
+  \] 
+  L'insieme dei conflitti è:
+  \[
+    CONFLITTI(S_{pa}) = \left\{ (r_1(x), w_2(x)),\; (r_2(x), w_1(x)),\; (w_2(x), w_1(x)) \right\}
+  \] 
+  Generiamo il grafo dei conflitti:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[circle, draw] (t1) at (0,0) {\( t_1 \)};
+      \node[circle, draw] (t2) at (3,0) {\( t_2 \)};
+
+      \draw[->] (t1) edge [bend left] node[above] {\( r_1(x), w_2(x) \)} (t2);
+      \draw[->] (t2) edge [bend left] node[below] {\( r_2(x), w_1(x) \)} (t1);
+    \end{tikzpicture}
+  \end{figure}
+  \noindent
+  Siccome il grafo ha un ciclo \( S_{pa} \) \textbf{non è conflict-serializzabile}.
+}
+
+\esempio{lettura inconsistente}{
+    Consideriamo le seguenti transazioni:
+  \[
+    \begin{aligned}
+      t_1:\; & r_1(x); \; r'_1(x) \\
+      t_2:\; & r_2(x); \; w_2(x)
+    \end{aligned}
+  \] 
+  Eseguite con lo schedule:
+  \[
+    S_{pa}:\; r_1(x); \; r_2(x); \; w_2(x); \; r'_1(x);
+  \] 
+  L'insieme dei conflitti è:
+  \[
+    CONFLITTI(S_{pa}) = \left\{ (r_1(x), w_2(x)),\; (w_2(x), r'_1(x)) \right\}
+  \] 
+  Generiamo il grafo dei conflitti:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[circle, draw] (t1) at (0,0) {\( t_1 \)};
+      \node[circle, draw] (t2) at (3,0) {\( t_2 \)};
+
+      \draw[->] (t1) edge [bend left] node[above] {\( r_1(x), w_2(x) \)} (t2);
+      \draw[->] (t2) edge [bend left] node[below] {\( w_2(x), r'_1(x) \)} (t1);
+    \end{tikzpicture}
+  \end{figure}
+}
+
+\teorema{conflict-serializzabile}{
+    La conflict-serializzabilità è una condixzione sufficiente, ma non necessaria per la view-serializzabilità, cioè:
+    \[
+        \mathrm{CSR \subset VSR}
+    \]
+
+    \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.5\textwidth]{images/VSR-CSR.png}
+     \caption{relazione tra conflict-serializzabilità e view-serializzabilità}   
+    \end{figure}
+
+    \textbf{Dimostrazione}
+    S è CSR $\Rightarrow$ S è VSR (se S non è CSR, allora non si può dire nulla sulla VSR).
+
+    \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
+        \item \textbf{dimostrazione che} $\mathbf{CSR \subset VSR}$: basta trovare un controesempio
+        \[
+            S \in VSR \text{ma} S \notin CSR
+        \]
+
+        Consideriamo:
+        \[
+            S = r_1(x); w_2(x); w_1(x); w_3(x)
+        \]
+
+        Gli insiemi sono:
+        \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+            \item \texttt{LEGGE\_DA(S)} = $\emptyset$
+            \item \texttt{SCRITTURE\_FINALI(S)} = $\{w_3(x)\}$
+        \end{itemize}
+
+        Quindi questo schdeule è VSR perchp esiste uno schdeule Sr tale che Sr S:
+        \[
+            S_r = r_1(x); w_2(x); w_1(x); w_3(x)
+        \]
+
+        che ha gli stessi insiemi:
+        \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+            \item \texttt{LEGGE\_DA(Sr)} = $\emptyset$
+            \item \texttt{SCRITTURE\_FINALI(Sr)} = $\{w_3(x)\}$
+        \end{itemize}
+
+        Ora dimostriamo che questo schdeule non è CSR.
+
+        Il suo insieme dei conflitti è:
+        \[
+            \begin{aligned}
+                \texttt{CONFLITTI(S)} &= \{(r_1(x), w_2(x)), (r_1(x), w_3(x)), (w_2(x), w_1(x)), (w_2(x), w_3(x))\}\\
+                &= \{(w_1(x), w_3(x))\}
+            \end{aligned}
+        \]
+
+        Costruiamo il grafico dei conflitti:
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.4\textwidth]{images/grafico-conflitti.png}
+        \end{figure}
+
+        \item \textbf{dimostrazione che} $\mathbf{CSR \Rightarrow VSR}$: se $S_1 \equiv_C S_2$ e dimostriamo $s_1 \equiv_V S_2$
+        \begin{itemize}[label=$\circ$, itemsep=\medskipamount]
+            \item $S_1$ e $S_2$ devono avere lo stesso insieme di \texttt{SCRITTURE\_FINALI}, altrimenti ci sarebbero due scritture sulla stessa risorsa da parte di transazioni in un ordine diverso e questo produrebbe un conflittodiverso
+            \item devono avere lo stesso insieme di \texttt{LEGGE\_DA}, altrimenti ci sarebbe un conflitto, composto da una latteura e una scrittura, diverso e, quindi, siccome il conflitto è diverso, allora $S_1$ e $S_2$ non sono conflit-equivalenti
+        \end{itemize}
+    \end{itemize}
+
+    \medskip
+    Quindi se S:
+    \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+        \item è CSR $\Rightarrow$ S è VSR
+        \item non è CSR $\Rightarrow$ S non è VSR
+    \end{itemize}
+}
+
+\esempio{}{
+    Consideriamo il seguente schedule:
+  \[
+    S_1 = r_1(x); \; w_1(x); \; r_2(z); \; r_1(y); \; w_1(y); \; r_2(x); \; w_2(x); \;
+    w_2(z);
+  \] 
+  Verifichiamo se \( S_1 \) è VSR, per farlo vediamo se prima è CSR controllando
+  l'insieme dei conflitti:
+  \[
+    CONFLITTI(S_1) = \left\{ (r_1(x), w_2(x)),\; (w_1(x), r_2(x)),\; (w_1(x), w_2(x)) \right\}
+  \] 
+  Costruiamo il grafo dei conflitti:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+      node distance=2cm
+      ]
+      \node[circle, draw] (t1) at (0,0) {\( t_1 \)};
+      \node[circle, draw, right of=t1] (t2) {\( t_2 \)};
+
+      \draw[->] (t1) to node[above] {} (t2);
+    \end{tikzpicture}
+  \end{figure}
+  \noindent
+  Siccome il grafo è aciclico, allora \( S_1 \) è CSR e quindi \( S_1 \) è VSR.
+}
+
+\esempio{}{
+    Consideriamo lo schedule:
+  \[
+    S_2 = r_1(x); \; w_1(x); \; w_3(x); \; r_2(y); \; r_3(y); \; w_3(y); \; w_1(y); \;
+    r_2(x);
+  \] 
+  Verifichiamo se \( S_2 \) è VSR, per farlo vediamo se prima è CSR controllando
+  l'insieme dei conflitti:
+  \[
+    \begin{aligned}
+alignedCONFLITTI(S_2) =& 
+      \{
+        (r_1(x), w_3(x)),\;
+        (w_1(x), w_3(x)),\;
+        (w_1(x), r_2(x)), \\
+                             &(w_3(x), r_2(x)),\;
+                             (r_2(y), w_3(y)),\;
+                             (r_2(y), w_1(y)), \\
+                             &(r_3(y), w_1(y)),\;
+                             (w_3(y), w_1(y))
+                           \} 
+    \end{aligned}
+  \]
+  Costruiamo il grafo dei conflitti:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[circle, draw] (t1) at (0,0) {\( t_1 \)};
+      \node[circle, draw] (t2) at (1.5,1.5) {\( t_2 \)};
+      \node[circle, draw] (t3) at (3,0) {\( t_3 \)};
+
+      \draw[->] (t1) edge [bend left=20] node[above] {} (t2);
+      \draw[->] (t2) edge [bend left=20] node[above] {} (t1);
+      \draw[->] (t1) edge [bend left=20] node[above] {} (t3);
+      \draw[->] (t3) edge [bend left=20] node[above] {} (t1);
+      \draw[->] (t3) edge [bend left=20] node[above] {} (t2);
+      \draw[->] (t2) edge [bend left=20] node[above] {} (t3);
+    \end{tikzpicture}
+  \end{figure}
+  \noindent
+  Il grafo è ciclico, quindi \( S_2 \) \textbf{non è conflict-serializzabile} e di
+  conseguenza \( S_2 \) \textbf{non è view-serializzabile}.
+
+  \vspace{1em}
+  \noindent
+  Questo schedule lo avevamo verificato anche nell'esercizio
+  \ref{esercizio_view_serializzabilita} e avevamo concluso che \( S_2 \) non è
+  view-serializzabile, e questo conferma che \( S_2 \) non è conflict-serializzabile
+   perchè \( CSR \subset VSR \).
+}
+
+\esempio{}{
+    Consideriamo lo schedule:
+  \[
+    \begin{aligned}
+      S_3 =& r_1(x); \; r_2(x); \; w_2(x); \; r_3(x); \; r_4(z); \; w_1(x); \; w_3(y); \;
+      w_3(x); \; w_1(y);\\
+           &w_5(x); \; w_1(z); \; w_5(y); \; r_5(z);
+    \end{aligned}
+  \] 
+  Verifichiamo se \( S_3 \) è VSR, per farlo vediamo se prima è CSR controllando
+  l'insieme dei conflitti:
+  \[
+    \begin{aligned}
+      CONFLITTI(S_3) =& \{
+        (r_1(x), w_2(x)),\;
+        (r_1(x), w_3(x)),\;
+        (r_1(x), w_5(x)), \\
+                      &(r_2(x), w_1(x)),\;
+        (r_2(x), w_3(x)),\;
+        (r_2(x), w_5(x)), \\
+                      &(w_2(x), r_3(x)),\;
+        (w_2(x), w_1(x)),\;
+        (w_2(x), w_3(x)), \\
+                      &(w_2(x), w_5(x)),\;
+        (r_3(x), w_1(x)),\;
+        (r_3(x), w_5(x)), \\
+                      &(r_4(z), w_1(z)),\;
+        (w_1(x), w_3(x)),\;
+        (w_1(x), w_5(x)), \\
+                      &(w_3(y), w_1(y)),\;
+        (w_3(y), w_5(y)),\;
+        (w_3(x), w_5(x)), \\
+                      &(w_1(y), w_5(y)),\;
+        (w_1(z), r_5(z))
+      \} 
+    \end{aligned}
+  \] 
+  Il grafo dei conflitti è ciclico, allora \( S_3 \) \textbf{non è conflict-serializzabile} e di
+  conseguenza \( S_3 \) \textbf{non è view-serializzabile}.
+
+  \vspace{1em}
+  \noindent
+  Questo schedule lo avevamo verificato anche nell'esercizio
+  \ref{esercizio_view_serializzabilita_2} e avevamo concluso che \( S_3 \) non è
+  view-serializzabile.
+}
 
 \subsection{Locking a due fasi stretto}
+Il locking a due fasi (2PL, Two-Phase Locking) è il metodo applicato nei sistemi reali
+per la gestione dell'esecuzione concorrente delle transazioni perchè non richiede di
+conoscere in anticipo l'esito delle transazioni.\\[0.2ex]
+Il locking a due fasi è un sottoinsieme della conflict-serializzabilità.\\[0.2ex]
+Gli aspetti che caratterizzano il locking a due fasi sono i seguenti:
+\begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
+  \item \textbf{meccanismo di base per la gestione dei lock}: si basa sull'introduzione di alcune \textbf{primitive di lock} che consentono
+    alle transazioni di bloccare le risorse sulle quali vogliono agire con operazioni
+    di lettura e scrittura. Le primitive di lock sono le seguenti:
+    \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+      \item \( r\_lock_K(x) \): richiesta di un lock \textbf{condiviso} da parte della
+        transazione \( t_K \) sulla risorsa \( x \) per eseguire una lettura
+
+      \item \( w\_lock_K(x) \): richiesta di un lock \textbf{esclusivo} da parte della
+        transazione \( t_K \) sulla risorsa \( x \) per eseguire una scrittura
+
+      \item \( unlock_K(x) \): richiesta da parte della transazione \( t_K \) di
+        liberare la risorsa \( x \) da un precedente lock
+    \end{itemize}
+    Le transazioni devono seguire le seguenti regole per applicare le primitive di
+    lock:
+    \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+      \item ogni \textbf{lettura} deve essere preceduta da un \( r\_lock \) e seguita
+        da un \( unlock \). Sono ammessi più \( r\_lock \) contemporanei sulla stessa
+        risorsa (lock condiviso)
+
+      \item ogni \textbf{scrittura} deve essere preceduta da un \( w\_lock \) e seguita
+        da un \( unlock \). \textbf{Non} sono ammessi più \( w\_lock \) (oppure
+        \( w\_lock \) e \( r\_lock \)) contemporanei sulla stessa risorsa (lock
+        esclusivo)
+    \end{itemize}
+    Se una transazione segue le precedenti regole, allora si dice \textbf{ben formata}
+    rispetto al locking.
+
+  \item \textbf{politica di concessione dei lock sulle risorse}: il gestore dei lock (o gestore della concorrenza) mantiene per ogni risorsa \( x \) 
+    le seguenti informazioni:
+    \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+      \item \textbf{stato}: \( s(x) \in \left\{ libero, r\_lock, w\_lock \right\} \) 
+
+      \item \textbf{transazioni in r\_lock}: \( c(x) = \left( t_1, \ldots, t_n \right)  \),
+        dove \( t_1, \ldots, t_n \) hanno un \( r\_lock \) su \( x \)
+    \end{itemize}
+    Il comportamento del gestore dei lock è descritto dalla seguente tablella:
+    \begin{table}[H]
+      \centering
+      \includegraphics[width=0.5\textwidth]{images/gestore-lock.png}
+    \end{table}
+
+  \item \textbf{regola che garantisce la serializzabilità}: una transazione \textbf{dopo aver rilasciato un lock non può acquisirne altri}.
+    Questa regola è visualizzata dal seguente grafico:
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.6\textwidth]{images/locking-due-fasi.png}
+      \caption{Locking a due fasi}
+    \end{figure}
+\end{itemize}
+
+\esempio{perdita di aggiornamento}{
+    Consideriamo le seguenti transazioni:
+  \[
+  \begin{aligned}
+    t_1:\; & r_1(x); \; w_1(x) \\
+    t_2:\; & r_2(x); \; w_2(x)
+  \end{aligned}
+  \] 
+  Eseguite con lo schedule:
+  \[
+    S_{pa}:\; r_1(x); \; r_2(x); \; w_2(x); \; w_1(x);
+  \]
+  \begin{enumerate}[itemsep=\smallskipamount]
+    \item \( r_1(x) \) richiede un \( r\_lock_1(x) \) 
+    \item \( r_2(x) \) richiede un \( r\_lock_2(x) \)
+    \item \( w_2(x) \) richiede un \( w\_lock_2(x) \), ma lo stato \( s(x) = r\_lock \),
+      con \( c(x) = \left\{ t_1, t_2 \right\} \), quindi \( w_2(x) \) per ottenere
+      \( w\_lock_2(x) \) deve attendere che \( t_1 \) rilasci \( r\_lock(x) \)
+      ma se \( t_1 \) rilascia \( r\_lock(x) \) e quindi inizierebbe la sua fase
+      discendente impedendogli di acquisire altri lock e di conseguenza
+      \( w\_lock_1(x) \) non è più possibile per la serializzabilità del 2PL
+  \end{enumerate}
+
+  \smallskip
+  Di conseguenza questo schedule non è 2PL.
+}
+
+Il locking a due fasi stretto (Strict 2PL) è una variante del locking a due fasi che
+introduce una condizione aggiuntiva per rimuovere la necessità dell'ipotesi di
+commit-proiezione. La condizione aggiuntiva è la seguente: Una transazione può
+rilasciare i lock solo quando ha eseguito correttamente un \textbf{commit} o un
+\textbf{rollback}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/locking-due-fasi-stretto.png}
+  \caption{Locking a due fasi stretto}
+\end{figure}
 
 \subsection{Blocco critico (deadlock)}
+Il blocco critico è una situazione di blocco che si verifica nell'esecuzione di
+transazioni concorrenti quando:
+\begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+  \item due transazioni hanno bloccato delle risorse:
+    \begin{itemize}
+      \item \( t_1 \) ha bloccato \( r_1 \)
+
+      \item \( t_2 \) ha bloccato \( r_2 \)
+    \end{itemize}
+
+  \item inoltre \( t_1 \) è in attesa sulla risorsa \( r_2 \) e \( t_2 \) è in attesa
+    sulla risorsa \( r_1 \)
+\end{itemize}
+Se il numero medio di tuple per tabella è \( n \) e la granularità del lock (cioè
+il numero di risorse che possono essere bloccate) è la tupla, la probabilità che
+si verifichi un lock tra due transazioni è:
+\[
+  P(\text{deadlock di lunghezza 2}) = \frac{1}{n^2}
+\]
+
+\esempio{deadlock}{
+  Un esempio di deadlock utilizzando il locking a due fasi stretto è il seguente:
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/deadlock-locking-due-fasi-stretto.png}
+  \end{figure}
+}
+
+\noindent
+Le tecniche per risolvere i deadlock sono le seguenti:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+  \item \textbf{Timeout}: se una transazione è in attesa su una risorsa da troppo tempo 
+    viene abortita
+
+  \item \textbf{Prevenzione}: 
+    \begin{itemize}
+      \item Una transazione blocca tutte le risorse a cui deve accedere in lettura o
+        scrittura in una sola volta (o blocca tutto o non blocca nulla)
+
+      \item Ogni transazione \( t_i \) acquisisce un timestamp \( TS_i \) all'inizio
+        della sua esecuzione. La transazione \( t_i \) può attendere una risorsa
+        bloccata da \( t_j \) solo se vale una certa condizione sui timestamp, ad esempio
+        \( TS_i < TS_j \), altrimenti \( t_i \) viene abortita e fatta ripartire con
+        lo stesso timestamp
+    \end{itemize}
+
+  \item \textbf{Rilevamento}: Si esegue un'analisi periodica della tabella di lock per
+    rilevare la presenza di un deadlock che corrisponde ad un ciclo nel grafo delle
+    relazioni di attesa. Questa tecnica è la più utilizzata nei sistemi reali.
+\end{itemize}
+
+Inoltre la scelta di gestire i lock in lettura come lock condivisi introduce il
+problema della \textbf{starvation} che tuttavia nel contesto delle DMBS risulta poco
+probabile, ma comunque risolvibile con le tecniche precedenti (in particolare il
+rilevamento).
+
+\definizione{starvation}{
+    Se una risorsa \( x \) viene costantemente bloccata da una sequenza di transazioni 
+  che acquisiscono \( r\_lock \) su \( x \), un'eventuale transazione in attesa di
+  scrivere su \( x \) viene bloccata per un lungo periodo fino alla fine della
+  sequenza di letture.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/starvation.png}
+  \end{figure}
+}
+
+\subsection{Gestione della concorrenza in SQL}
+Siccome risulta molto pesante per il sistema gestire l'esecuzione concorrente di
+transazioni con una conseguente diminuzione delle prestazioni, SQL prevede la 
+possibilità di \textbf{rinunciare del tutto o in parte al controllo di concorrenza}
+per aumentare le prestazioni del sistema. È quindi possibile, a livello di una singola
+transazione, decidere di \textbf{tollerare alcune anomalie} di esecuzione concorrente.
+La seguente tabella mostra le possibili combinazioni di anomalie che si possono tollerare:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{images/anomalie-tollerate-SQL.png}
+  \caption{Anomalie tollerate in SQL}
+\end{figure}
+
+\vario{Nota}{
+    \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+        \item Tutti i livelli richiedono il 2PL stretto per le scritture
+
+        \item \textbf{Serializable}: Richiede il 2PL stretto anche per le letture e applica
+            il \textbf{lock sulle tabelle} per evitare l'inserimento fantasma
+
+        \item \textbf{Repeatable read}: Applica il 2PL stretto anche per le letture, ma
+            applica i \textbf{lock a livello di tupla} e non di tabella. Consente inserimenti
+            e quindi non evita l'anomalia di inserimento fantasma.
+            \textbf{Attenzione}: in PostgreSQL la repeatable read è implementata in modo più stringente
+            che evita anche l'anomalia di inserimento fantasma
+
+        \item \textbf{Read committed}: Richiede lock condivisi per le letture, ma non il
+            2PL stretto
+
+        \item \textbf{Read uncommitted}: Non applica lock in lettura
+    \end{itemize}
+}

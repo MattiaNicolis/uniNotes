@@ -11,7 +11,7 @@
   \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
     \item \textbf{grandi}: dati devono essere organizzati in modo efficiente per poter essere gestiti in grandi quantità
     \item \textbf{condivise}: dati devono essere accessibili da più utenti contemporaneamente
-    \item \textbf{persistenti}: dati devono essere memorizzati in modo permanente, anche dopo la chiusra del programma
+    \item \textbf{persistenti}: dati devono essere memorizzati in modo permanente, anche dopo la chiusura del programma
     \item \textbf{affidabili}: dati devono essere protetti da errori e guasti del sistema
     \item \textbf{privati}: dati devono essere protetti da accessi non autorizzati 
   \end{itemize}
@@ -23,19 +23,19 @@ Un DBMS in quanto sistema software deve essere \textbf{efficiente} ed \textbf{ef
 \definizione{base di dati}{Una \textbf{base di dati} è una collezione di dati gestita da un DBMS.}
 
 \section{Architettura transazionale di un DBMS}
-Un DBMS è costituto tra 3 livelli:
+Un DBMS è costituto da tra 3 livelli:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.7\textwidth]{images/schema.png}
+  \includegraphics[width=0.8\textwidth]{images/schema.png}
 \end{figure}
 
 Un DBMS basato sul \textbf{modello relazionale} è nella maggior parte dei casi anche un sistema transazionale: fornisce un meccanismo per la definizione ed esecuzione di transazioni.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{images/DBMS.png}
-  \caption{sistema transizionale}
+  \includegraphics[width=0.7\textwidth]{images/DBMS.png}
+  \caption{sistema transazionale}
 \end{figure}
 
 \section{Transazione}
@@ -50,14 +50,14 @@ Le caratteristiche principali sono:
 
 \subsection{Sintassi}
 La sintassi per definire una transazione in SQL:
-\begin{sqlcode}
-  <transazione> -> begin transaction
-                    <programma>
-                    end transaction
-  
-  <programma> -> < <istruzione> | commit work | rollback work >
-                  { < <istruzione> | commit work | rollback work > }
-\end{sqlcode}
+\begin{codiceSQL}
+<transazione> -> begin transaction
+                  <programma>
+                 end transaction
+
+<programma> -> < <istruzione> | commit work | rollback work >
+               { < <istruzione> | commit work | rollback work > }
+\end{codiceSQL}
 
 La transazione va a buon fine all’esecuzione di un $\verb|commit work|$, ma non ha alcun effetto se viene eseguito un $\verb|rollback work|$.
 
@@ -69,20 +69,20 @@ Per essere ben formata, una transazione deve:
   \item \textbf{esecuzione} comportare il raggiungimento di un $\verb|commit|$ o di un $\verb|rollback work|$, a seguito del quale non si eseguono altri accessi alla base di dati.
 \end{itemize}
 
-\begin{sqlcode}
-  begin transaction;
-    update CONTO set saldo = saldo - 1200
-      where filiale = '005' and numero = 15;
-    update CONTO set saldo = saldo + 1200
-      where filiale = '005' and numero = 205;
-    commit work;
-  end transaction;
-\end{sqlcode}
+\begin{codiceSQL}
+begin transaction;
+  update CONTO set saldo = saldo - 1200
+    where filiale = '005' and numero = 15;
+  update CONTO set saldo = saldo + 1200
+    where filiale = '005' and numero = 205;
+  commit work;
+end transaction;
+\end{codiceSQL}
 
 \subsection{Proprietà delle transazioni}
 Una transazione ha 4 proprietà fondamentali:
 \begin{enumerate}[itemsep=\smallskipamount]
-  \item \textcolor{azzurrino}{\textbf{atomicità}}: una transazione è una unità di esecuzione indivisibile (viene eseguita completamente o non viene eseguita affatto).
+  \item \textcolor{azzurrino}{\textbf{atomicità}}: una transazione è un'unità di esecuzione indivisibile (viene eseguita completamente o non viene eseguita affatto).
   
   Questo implica:
   \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
@@ -101,7 +101,7 @@ Una transazione ha 4 proprietà fondamentali:
     \end{itemize}
     \item verifica differita:
     \begin{itemize}[itemsep=\smallskipamount]
-      \item  al $\verb|commit|$ se un vincolo di integrità viene violato, la transazione viene abortita senza possibilità da parte dell’applicazione di reagire alla violazione
+      \item  al $\verb|commit|$, se un vincolo di integrità viene violato, la transazione viene abortita senza possibilità da parte dell’applicazione di reagire alla violazione
     \end{itemize}
   \end{itemize}
   \item \textcolor{azzurrino}{\textbf{isolamento}}: esecuzione di una transazione deve essere indipendente dalla contemporanea esecuzione di altre transazioni
@@ -123,7 +123,7 @@ L’architettura di un DBMS è composta da \textbf{moduli} che si occupano di ge
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.6\textwidth]{images/ArchitetturaDBMS.png} 
+  \includegraphics[width=0.7\textwidth]{images/ArchitetturaDBMS.png} 
   \caption{architettura di riferimento di un DBMS}
 \end{figure}
 
@@ -131,8 +131,8 @@ Il modulo di gestione delle transazioni si occupa di trasformare una transazione
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.6\textwidth]{images/Architettura2.png} 
-  \caption{modulo di gestione delle transazion di un DBMS}
+  \includegraphics[width=0.7\textwidth]{images/Architettura2.png} 
+  \caption{modulo di gestione delle transazioni di un DBMS}
 \end{figure}
 
 I singoli moduli che compongono questo modulo sono:
@@ -140,17 +140,17 @@ I singoli moduli che compongono questo modulo sono:
   \item \textcolor{azzurrino}{\textbf{gestore delle interrogazioni}}: riceve in ingresso una query SQL
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/passaggio1.png} 
+    \includegraphics[width=0.7\textwidth]{images/passaggio1.png} 
   \end{figure}
   \item\textcolor{azzurrino}{ \textbf{gestore dei metodi di accesso}}: determina quali sono le pagine della memoria secondaria di cui si ha bisogno, ma capisce anche se è possibile accederci
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/passaggio2.png} 
+    \includegraphics[width=0.7\textwidth]{images/passaggio2.png} 
   \end{figure}
   \item \textcolor{azzurrino}{\textbf{gestore dell’affidabilità}}: carica in memoria principale le pagine della memoria secondaria di cui si ha bisogno e le mantiene in memoria finché non sono più necessarie
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/passaggio4.png} 
+    \includegraphics[width=0.7\textwidth]{images/passaggio4.png} 
   \end{figure}
   \item \textcolor{azzurrino}{\textbf{gestore del buffer}}
   \item \textcolor{azzurrino}{\textbf{gestore dell’esecuzione concorrente}}

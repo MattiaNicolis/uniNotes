@@ -7,20 +7,20 @@ L'interazione tra un utente (programmatore/utente finale) e le basi di dati gest
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.6\textwidth]{images/ClientServer.png}
+  \includegraphics[width=0.8\textwidth]{images/ClientServer.png}
 \end{figure}
 
 \section{Comando \protect\texttt{CREATE TABLE}}
 Il comando $\verb|CREATE TABLE|$ definisce uno schema di relazione e ne crea un'istanza vuota, specificando attributi, domini e vincoli.
 
 La sintassi è:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 CREATE TABLE tabella(
   attributo dominio [valoreDefault] {vincolo},
   attributo dominio [valoreDefault] {vincolo},
   {vincoloTabella}
 );
-\end{lstlisting}
+\end{codiceSQL}
 
 dove:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
@@ -31,18 +31,18 @@ dove:
 \end{itemize}
 
 \begin{esempiobox}{Utilizzo di \texttt{CREATE TABLE}}
-  \begin{lstlisting}[language=SQL]
-  CREATE TABLE Impiegato (
-    Matricola CHARACTER(6) PRIMARY KEY, 
-    Nome VARCHAR(20) NOT NULL, 
-    Cognome VARCHAR(20) NOT NULL,
-    Dipart VARCHAR(15), 
-    Stipendio NUMERIC(9) DEFAULT 0,
-    FOREIGN KEY(Dipart) 
-      REFERENCES Dipartimento(NomeDip),     -- vincolo di tabella
-    UNIQUE (Cognome,Nome)                   -- vincolo di tabella
-  );
-  \end{lstlisting}
+\begin{codiceSQL}
+CREATE TABLE Impiegato (
+  Matricola CHARACTER(6) PRIMARY KEY, 
+  Nome VARCHAR(20) NOT NULL, 
+  Cognome VARCHAR(20) NOT NULL,
+  Dipart VARCHAR(15), 
+  Stipendio NUMERIC(9) DEFAULT 0,
+  FOREIGN KEY(Dipart) 
+    REFERENCES Dipartimento(NomeDip),     -- vincolo di tabella
+  UNIQUE (Cognome,Nome)                   -- vincolo di tabella
+);
+\end{codiceSQL}
 \end{esempiobox}
 
 \subsection{Identificatori}
@@ -77,12 +77,12 @@ Gli identificatori, in SQL, devono rispettare alcune regole:
 Permette di rappresentare singoli caratteri oppure stringhe.
 
 Un carattere o stringa di caratteri sono rappresentati tra apici ('):
-'a', 'Questa è una stringa'.
+\texttt{'a'}, \texttt{'Questa è una stringa'}.
 
 La sintassi è:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 CHARACTER [VARYFING] [(lunghezza)]
-\end{lstlisting}
+\end{codiceSQL}
 
 dove:
 \begin{itemize}[label=$\triangleright$]
@@ -98,12 +98,12 @@ dove:
 \end{itemize}
 
 \subsubsection{Tipo boolean}
-Permette di rappresentare valori booleani (true o false), più lo stato nullo.
+Permette di rappresentare valori booleani (\texttt{true} o \texttt{false}), più lo stato nullo.
 
 La sintassi è:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 BOOLEAN
-\end{lstlisting}
+\end{codiceSQL}
 
 La rappresentazione dei valori booleani può essere:
 \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
@@ -115,7 +115,7 @@ La rappresentazione dei valori booleani può essere:
 \end{itemize}
 
 \subsubsection{Tipo numerico esatto}
-Permettono di rappresentare valori esatti: interi o con una parte decimale di lunghezza prefissata:
+Permettono di rappresentare valori esatti (interi o con una parte decimale di lunghezza prefissata):
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
   \item \textbf{valori interi}:
   \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
@@ -134,7 +134,7 @@ Permettono di rappresentare valori esatti: interi o con una parte decimale di lu
 \end{itemize}
 
 \esempio{tipo numerico esatto}{
-  NUMERIC(5,2) permette di rappresentare valori come 100.01, 100.999 (arrotondato a 101.00), ma non valori come 1000.01
+  \texttt{NUMERIC(5,2)} permette di rappresentare valori come 100.01, 100.999 (arrotondato a 101.00), ma non valori come 1000.01
 }
 
 \subsubsection{Tipo numerico approssimato}
@@ -170,9 +170,9 @@ Permettono di rappresentare istanti di tempo.
 Rappresenta un intervallo di tempo.
 
 La sintassi è:
-\begin{lstlisting}[language=SQL]
-INTERVAL PrimaUNitaTempo [TO UltimaUNitaTempo]
-\end{lstlisting}
+\begin{codiceSQL}
+INTERVAL PrimaUnitaTempo [TO UltimaUNitaTempo]
+\end{codiceSQL}
 
 dove:
 \begin{itemize}[label=$\triangleright$]
@@ -187,130 +187,128 @@ L'insieme delle unità di misura è diviso in due insiemi distinti:
 
 \subsection{Domini definiti dall'utente}
 Per creare un dominio si esegue il comando:
-\begin{lstlisting}[language=SQL]
+\begin{codiceSQL}
 CREATE DOMAIN nome AS tipoBase [valoreDefault][vincolo]
-\end{lstlisting}
+\end{codiceSQL}
 
 dove:
 \begin{itemize}[label=$\triangleright$]
-  \item $\verb|CREATE DOMAIN|$: definisce un dominio, utilizzabile in definizioni di relazioni, anche con vincoli e valori di default.
+  \item $\verb|CREATE DOMAIN|$: definisce un dominio, utilizzabile in definizioni di relazioni, anche con vincoli e valori di default
 \end{itemize}
 
 Il dominio può essere definito a partire da un dominio elementare oppure da un altro dominio definito dall'utente.
 
 \begin{esempiobox}{Comando \texttt{CRETATE DOMAIN}}
-  \begin{lstlisting}[language=SQL]
-  CREATE DOMAIN giorniSettimana AS CHARACTER(3)
-    CHECK (VALUE IN ('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'));
+\begin{codiceSQL}
+CREATE DOMAIN giorniSettimana AS CHARACTER(3)
+ CHECK(VALUE IN('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'));
 
-  CREATE DOMAIN Voto AS SMALLINT DEFAULT NULL
-    CHECK (value >= 18 AND value <= 30);
-  \end{lstlisting}
+CREATE DOMAIN Voto AS SMALLINT DEFAULT NULL
+ CHECK (value >= 18 AND value <= 30);
+\end{codiceSQL}
 \end{esempiobox}
 
   %----fino a qui
 
   \subsection{Vincoli intrarelazionali}
-  I vincoli interrelazionali sono vincoli che si applicano a livello di relazione, cioè a una singola tabella.
+  I vincoli intrarelazionali sono vincoli che si applicano a livello di relazione, cioè a una singola tabella.
 
-  I principali vincoli interrelazionali sono:
+  I principali vincoli intrarelazionali sono:
   \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
     \item $\verb|NOT NULL|$: valore nullo non è ammesso per l'attributo, quindi il valore deve sempre essere specificato, o si assegna un valore di default
     \item $\verb|UNIQUE|$: definisce (super)chiavi
-    \begin{lstlisting}[language=SQL]
-      Nome VARCHAR(20),
-      Cognome VARCHAR(20),
-      UNIQUE(Nome,Cognome)
+\begin{codiceSQL}
+Nome VARCHAR(20),
+Cognome VARCHAR(20),
+UNIQUE(Nome, Cognome)
+--impone che non ci siano due righe che abbiano uguale
+--sia il nome che il cognome
+\end{codiceSQL}
 
-      -- impone che non ci siano due righe che abbiano uguale sia il nome che il cognome
-    \end{lstlisting}
+\begin{codiceSQL}
+Nome VARCHAR(20) UNIQUE,
+Cognome VARCHAR(20) UNIQUE
+--impone che non ci siano due righe che abbiano lo stesso nome
+--o lo stesso cognome 
+\end{codiceSQL}
+    \item $\verb|PRIMARY KEY|$: chiave primaria (una sola, implica \texttt{NOT NULL}) 
+\begin{codiceSQL}
+matricola CHAR(6) PRIMARY KEY;
+--se unico componente della chiave primaria
+\end{codiceSQL}
 
-    \begin{lstlisting}[language=SQL]
-      Nome VARCHAR(20) UNIQUE,
-      Cognome VARCHAR(20) UNIQUE
-
-      /* impone che non ci siano due righe che abbiano lo stesso nome o lo stesso cognome*/ 
-    \end{lstlisting}
-    \item $\verb|PRIMARY KEY|$: chiave primaria (una sola, implica NOT NULL) 
-    \begin{lstlisting}[language=SQL]
-      matricola CHAR (6) PRIMARY KEY;
-      /* se unico componente della chiave primaria*/
-    \end{lstlisting}
-
-    \begin{lstlisting}[language=SQL]
-      nome VARCHAR(20),
-      cognome VARCHAR(20),
-      PRIMARY KEY(nome, cognome)
-
-      /* Se la chiave primaria ha piu attributi */
-    \end{lstlisting}
+\begin{codiceSQL}
+nome VARCHAR(20),
+cognome VARCHAR(20),
+PRIMARY KEY(nome, cognome)
+--se la chiave primaria ha piu' attributi
+\end{codiceSQL}
     \item $\verb|CHECK|$: specifica un vincolo generico che deve soddisfare le tuple della tabella. 
     
-    Viene soddisfatto se la sua espressione è vera o nulla.
-    \begin{lstlisting}[language=SQL]
-      CREATE TABLE Impiegato (
-        matricola CHAR(6) PRIMARY KEY,
-        nome VARCHAR(20) NOT NULL,
-        cognome VARCHAR(20) NOT NULL,
-        qualifica VARCHAR(20),
-        stipendio NUMERIC(8,2) DEFAULT 500.00 NOT NULL
-        CHECK( stipendio >= 0.0 ),    /* check di attributo */
-        UNIQUE( cognome, nome ),
-        CHECK( nome <> cognome )      /* check di tabella */
-      )
-    \end{lstlisting}
+    Viene soddisfatto se la sua espressione è vera o nulla
+\begin{codiceSQL}
+CREATE TABLE Impiegato(
+  matricola CHAR(6) PRIMARY KEY,
+  nome VARCHAR(20) NOT NULL,
+  cognome VARCHAR(20) NOT NULL,
+  qualifica VARCHAR(20),
+  stipendio NUMERIC(8,2) DEFAULT 500.00 NOT NULL
+  CHECK(stipendio >= 0.0),    --check di attributo
+  UNIQUE(cognome, nome),
+  CHECK(nome <> cognome)      --check di tabella
+)
+\end{codiceSQL}
   \end{itemize}
 
-  \subsection{Vincoli interrelazionali}
-  Un vincolo di integrità referenziale (interrelazionale) crea un legame tra i valori di un attributo (o di un insieme di attributi) A della tabella corrente (interna/slave) e i valori di un attributo (o di un insieme di attributi) B di un'altra tabella (esterna/master).\\[0.2ex]
-  Il vincolo impone che:
-  \begin{itemize}[itemsep=\smallskipamount]
-    \item in ogni tupla della tabella interna, il valore di A, se diverso dal valore nullo, sia presente tra i valori di B nella tabella esterna
-    \item  l'attributo B della tabella esterna deve essere soggetto a un vincolo UNIQUE (o PRIMARY KEY).
-  \end{itemize}
-  
-  \vario{Nota:}{
-    L'attributo (o insieme di attributi) B può anche non essere la chiave primaria, ma deve essere identificante per le tuple della tabella esterna.
-  }
+\subsection{Vincoli interrelazionali}
+Un vincolo di integrità referenziale (interrelazionale) crea un legame tra i valori di un attributo (o di un insieme di attributi) A della tabella corrente (interna/slave) e i valori di un attributo (o di un insieme di attributi) B di un'altra tabella (esterna/master).\\[0.2ex]
+Il vincolo impone che:
+\begin{itemize}[itemsep=\smallskipamount]
+  \item in ogni tupla della tabella interna, il valore di A, se diverso dal valore nullo, sia presente tra i valori di B nella tabella esterna
+  \item  l'attributo B della tabella esterna deve essere soggetto a un vincolo \texttt{UNIQUE} (o \texttt{PRIMARY KEY})
+\end{itemize}
 
-  \textbf{REFERENCES e FOREIGN KEY permettono di definire vincoli di integrità referenziale}
+\vario{Nota:}{
+  L'attributo (o insieme di attributi) B può anche non essere la chiave primaria, ma deve essere identificante per le tuple della tabella esterna.
+}
 
-Per singoli attributi, basta utilizzare il costrutto \textcolor{purple}{\textbf{REFERENCES}}
+\textbf{REFERENCES e FOREIGN KEY permettono di definire vincoli di integrità referenziale}.
+
+Per singoli attributi, basta utilizzare il costrutto \textcolor{purple}{\textbf{REFERENCES}}.
 \begin{codiceSQL}
 CREATE TABLE Impiegato (
-  Matricola CHARACTER(6) primary key,
-  Nome CHARACTER VARYING(20)  not null,
-  Cognome CHARACTER VARYING(20)  not null,
-  Dipart CHARACTER VARYING(15) 
-  REFERENCES Dipartimento(NomeDip),   
-  /* Attributo chiave (singolo) di tabella esterna*/
+  Matricola CHARACTER(6) PRIMARY KEY,
+  Nome CHARACTER VARYING(20) NOT NULL,
+  Cognome CHARACTER VARYING(20) NOT NULL,
+  Dipart CHARACTER VARYING(15),
+    REFERENCES Dipartimento(NomeDip),  --attributo chiave (singolo) di tabella esterna
   Ufficio NUMERIC(3),
-  Stipendio  NUMERIC(9) default 0,
-  UNIQUE (Cognome, Nome)
+  Stipendio NUMERIC(9) DEFAULT 0,
+  UNIQUE(Cognome, Nome)
 )
 \end{codiceSQL}
 
-Per attributi multipli, si usa il costrutto \textcolor{purple}{\textbf{FOREIGN KEY}} alla fine della definizione degli attributi, seguito da \textcolor{purple}{\textbf{REFERENCES}}
+Per attributi multipli, si usa il costrutto \textcolor{purple}{\textbf{FOREIGN KEY}} alla fine della definizione degli attributi, seguito da \textcolor{purple}{\textbf{REFERENCES}}.
 \begin{codiceSQL}
 CREATE TABLE Impiegato (
-  Matricola CHARACTER(6) primary key,
-  Nome CHARACTER VARYING(20)  not null,
-  Cognome CHARACTER VARYING(20)  not null,
+  Matricola CHARACTER(6) PRIMARY KEY,
+  Nome CHARACTER VARYING(20) NOT NULL,
+  Cognome CHARACTER VARYING(20) NOT NULL,
   Dipart CHARACTER VARYING(15),
   REFERENCES Dipartimento(NomeDip),   
   Ufficio NUMERIC(3),
   Stipendio  NUMERIC(9) default 0,
   FOREIGN KEY(Nome, Cognome)
-    REFERENCES Anagrafica (Nome, Cognome) 
-    /* Tabella esterna con attributi chiave*/
+    REFERENCES Anagrafica (Nome, Cognome) --tabella esterna con attributi chiave
 )
 \end{codiceSQL}
 
+\smallskip
 Vediamo un esempio più concreto:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width= \textwidth]{images/esempioReferences.png}
+  \includegraphics[width=0.7\textwidth]{images/esempioReferences.png}
 \end{figure}
 
 \begin{codiceSQL}
@@ -324,97 +322,101 @@ CREATE TABLE Infrazione(
   FOREIGN KEY(Provincia, Numero)
     REFERENCES Auto(Provincia, Numero)
 )
-
 \end{codiceSQL}
 
 \section{Modifica degli schemi}
-\begin{itemize}
-  \item ALTER: effettua modifiche (a domini, tabelle...), ad esempio aggiungere una colonna a una relazione
-  \item DROP DOMAIN: permette di rimuovere i domini
-  \item DROP TABLE: cancella una tabella
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+  \item \texttt{ALTER}: effettua modifiche (a domini, tabelle...), ad esempio aggiungere una colonna a una relazione
+  \item \texttt{DROP DOMAIN}: permette di rimuovere i domini
+  \item \texttt{DROP TABLE}: cancella una tabella
 \end{itemize}
 
-\subsection{ALTER: modifiche alla struttura di una tabella}
-Il costrutto \textbf{Alter} permette di:
-
-Aggiungere un nuovo attributo (ADD COLUMN):
+\subsection{Comando \texttt{ALTER TABLE}}
+Il costrutto \texttt{ALTER} permette di:
+\begin{itemize}[label=$\circ$, itemsep=\medskipamount]
+  \item \textbf{aggiungere un nuovo attributo} (\texttt{ADD COLUMN}):
 \begin{codiceSQL}
-ALTER TABLE tabella ADD COLUMN attributo tipo;
-ALTER TABLE impiegato ADD COLUMN stipendio NUMERIC(8,2);
+ALTER TABLE tabella
+ADD COLUMN attributo tipo;
+
+ALTER TABLE impiegato
+ADD COLUMN stipendio NUMERIC(8,2);
+\end{codiceSQL}
+  \item \textbf{rimuovere un attributo} (\texttt{DROP COLUMN}):
+\begin{codiceSQL}
+ALTER TABLE tabella
+DROP COLUMN attributo;
+
+ALTER TABLE impiegato
+DROP COLUMN stipendio;
+\end{codiceSQL}
+  \item \textbf{modificare valore di default di un attributo} (\texttt{ALTER COLUMN}):
+\begin{codiceSQL}
+ALTER TABLE tabella 
+ALTER COLUMN attributo { SET DEFAULT valore | DROP DEFAULT };
+
+ALTER TABLE impiegato 
+ALTER COLUMN stipendio SET DEFAULT 1000.00;
+\end{codiceSQL}
+\end{itemize}
+
+\section{Comando \texttt{DELETE} e \texttt{DROP TABLE}}
+Le tuple di una tabella vengono cancellate con il comando \texttt{DELETE}:
+\begin{codiceSQL}
+DELETE FROM tabella [ WHERE condizione ];
 \end{codiceSQL}
 
-Rimuovere un attributo (DROP COLUMN):
-\begin{codiceSQL}
-ALTER TABLE tabella DROP COLUMN attributo;
-ALTER TABLE impiegato DROP COLUMN stipendio;
-\end{codiceSQL}
-Modificare valore di default di un attributo (ALTER COLUMN):
-\begin{codiceSQL}
-ALTER TABLE tabella ALTER COLUMN attributo { SET DEFAULT valore | 
-DROP DEFAULT };
-ALTER TABLE impiegato ALTER COLUMN stipendio SET DEFAULT 1000.00;
-\end{codiceSQL}
+dove:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+  \item \texttt{condizione}: espressione booleana che seleziona quali tuple cancellare
+\end{itemize}
 
-\section{Cancellazione dati in una tabella}
-Le tuple di una tabella vengono cancellate con il comando \textcolor{purple}{\textbf{DELETE}}.
-condizione è una espressione booleana che seleziona quali tuple cancellare. 
-\begin{codiceSQL}
-  DELETE FROM tabella [ WHERE condizione ];
-\end{codiceSQL}
-
-\vario{}{
-  \textbf{Se WHERE non è presente, tutte le tuple saranno cancellate.}
+\vario{Nota}{
+  Se non viene specificata la condizione \texttt{WHERE}, verrano cancellate tutte le tuple.
 }
 \begin{codiceSQL}
-  DELETE FROM impiegato WHERE matricola = 'A001 ';
+DELETE FROM impiegato WHERE matricola = 'A001';
 \end{codiceSQL}
 
-Una tabella viene cancellata con il comando \textcolor{purple}{\textbf{DROP TABLE}}:
+\bigskip
+Una tabella viene cancellata con il comando \texttt{DROP TABLE}:
 \begin{codiceSQL}
   DROP TABLE tabella;
 \end{codiceSQL}
 
-
-
-
-\section{Inserimento e aggiornamento di tuple}
-
-\textbf{\large Inserimento di valori all'interno di una tupla}
-
+\section{Comando \texttt{INSERT INTO} e \texttt{UPDATE}}
+Il comando \texttt{INSERT INTO} permette di inserire valori all'interno di una tupla:
 \begin{codiceSQL}
 INSERT INTO Tabella [ ( Attributi ) ] 
-VALUES( Valori ) 
-\end{codiceSQL}
-oppure
-\begin{codiceSQL}
-  INSERT INTO Tabella [ ( Attributi )]
+VALUES( Valori )
+
+--oppure
+
+INSERT INTO Tabella [ ( Attributi )]
 (SELECT ...)
 \end{codiceSQL}
 
-\textbf{ Esempio inserimento}
+\begin{esempiobox}{Utilizzo di \texttt{INSERT INTO}}
 \begin{codiceSQL}
-INSERT INTO Museo (nome, citta, indirizzo, numeroTelefono, giornoChiusura, prezzo)
-VALUES('Arena', 'Verona', 'piazza Bra', '045 8003204', 'MARTEDI', 20) 
-
+INSERT INTO Museo(nome, citta, indirizzo, numeroTelefono, giornoChiusura, prezzo)
+VALUES('Arena', 'Verona', 'piazza Bra', '045 8003204', 'MARTEDI', 20);
 \end{codiceSQL}
+\end{esempiobox}
 
-
-\textbf{\large Aggiornamento di valori all'interno di una tupla}
-
+\bigskip
+Il comando \texttt{UPDATE} permette di aggiornare i valori all'interno di una tupla:
 \begin{codiceSQL}
 UPDATE NomeTabella
-  SET Attributo = < 
-  Espressione |
-  SELECT ... | 
-  NULL | 
-  DEFAULT >
-  [ WHERE Condizione ]
+SET Attributo = < Espressione | SELECT ... | NULL | DEFAULT >
+[ WHERE Condizione ]
 \end{codiceSQL}
 
-\textbf{Esempio}
+\begin{esempiobox}{Utilizzo di \texttt{INSERT INTO}}
 \begin{codiceSQL}
-UPDATE Museo SET sitoInternet = 'www.ciao.it' WHERE citta ='Verona'  
+UPDATE Museo SET sitoInternet = 'www.ciao.it' 
+WHERE citta = 'Verona';  
 \end{codiceSQL}
+\end{esempiobox}
 
 
 \section{Selezione}

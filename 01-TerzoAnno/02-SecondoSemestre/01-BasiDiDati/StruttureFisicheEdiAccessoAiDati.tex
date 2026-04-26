@@ -5,20 +5,20 @@ Le basi di dati risiedono nella \textcolor{azzurrino}{\textbf{memoria secondaria
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item \textbf{grandi}: non possono essere contenute completamente in memoria centrale
   \smallskip
-  \item \textbf{persistenti}: hanno un tempo di vita che non è limitato all'esecuizone dei programmi che le usano
+  \item \textbf{persistenti}: hanno un tempo di vita che non è limitato all'esecuzione dei programmi che le usano
 \end{itemize}
 
 \vario{Caratteristiche della memoria secondaria}{
   Le caratteristiche principali della memoria secondaria sono:
   \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-    \item non utilizzabile direttamente dai programmi
-    \item dati organizzati in \textbf{blocchi} (grandezza dipende dal sistema operativo)
-    \item operazioni possibili:
+    \item \textbf{non utilizzabile direttamente dai programmi}
+    \item \textbf{dati organizzati in blocchi} (grandezza dipende dal sistema operativo)
+    \item \textbf{operazioni possibili}:
     \begin{itemize}[label=$\diamond$]
       \item lettura intero blocco
       \item scrittura intero blocco
     \end{itemize}
-    \item costo delle operazioni di accesso alla memoria secondaria è maggiore al costo per accedere ai dati in memoria centrale
+    \item \textbf{costo delle operazioni di accesso alla memoria secondaria è maggiore al costo per accedere ai dati in memoria centrale}
   \end{itemize}
 }
 
@@ -52,7 +52,7 @@ L'obiettivo del gestore del buffer è di \hl{ottimizzare gli accessi} attraverso
     \item blocco presente in una pagina del buffer
     \begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
       \item non viene eseguita la lettura in memoria secondaria
-      \item viene restituito un puntatore alla pagine del buffer
+      \item viene restituito un puntatore alla pagina del buffer
     \end{itemize}
     \item blocco non presente in una pagina del buffer
     \begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
@@ -61,14 +61,14 @@ L'obiettivo del gestore del buffer è di \hl{ottimizzare gli accessi} attraverso
       \item viene restituito il puntatore alla pagina del buffer
     \end{itemize}
   \end{itemize}
-  \item \textbf{scrittura di un blocco}: se viene effettuata una richiesta si dcrittura di un blocco giù caricato in una pagina del buffer, il gestore del buffer può decidere di \hl{differire la scrittura} su memoria secondaria in un secondo momento
+  \item \textbf{scrittura di un blocco}: se viene effettuata una richiesta si scrittura di un blocco già caricato in una pagina del buffer, il gestore del buffer può decidere di \hl{differire la scrittura} su memoria secondaria in un secondo momento
 \end{itemize}
 
 \medskip
 Per poter aumentare la velocità di accesso ai dati, le politiche di lettura e scrittura si basano sul \textbf{principio di località}.
 
 \definizione{principio di località}{
-  Il \textbf{principio di località} si basa sul fatto che i dati refernziati di recente hanno maggiore probabilità di essere referenziati nuovamente in futuro.
+  Il \textbf{principio di località} si basa sul fatto che i dati referenziati di recente hanno maggiore probabilità di essere referenziati nuovamente in futuro.
 }
 
 \subsection{Gestione delle pagine}
@@ -76,23 +76,23 @@ Il contenuto del buffer lo possiamo immaginare come una matrice.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\textwidth]{images/gestione-pagine.png}
+  \includegraphics[width=0.6\textwidth]{images/gestione-pagine.png}
 \end{figure}
 
 Per ogni pagina del buffer si memorizza:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-  \item blocco B (L se libero) indicando il file e il numero di blocco (offset)
-  \item variabili di stato ($B_{i,j}$):
+  \item \textbf{blocco B} (L se libero) indicando il file e il numero di blocco (offset)
+  \item \textbf{variabili di stato} ($\mathrm{B_{i,j}}$):
   \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-    \item contatore i: indica il numero di transazioni
-    \item bit di stato j: indica se la pagina è stata modificata (1) o no (0)
+    \item \textbf{contatore} $\mathbf{i}$: indica il numero di transazioni
+    \item \textbf{bit di stato} $\mathbf{j}$: indica se la pagina è stata modificata (1) o no (0)
   \end{itemize}
 \end{itemize}
 
 \subsection{Primitive per la gestione del buffer}
 
 \subsubsection{Primitiva \protect\texttt{fix}}
-La \textcolor{azzurrino}{primitiva \texttt{fix}} viene utilizzata dalle transazioni per richiedere l'accesso ad un blocco e restituisce un puntatore alla pagina contente il blocco richiesto.
+La \textcolor{azzurrino}{primitiva \texttt{fix}} viene utilizzata dalle transazioni per richiedere l'accesso a un blocco e restituisce un puntatore alla pagina contente il blocco richiesto.
 
 Le azioni della primitiva sono:
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
@@ -112,7 +112,7 @@ Le azioni della primitiva sono:
       \item non ci sono pagine libere
       \begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
         \item viene rubata una pagina a un'altra transazione (primitiva $\verb|flush|$)
-        \item viene sospesa la transazione inserendola in una cosa di attesa
+        \item viene sospesa la transazione inserendola in una coda di attesa
         \item se si libera una pagina il gestore si comporterà come al punto precedente
       \end{itemize}
     \end{itemize}
@@ -120,21 +120,21 @@ Le azioni della primitiva sono:
 \end{itemize}
 \medskip
 \begin{itemize}[label=$\Rightarrow$]
-  \item \textbf{effetto della modifica}: quando una transizione accede a una pagina per la prima volta il contatore si incrementa
+  \item \textcolor{red}{\textbf{effetto della modifica}}: quando una transizione accede a una pagina per la prima volta il contatore si incrementa
 \end{itemize}
 
 \subsubsection{Primitiva \protect\texttt{unfix}}
 La \textcolor{azzurrino}{primitiva \texttt{unfix}} viene usata dalle transazioni per indicare che la transazione ha terminato di usare il blocco.
 
 \begin{itemize}[label=$\Rightarrow$]
-  \item \textbf{effetto della modifica}: decremento del contatore i
+  \item \textcolor{red}{\textbf{effetto della modifica}}: decremento del contatore $\mathrm{i}$
 \end{itemize}
 
 \subsubsection{Primitiva \protect\texttt{setDirty}}
 La \textcolor{azzurrino}{primitiva \texttt{setDirty}} viene utilizzata dalle transazioni per indicare al gestore del buffer che il blocco della pagina è stato modificato.
 
 \begin{itemize}[label=$\Rightarrow$]
-  \item \textbf{effetto della modifica}: bit di stato J passa da 0 a 1
+  \item \textcolor{red}{\textbf{effetto della modifica}}: bit di stato $\mathrm{j}$ passa da 0 a 1
 \end{itemize}
 
 \subsubsection{Primitiva \protect\texttt{force}}
@@ -142,7 +142,7 @@ La \textcolor{azzurrino}{primitiva \texttt{force}} viene utilizzata per salvare 
 Questa primitiva viene usata dal gestore dell'affidabilità.
 
 \begin{itemize}[label=$\Rightarrow$]
-  \item \textbf{effetto della modifica}: viene salvato in memoria secondaria il blocco e il bit di stato J posto a 0
+  \item \textcolor{red}{\textbf{effetto della modifica}}: viene salvato in memoria secondaria il blocco e il bit di stato $\mathrm{j}$ posto a 0
 \end{itemize}
 
 \subsubsection{Primitiva \protect\texttt{flush}}
@@ -150,11 +150,11 @@ La \textcolor{azzurrino}{primitiva \texttt{flush}} viene utilizzata per salvare 
 Questa primitiva viene usata dal gestore del buffer.
 
 \begin{itemize}[label=$\Rightarrow$]
-  \item \textbf{effetto della modifica}: viene liberata la pagina "dirty" e il bit di stato J viene posto a 0
+  \item \textcolor{red}{\textbf{effetto della modifica}}: viene liberata la pagina "dirty" e il bit di stato $\mathrm{j}$ viene posto a 0
 \end{itemize}
 
 \section{Gestore dell'affidabilità}
-Il gestore del buffer differisce le operazioni di scrittura e questo potrebbe raprresentare un pericolo.\\[0.2ex]
+Il gestore del buffer differisce le operazioni di scrittura e questo potrebbe rappresentare un pericolo.\\[0.2ex]
 Il \textcolor{azzurrino}{\textbf{gestore dell'affibilità}} si occupa di garantire:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item \textbf{atomicità}: transazioni non devono essere incomplete
@@ -174,32 +174,32 @@ Il funzionamento del gestore dell'affidabilità si basa sull'utilizzo del \textb
   Il \textbf{file di LOG} è un archivio persistente su cui vengono registrate tutte le operazioni eseguite dal DBMS.
 }
 
-Per il corretto funzionamento, il gestore dell'affidabilità deve disporre di un dispositivo di una \textbf{memoria stabile} (resistente ai guasti).
+Per il corretto funzionamento, il gestore dell'affidabilità deve disporre di un dispositivo di \textbf{memoria stabile} (resistente ai guasti).
 
 Il file di LOG viene memorizzato in memoria stabile e al suo interno vengono memorizzati:
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
   \item \textbf{record di transizione}: record che descrivono informazioni sulle transazioni
   \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
-    \item $\boldsymbol{\mathrm{B(T)}}$: \textcolor{azzurrino}{\textbf{begin}} della transazione
-    \item $\boldsymbol{\textbf{C(T)}}$: \textcolor{azzurrino}{\textbf{commit}} della transazione
-    \item $\boldsymbol{\textbf{A(T)}}$: \textcolor{azzurrino}{\textbf{abort}} della transazione
-    \item $\boldsymbol{\textbf{I(T,O,AS)}}$: \textcolor{azzurrino}{\textbf{insert}} di un oggetto $\mathrm{O}$ da parte di una transazione $\mathrm{T}$ con il suo after state $\mathrm{AS}$ (stato dell'oggetto dopo l'operazione)
-    \item $\boldsymbol{\mathrm{D(T,O,BS)}}$: \textcolor{azzurrino}{\textbf{delete}} di un oggetto $\mathrm{O}$ da parte della transizione $\mathrm{T}$ con il suo before state $\mathrm{BS}$ (stato dell'oggetto prima dell'operazione)
-    \item $\boldsymbol{\mathrm{U(T,O,BS,AS)}}$: \textcolor{azzurrino}{\textbf{update}} di un oggetto $\mathrm{O}$ da parte della transizione $\mathrm{T}$ con il suo before state $\mathrm{BS}$ e il suo after state $\mathrm{AS}$
+    \item $\mathbf{B(T)}$: \textcolor{azzurrino}{\textbf{begin}} della transazione
+    \item $\mathbf{C(T)}$: \textcolor{azzurrino}{\textbf{commit}} della transazione
+    \item $\mathbf{A(T)}$: \textcolor{azzurrino}{\textbf{abort}} della transazione
+    \item $\mathbf{I(T,O,AS)}$: \textcolor{azzurrino}{\textbf{insert}} di un oggetto $\mathrm{O}$ da parte di una transazione $\mathrm{T}$ con il suo after state $\mathrm{AS}$ (stato dell'oggetto dopo l'operazione)
+    \item $\mathbf{D(T,O,AS)}$: \textcolor{azzurrino}{\textbf{delete}} di un oggetto $\mathrm{O}$ da parte della transizione $\mathrm{T}$ con il suo before state $\mathrm{BS}$ (stato dell'oggetto prima dell'operazione)
+    \item $\mathbf{U(T,O,BS,AS)}$: \textcolor{azzurrino}{\textbf{update}} di un oggetto $\mathrm{O}$ da parte della transizione $\mathrm{T}$ con il suo before state $\mathrm{BS}$ e il suo after state $\mathrm{AS}$
   \end{itemize}
   \item \textbf{record di sistema}: record che descrivono informazioni sulle operazioni esaguite dal DBMS
   \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-    \item $\boldsymbol{\mathrm{DUMP}}$: copia completa e consistente della base di dati.
-    \item $\boldsymbol{\mathrm{CK}(T_1, \dots, T_n)}$: indica che all'esecuzione del checkpoint, le transazioni attive erano $T_1, \dots, T_n$
+    \item $\mathbf{DUMP}$: copia completa e consistente della base di dati.
+    \item $\mathbf{CK(T_1, \dots, T_n)}$: indica che all'esecuzione del checkpoint, le transazioni attive erano $\mathrm{T_1, \dots, T_n}$
     \begin{itemize}[itemsep=\smallskipamount]
       \item elenco delle transazioni che non hanno ancora espresso la loro scelta relativamente all'esito finale
       \item operazione svolta periodicamente affinché i dati delle transazioni che hanno eseguito il \texttt{commit} siano registrati in modo permanente
       \item il protocollo di checkpoint prevede i seguenti passi:
       \begin{enumerate}[itemsep=\smallskipamount]
-        \item sospensione delle operazioni di scrittura, \texttt{commit} e \texttt{abort} delle transazioni
+        \item sospensione delle operazioni di \texttt{scrittura}, \texttt{commit} e \texttt{abort} delle transazioni
         \item esecuzione della primitiva \texttt{force} sulle pagine ``dirty'' di transazioni che hanno eseguito il \texttt{commit}
         \item scrittura sincrona (primitiva \texttt{force}) sul file di LOG del record di checkpoint con gli identificatori delle transazioni attive
-        \item ripresa delle operazioni di scrittura, \texttt{commit} e \texttt{abort} delle transazioni
+        \item ripresa delle operazioni di \texttt{scrittura}, \texttt{commit} e \texttt{abort} delle transazioni
       \end{enumerate}
     \end{itemize}
   \end{itemize}
@@ -207,12 +207,16 @@ Il file di LOG viene memorizzato in memoria stabile e al suo interno vengono mem
 
 I record di transazione salvati nel LOG consentono di eseguire in caso di ripristino le seguenti operazioni:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-  \item $\boldsymbol{\mathrm{UNDO}}$: viene usato per disfare un'azione su un oggetto $\mathrm{O}$ è sufficiente ricopiare in $\mathrm{O}$ il valore d $\mathrm{BS}$.
+  \item $\mathbf{UNDO}$: viene usato per disfare un'azione su un oggetto $\mathrm{O}$.
   
-  L'insert/delete viene disfatto cancellando/inserendo $\mathrm{O}$
-  \item $\boldsymbol{\mathrm{REDO}}$: serve per rifare un'azione su un oggetto $\mathrm{O}$ è sufficiente ricopiare in $\mathrm{O}$ il valore $\mathrm{AS}$.
+  \hl{È sufficiente ricopiare in $\mathrm{O}$ il valore d $\mathrm{BS}$}.
   
-  L'insert/delete viene rifatto inserendo/cancellando $\mathrm{O}$
+  L'\texttt{insert}/\texttt{delete} viene disfatto cancellando/inserendo $\mathrm{O}$
+  \item $\mathbf{REDO}$: serve per rifare un'azione su un oggetto $\mathrm{O}$.
+  
+  \hl{È sufficiente ricopiare in $\mathrm{O}$ il valore $\mathrm{AS}$}.
+  
+  L'\texttt{insert}/\texttt{delete} viene rifatto inserendo/cancellando $\mathrm{O}$
 \end{itemize}
 
 \medskip
@@ -228,28 +232,28 @@ Per queste operazioni vale la \textbf{proprietà di idempotenza}.
   \]
 }
 
-\subsection{Regole di scrittura sul file di log}
-Il gestore dell'affibilità deve rispettare le seguenti regole di scrittura sul file di LOG:
+\subsection{Regole di scrittura sul file di LOG}
+Il gestore dell'affidabilità deve rispettare le seguenti regole di scrittura sul file di LOG:
 \begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
-  \item \textbf{regola Write Ahead Logging}: record di LOG devono essere scritti sul LOG precedente all'esecuzione delle corrispondenti operazioni sulla base di dati (garantisce la possibilità di fare sempre UNDO)
-  \item \textbf{regola di commit-precedenza}: record di LOG devono essere scritti sul LOG prima dell'esecuzione del $\texttt{commit}$ della transazione (garantisce la possibilità di fare sempre REDO)
+  \item \textbf{regola Write Ahead Logging}: record di LOG devono essere scritti sul LOG precedente all'esecuzione delle corrispondenti operazioni sulla base di dati (garantisce la possibilità di fare sempre \texttt{UNDO})
+  \item \textbf{regola di commit-precedenza}: record di LOG devono essere scritti sul LOG prima dell'esecuzione del \texttt{commit} della transazione (garantisce la possibilità di fare sempre \texttt{REDO})
 \end{itemize}
 
 Queste regole consentono di salvare i blocchi delle pagine “dirty” in modo totalmente asincrono rispetto al commit delle transazioni.
 
 \subsection{Guasti}
-Una transazione T sceglie in modo atomico l'esito di $\verb|commit|$ nel momento in cui scrive nel file di log in modo sincrono (primitiva $\verb|force|$) il suo record di $\verb|commit| \ \mathrm{C(T)}$. 
+Una transazione $\mathrm{T}$ sceglie in modo atomico l'esito di $\verb|commit|$ nel momento in cui scrive nel file di LOG in modo sincrono (primitiva $\verb|force|$) il suo record di $\verb|commit| \ \mathrm{C(T)}$. 
 
 \begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
-  \item se avviene un guasto prima della scrittura del record di $\verb|commit|$ $\rightarrow$ $\boldsymbol{\mathrm{UNDO}}$
-  \item se avviene un guasto dopo la scrittura del record di $\verb|commit|$ $\rightarrow$ $\boldsymbol{\mathrm{REDO}}$
+  \item se avviene un guasto prima della scrittura del record di $\verb|commit|$ $\rightarrow$ $\mathbf{UNDO}$
+  \item se avviene un guasto dopo la scrittura del record di $\verb|commit|$ $\rightarrow$ $\mathbf{REDO}$
 \end{itemize}
 
 Esistono due tipologie di guasto:
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
-  \item \textbf{guasto di sistema}: perdita del conte della memoria centrale.
+  \item \textbf{guasto di sistema}: perdita del contenuto della memoria centrale.
   
-  Viene risolto con la tecnica della \hl{ripresa a caldo}:
+  Viene risolto con la tecnica della \textcolor{azzurrino}{\textbf{ripresa a caldo}}:
   \begin{enumerate}[itemsep=\smallskipamount]
     \item accede al file di LOG e si ripercorre all’indietro il LOG fino al più recente record di checkpoint
     \item si inizializza:
@@ -259,24 +263,24 @@ Esistono due tipologie di guasto:
     \end{itemize}
     \item si ripercorre in avanti il LOG
     \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-      \item per ogni record $\mathrm{B(T)}$ incontrato si aggiunge T all’insieme $\mathrm{UNDO}$
-      \item per ogni record $\mathrm{C(T)}$ incontrato si sposta T dall’insieme $\mathrm{UNDO}$ all’insieme $\mathrm{REDO}$
+      \item per ogni record $\mathrm{B(T)}$ incontrato si aggiunge $\mathrm{T}$ all’insieme $\mathrm{UNDO}$
+      \item per ogni record $\mathrm{C(T)}$ incontrato si sposta $\mathrm{T}$ dall’insieme $\mathrm{UNDO}$ all’insieme $\mathrm{REDO}$
     \end{itemize}
     \item si ripercorre all'indietro il LOG disfacendo le operazioni eseguite dalle transazioni $\mathrm{UNDO}$ risalendo fino alla prima azione della transazione più vecchia
     \item si ripercorre in avanti il LOG per rifare le operazioni eseguite dalle transazioni $\mathrm{REDO}$
   \end{enumerate}
   \item \textbf{guasto di dispositivo}: perdita di parte o tutto il contenuto della base di dati in memoria secondaria.
   
-  Viene risolto con la tecninca della \hl{ripresa a freddo}:
+  Viene risolto con la tecninca della \textcolor{azzurrino}{\textbf{ripresa a freddo}}:
   \begin{enumerate}[itemsep=\smallskipamount]
     \item si accede al $\mathrm{DUMP}$ della base di dati e si ricopia selettivamente la parte deteriorata della base di dati
     \item si accede al LOG risalendo al record di $\mathrm{DUMP}$
-    \item si ripercorre in avanti il LOG rieseguendo tutte le operazioni relative alla perte deteriorata comprese le azioni di $\verb|commit|$ e $\verb|abort|$
+    \item si ripercorre in avanti il LOG rieseguendo tutte le operazioni relative alla parte deteriorata comprese le azioni di $\verb|commit|$ e $\verb|abort|$
     \item si applica una ripresa a caldo
   \end{enumerate}
 \end{itemize}
 
-\esempio{file di LOG}{
+\esercizio{file di LOG}{
   Consideriamo il seguente file di LOG:
   \[
     \begin{aligned}
@@ -326,7 +330,7 @@ Esistono due tipologie di guasto:
   \end{enumerate}
 }
 
-\esempio{file di LOG}{
+\esercizio{file di LOG}{
   Consideriamo il seguente file di LOG:
   \[
     \begin{aligned}
@@ -348,10 +352,9 @@ Esistono due tipologie di guasto:
       \item $\mathrm{REDO = \emptyset}$ 
     \end{itemize}
     \smallskip
-    \item ripercorre in avanti il LOG dal CheckPoint fino al guasto e si aggiungono o si spostano le transazioni tra $\mathrm{UNDO}$ e $\mathrm{REDO}$
-    \begin{itemize}[label=$\triangleright$]
+    \item ripercorre in avanti il LOG dal checkpoint fino al guasto e si aggiungono o si spostano le transazioni tra $\mathrm{UNDO}$ e $\mathrm{REDO}$
+    \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
       \item $\mathrm{UNDO = \{T_1, \cancel{T_4}, T_5, t_6, t_7, t_8\}}$ (inizializzato con le transazioni del checkpoint)
-      \smallskip
       \item $\mathrm{REDO = \{T_4\}}$ 
     \end{itemize}
     \smallskip
@@ -376,7 +379,7 @@ Esistono due tipologie di guasto:
 }
 
 \section{Gestore dei metodi di accesso}
-Il \textcolor{azzurrino}{\textbf{gestore dei metodi di accesso}} esegue il piano di esecuzione prodotto dall'ottimizzatore e produce sequenze richieste di accessi ai blocchi della base di dati presenti in memoria secondaria.\\[0.2ex]
+Il \textcolor{azzurrino}{\textbf{gestore dei metodi di accesso}} esegue il piano di esecuzione prodotto dall'ottimizzatore e produce sequenze di richieste di accessi ai blocchi della base di dati presenti in memoria secondaria.\\[0.2ex]
 Le richieste vengono inviate al gestore del buffer che si occupa di caricare i blocchi necessari in pagine di memoria centrale.
 
 \begin{figure}[H]
@@ -386,7 +389,7 @@ Le richieste vengono inviate al gestore del buffer che si occupa di caricare i b
 \end{figure}
 
 \subsection{Metodi di accesso}
-I metodi di accesso sono moduli software (es. scansione sequenziale, accesso via indice, ordinamento, varie implementazioni del join) che implementano gli algoritmi di accesso e manipolazione dei dati organizzati in specifiche strutture fisiche.
+I metodi di accesso sono \textbf{moduli software} (es. scansione sequenziale, accesso via indice, ordinamento, varie implementazioni del join) che implementano gli algoritmi di accesso e manipolazione dei dati organizzati in specifiche strutture fisiche.
 
 Ogni metodo di accesso conosce:
 \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
@@ -398,7 +401,7 @@ Ogni metodo di accesso conosce:
 All'interno di una pagina sono presenti:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item \textbf{informazioni utili}: dati veri e propri (tuple della tabella)
-  \item \textbf{informazioni di controllo}: consentono di accedere alle informazioni utili (dizionario, bt di parità, altre informazioni del file system o della specifica struttura fisica)
+  \item \textbf{informazioni di controllo}: consentono di accedere alle informazioni utili (dizionario, bit di parità, altre informazioni del file system o della specifica struttura fisica)
 \end{itemize}
 
 \begin{figure}[H]
@@ -408,18 +411,20 @@ All'interno di una pagina sono presenti:
 \end{figure}
 
 \begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
-  \item \textcolor{red}{\textbf{blocco header/trailer}}: contengono informazioni di controllo utilizzate daò file system
+  \item \textcolor{red}{\textbf{blocco header/trailer}}: contengono informazioni di controllo utilizzate dal file system
   \item \textcolor{violet}{\textbf{pagina header/trailer}}: contengono le informazioni di controllo relative alla specifica struttura fisica
   \item \textcolor{orange}{\textbf{dizionario di pagina}}: contiene i puntatori a ciascun dato utile elementare contenuto nella pagina
   \item \textcolor{green}{\textbf{bit di parità}}: verifica che l'informazione contenuta nella pagina sia valida
   \item \textcolor{blue}{\textbf{parte utile}}: contiene i dati
 \end{itemize}
 
-\vario{N.B.}{
-  Dizionari di pagina e parte utile crescono come stack contrapposti, lasciando libera la parte centrale in uno spazio contiguo.
+\vario{Nota}{
+  Dizionari di pagina e parte utile crescono come stack contrapposti lasciando libera la parte centrale in uno spazio contiguo.
 }
 
-In caso di \textbf{tuple di lunghezza fissa}, il dizionario non è necessario: si memorizza la dimensione delle tuple e l'offset del punto iniziale.\\[0.2ex]
+In caso di \textbf{tuple di lunghezza fissa}, il dizionario non è necessario: si memorizza la dimensione delle tuple e l'offset del punto iniziale.
+
+\smallskip
 In caso di \textbf{tuple di lunghezza variabile}, il dizionario memorizza l'offset di ogni tupla presente nel blocco e di ogni attributo di ogni tupla.
 
 Molti gestori delle pagine non consentono la separazione di una tupla su più pagine:
@@ -427,20 +432,20 @@ Molti gestori delle pagine non consentono la separazione di una tupla su più pa
   \text{dimensione massima tupla} = \text{dimensione massima area disponibile su un blocco}
 \end{equation*}
 
-Alcuni gestori delle pagine consentono di distribuire una tupla su più pagine, altrimenti va gestito il caso di tuple memorizzato su più pagine.
+Alcuni gestori delle pagine consentono di distribuire una tupla su più pagine, altrimenti va gestito il caso di tuple memorizzate su più pagine.
 
 \subsection{Operazioni sulle pagine}
 Le principali operazioni che si possono eseguire sulle pagine sono:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item \textbf{inserimento/aggiornamento di una tupla}:
   \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
-    \item esiste spazio contiguo sufficiente: Inserimento
-    \item non esiste spazio contiguo sufficiente, ma spazio sufficiente: riorganizzazione dello spazio + inserimento
-    \item non esiste spazio sufficiente: interazione con il file system per allocare nuovi blocchi per il file
+    \item esiste spazio contiguo sufficiente: \texttt{inserimento}
+    \item non esiste spazio contiguo sufficiente, ma spazio sufficiente: \texttt{riorganizzazione dello spazio + inserimento}
+    \item non esiste spazio sufficiente: \texttt{interazione con il file system per allocare nuovi blocchi per il file}
   \end{itemize}
   \item \textbf{cancellazione contenuto della pagina}
   \item \textbf{accesso a una tupla}: avviene tramite il valore della chiave o l'offset nel dizionario
-  \item \textbf{accesso a un attributo di una tupla}: identificato in base all’offset e alla lunghezza del campo dopo aver identificato la tuplatramite la chiave o il suo offset 
+  \item \textbf{accesso a un attributo di una tupla}: identificato in base all’offset e alla lunghezza del campo dopo aver identificato la tupla tramite la chiave o il suo offset 
 \end{itemize}
 
 
@@ -448,13 +453,13 @@ Le principali operazioni che si possono eseguire sulle pagine sono:
 La struttura prmaria di un file stabilisce il criterio di disposizione delle tuple all'interno del file presente in memoria di massa:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item \textbf{sequenziale}: colloca le tuple in maniera consecutiva sulla base di un criterio specifico (es. ordine di inserimento)
-  \item \textbf{ad accesso clacolato}: colloca le tuple in posizioni determinate sulla base dell'esecuzione di un algoritmo di hash
+  \item \textbf{ad accesso calcolato}: colloca le tuple in posizioni determinate sulla base dell'esecuzione di un algoritmo di hash
   \item \textbf{ad albero}: utilizzate come strutture secondarie (indici)
 \end{itemize}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.6\textwidth]{images/strutture-primarie.png}
+  \includegraphics[width=0.7\textwidth]{images/strutture-primarie.png}
   \caption{strutture primarie per l'organizzazione dei file}
 \end{figure}
 
@@ -469,7 +474,7 @@ Questa è la struttura più semplice e più diffusa.
   \item \textbf{inserimento}:
   \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
     \item operazione molto efficiente
-    \item sufficiente mantenere uun riferimento all'ultimo blocco
+    \item sufficiente mantenere un riferimento all'ultimo blocco
     \item richiede solo un accesso in memoria secondaria
     \item maggiore costo in caso di verifica dei vincoli di integrità
   \end{itemize}
@@ -492,21 +497,21 @@ Questa è la struttura più semplice e più diffusa.
   \end{itemize}
 \end{itemize}
 
-Eliminazioni e modifiche possono portare ad un uso non ottimale dello spazio, siccome, si devono effettuare riorganizzazioni periodiche.
+Eliminazioni e modifiche possono portare a un uso non ottimale dello spazio, siccome, si devono effettuare riorganizzazioni periodiche.
 
 \paragraph{Struttura sequenziale ad array}
-Le tuple sono disposte come in un array, e la loro posizione dipende dal valore assunto in ciascuna tupla da un campo detto \textbf{indice}.\\[0.2ex]
+Le tuple sono disposte come in un array e la loro posizione dipende dal valore assunto in ciascuna tupla da un campo detto \textbf{indice}.\\[0.2ex]
 Questa struttura è utilizzabile soltanto quando le tuple di una tabella
 hanno una dimensione fissa, infatti non è quasi masi usata nei DBMS reali perchè difficilmente sono soddisfatte le condizioni per la sua applicazione.
 
-Ad ogni file viene assegnato un numero $\boldsymbol{n}$ di blocchi contigui e ciascun blocco è dotato di un numero m di posizioni disponibili per le tuple (quindi è un array bidimensionale $\mathrm{n \times m}$).\\[0.2ex]
-Ogni tupla è dotata di un valore numerico i che rappresenta l'indice della tupla in i-esima posizione nell'array.
+Ad ogni file viene assegnato un numero $\mathbf{n}$ di blocchi contigui e ciascun blocco è dotato di un numero $\mathrm{m}$ di posizioni disponibili per le tuple (array bidimensionale $\mathrm{n \times m}$).\\[0.2ex]
+Ogni tupla è dotata di un valore numerico $\mathrm{i}$ che rappresenta l'indice della tupla in i-esima posizione nell'array.
 
 \begin{itemize}[label=$\Rightarrow$, itemsep=\smallskipamount]
   \item \textbf{inserimento}
   \begin{itemize}[itemsep=\smallskipamount]
-    \item Iniziale: l’indice $\boldsymbol{i}$ viene ottenuto incrementando un contatore
-    \item Successivo: in una posizione libera oppure alla fine del file
+    \item iniziale: l’indice $\mathbf{i}$ viene ottenuto incrementando un contatore
+    \item successivo: in una posizione libera oppure alla fine del file
   \end{itemize}
   \item \textbf{cancellazione}: creano delle posizioni libere
 \end{itemize}
@@ -528,16 +533,16 @@ In caso di aggiornamento è necessario mantenere l'ordinamento, quindi servono p
   \begin{enumerate}[itemsep=\smallskipamount]
     \item individuare il blocco B che contiene la tupla che precede, nell’ordine della chiave, la tupla da inserire
     \item se B contiene spazio sufficiente per la nuova tupla allora si inserisce la tupla in B
-    \item altrimenti si aggiunge un nuovo blocco, detto overflow page, alla struttura e si inserisce la tupla nel nuovo blocco e si aggiusta la catena di puntatori
+    \item altrimenti si aggiunge un nuovo blocco (overflow page) alla struttura e si inserisce la tupla nel nuovo blocco e si aggiusta la catena di puntatori
   \end{enumerate}
   \item \textbf{scansione sequenziale ordinata secondo la chiave}:  è sufficiente seguire i puntatori
   \item \textbf{cancellazione di una tupla}
   \begin{enumerate}[itemsep=\smallskipamount]
     \item individuare il blocco B che contiene la tupla da cancellare
-    \item Cancellare la tupla da B
+    \item cancellare la tupla da B
     \item aggiustare la catena di puntatori
   \end{enumerate}
-  \item \textbf{riorganizzazione}: si assegnano le tuple ai blocchi in base ad opportuni coefficienti di riempimento, riaggiustando i puntatori
+  \item \textbf{riorganizzazione}: si assegnano le tuple ai blocchi in base a opportuni coefficienti di riempimento, riaggiustando i puntatori
 \end{itemize}
 
 \esempio{struttura sequenziale}{
@@ -545,20 +550,20 @@ In caso di aggiornamento è necessario mantenere l'ordinamento, quindi servono p
   
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/esempio-struttura-sequenziale.png}
+    \includegraphics[width=0.7\textwidth]{images/esempio-struttura-sequenziale.png}
   \end{figure}
 }
 
 \paragraph{Indice}
 Per aumentare le prestazioni degli accessi alle tuple memorizzate nelle strutture fisiche (file sequenziale), si introducono strutture ausiliarie dette strutture di accesso
-ai dati, o indici.\\[0.2ex]
+ai dati (indici).\\[0.2ex]
 Queste strutture velocizzano l'accesso casuale via chiave di ricerca, cioè un insieme di attributi utilizzati nell'indice della ricerca.
 
 Ci sono due tipi di indici su file sequenziali:
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
   \item \textbf{indice primario}: la chiave di ordinamento del file sequenziale coincide con la chiave di ricerca dell’indice.
   
-  Ogni record dell’indice primario contiene una coppia $\mathrm{\langle v_i, p_i\rangle}$, dove:
+  Ogni record dell’indice primario contiene una coppia $\mathbf{\langle v_i, p_i\rangle}$, dove:
   \begin{itemize}
     \item $\mathrm{v_i}$: valore della chiave di ricerca
     \item $\mathrm{p_i}$: puntatore al primo record nel file sequenziale con chiave $\mathrm{v_i}$
@@ -574,39 +579,58 @@ Ci sono due tipi di indici su file sequenziali:
   \smallskip
   Le operazioni che si possono eseguire su un indice primario sono:
   \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
-    \item \textbf{ricerca} di una tupla con chiave di ricerca K
+    \item \textbf{ricerca di una tupla con chiave di ricerca K}
     \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-      \item indice è denso $\mathrm{K} \rightarrow$ è presente nell'indice
+      \item se l'indice è denso $\mathrm{K} \rightarrow$ è presente nell'indice
       \begin{enumerate}[itemsep=\smallskipamount]
         \item scansione sequenziale dell'indice per trovare il record $\mathrm{(K, p_k)}$
         \item accesso al file attraverso il puntatore $\mathrm{p_k}$
       \end{enumerate}
 
       $\Rightarrow$ \hl{\textbf{costo}: 1 accesso indice + 1 accesso blocco dati}
-      \item indice è sparso $\mathrm{K \rightarrow}$ potrebbe non essere presente nell'indice
+
+      \esempio{ricerca con indice primario denso}{
+        Un esempio di ricerca con indice primario denso è il seguente:
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.6\textwidth]{images/indice-primario-denso.png}
+          \caption{ricerca dei conti della filiale B}
+        \end{figure}
+      }
+
+      \item se l'indice è sparso $\mathrm{K \rightarrow}$ potrebbe non essere presente nell'indice
       \begin{enumerate}[itemsep=\smallskipamount]
-        \item ccansione sequenziale dell'indice fino al record $\mathrm{(K", p_k)}$, dove $\mathrm{K"}$ è il valore più grande che sia minore o uguale a $\mathrm{K}$
+        \item scansione sequenziale dell'indice fino al record $\mathrm{(K', p_k)}$, dove $\mathrm{K'}$ è il valore più grande che sia minore o uguale a $\mathrm{K}$
         \item accesso al file attraverso il puntatore $\mathrm{p_k}$ e scansione del file (blocco corrente) per trovare le tuple con chiave $\mathrm{K}$
       \end{enumerate}
 
       $\Rightarrow$ \hl{\textbf{costo}: 1 accesso indice + 1 accesso blocco dati}
+
+      \esempio{ricerca con indice primario sparso}{
+        Un esempio di ricerca con indice primario sparso è il seguente:
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.6\textwidth]{images/indice-primario-sparso.png}
+          \caption{ricerca dei conti della filiale B}
+        \end{figure}
+      }
     \end{itemize}
 
-    \item \textbf{inserimento} di un record nell'indice
+    \item \textbf{inserimento di un record nell'indice}
     \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
       \item \textbf{indice è denso}: inserimento nell'indice avviene solo se la tupla inserita nel file ha un valore di chiave K che non è già presente
       \item \textbf{indice è sparso}: inserimento avviene solo quando, per effetto dell'inserimento di una nuova tupla, si aggiunge un blocco dati alla struttura (negli altri casi rimane invariato)
     \end{itemize}
 
     \smallskip
-    Gli indici sono costosi, quindi bisogna fare un compromesso sul numero di indici da mantenere e il numero di attributi ad accesso sequenziale.
+    Gli indici sono costosi, quindi, bisogna fare un compromesso sul numero di indici da mantenere e il numero di attributi ad accesso sequenziale.
 
   \item  \textbf{cancellazione} di un record nell’indice
   \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
     \item \textbf{indice è denso}: cancellazione nell'indice avviene solo se la tupla cancellata nel file è l'ultima tupla con valore di chiave $\mathrm{K}$
     \item \textbf{indice è sparso}: cancellazione nell'indice avviene solo quando $\mathrm{K}$ è presente nell'indice e il corrispondente blocco viene eliminato
     
-    Nel caso in cui il blocco sopravvive, va sostituito $\mathrm{K}$ nel record dell'indice con il primo valore $K"$ presente nel blocco.
+    Nel caso in cui il blocco sopravvive, va sostituito $\mathrm{K}$ nel record dell'indice con il primo valore $\mathrm{K'}$ presente nel blocco.
   \end{itemize}
 \end{itemize}
 \item \textbf{indice secondario}: la chiave di ordinamento e la chiave di ricerca sono diverse.
@@ -614,14 +638,14 @@ Ci sono due tipi di indici su file sequenziali:
 Ogni record dell'indice secondario contiene una coppia $\mathrm{\langle v_i, p_i \rangle}$, dove:
 \begin{itemize}
   \item $\mathrm{v_i}$: valore della chiave di ricerca
-  \item $\mathrm{p_i}$ è il puntatore al bucket di puntatori che individuano nel file sequenziale tutte le tuple con chiave vi
+  \item $\mathrm{p_i}$: puntatore al bucket di puntatori che individuano nel file sequenziale tutte le tuple con chiave $\mathrm{v_i}$
 \end{itemize}
 
 Gli indici secondari sono sempre densi perchè non si può sfruttare l'ordinamento delle tuple.
 
 Le operazioni che si possono eseguire su un indice secondario sono:
 \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
-  \item \textbf{ricerca} di una tupla con chiave di ricerca $\mathrm{K}$
+  \item \textbf{ricerca di una tupla con chiave di ricerca} $\mathbf{K}$
   \begin{enumerate}[itemsep=\smallskipamount]
     \item scansione sequenziale dell'indice per trovare il record $\mathrm{(K, p_k)}$
     \item accesso al bucket $\mathrm{B}$ di puntatori attraverso il puntatore $\mathrm{B}$
@@ -629,13 +653,23 @@ Le operazioni che si possono eseguire su un indice secondario sono:
   \end{enumerate}
   
   $\Rightarrow$ \hl{\textbf{costo}: 1 accesso indice + 1 accesso al bucket + n accessi alle pagine dati} (n è il numero di puntatori nel bucket B)
+
+  \esempio{ricarca con indice secondario}{
+    Un esempio di ricerca con indice secondarioè il seguente:
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.6\textwidth]{images/indice-secondario.png}
+      \caption{ricerca dei conti della filiale B}
+    \end{figure}
+  }
+
   \item  \textbf{inserimento} e \textbf{cancellazione}: si effettuano gli stessi passi dell'inserimento e della cancellazione in un indice primario denso, con in più l'aggiornamento dei bucket
 \end{itemize}
 \end{itemize}
 
 \subsubsection{Struttura ad albero}
-Quando l'indice aumenta di dimensioni, non si può più gestire in memoria centrale, di conseguenza deve essere gestito in memoria secondaria.\\[0.2ex]
-Per migliorare le prestazioni degli accessi a un indice di grandi dimensioni, si utilizza il $\verb|B+-tree|$, in cui:
+Quando l'indice aumenta di dimensioni non si può più gestire in memoria centrale, di conseguenza deve essere gestito in memoria secondaria.\\[0.2ex]
+Per migliorare le prestazioni degli accessi a un indice di grandi dimensioni, si utilizza il $\verb|B+ tree|$, in cui:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
   \item ogni nodo viene memorizzato in una pagina della memoria secondaria
   \item legami tra nodi = puntatori a pagina
@@ -645,7 +679,7 @@ Per migliorare le prestazioni degli accessi a un indice di grandi dimensioni, si
 \end{itemize}
 
 \paragraph{Struttura}
-La struttura di un $\verb|B+-tree|$ con fan-out = n (n figli per nodo) è la seguente:
+La struttura di un $\verb|B+ tree|$ con fan-out = n (n figli per nodo) è la seguente:
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
   \item \textbf{nodo foglia}
   
@@ -654,7 +688,7 @@ La struttura di un $\verb|B+-tree|$ con fan-out = n (n figli per nodo) è la seg
     \includegraphics[width=0.5\textwidth]{images/nodo-foglia-BTree.png}  
   \end{figure}
 
-  Può contenere fino a $\boldsymbol{n - 1}$ valori ordinati di chiave di ricerca e fino a $\boldsymbol{n}$ puntatori ai dati.\\[0.2ex]
+  Può contenere fino a $\mathbf{n - 1}$ valori ordinati di chiave di ricerca e fino a $\mathbf{n}$ puntatori ai dati.\\[0.2ex]
   Ogni nodo foglia ha un vincolo di ordinamento, cioè:
   \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
     \item chiavi dentro a un nodo foglia sono ordinate
@@ -673,7 +707,7 @@ La struttura di un $\verb|B+-tree|$ con fan-out = n (n figli per nodo) è la seg
     \includegraphics[width=0.5\textwidth]{images/puntatore-nodo-foglia-BTree.png}
   \end{figure}
 
-  Una variante del $\verb|B+-tree|$ è quella in cui i nodi foglia contengono direttamente le tuple.
+  Una variante del $\verb|B+ tree|$ è quella in cui i nodi foglia contengono direttamente le tuple.
 
   In questo caso si ha una struttura fisica integrata.
 
@@ -690,21 +724,66 @@ La struttura di un $\verb|B+-tree|$ con fan-out = n (n figli per nodo) è la seg
 \paragraph{Vincoli di riempimento}
 Il fan-out è un parametro che fornisce il limite massimo, ma bisogna anche fornire un limite minimo per evitare che i nodi siano troppo vuoti e sono chiamati \textbf{vincoli di riempimento}:
 \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
-  \item \textbf{vincoli per i nodi foglia}: ogni nodo foglia può contenere un numero di valori di chiavi ($\mathrm{\# \ chiavi}$) vincolato come:
+  \item \textbf{vincoli per i nodi foglia}: ogni nodo foglia può contenere un numero di valori di chiavi ($\mathrm{\# \ chiavi}$) vincolato
   \begin{equation*}
     \mathrm{\left\lceil \frac{n - 1}{2} \right\rceil \leq \# \ chiavi \leq n - 1}
   \end{equation*}
-  \item \textbf{vincoli per i nodi intermedi}: ogni nodo intermedio può contenere un numero di puntatori ($\mathrm{\# \ puntatori}$) vincolato come:
+  \item \textbf{vincoli per i nodi intermedi}: ogni nodo intermedio può contenere un numero di puntatori ($\mathrm{\# \ puntatori}$) vincolato
   \begin{equation*}
     \mathrm{\left\lceil \frac{n}{2} \right\rceil \leq \# \ puntatori \leq n}
   \end{equation*}
 \end{itemize}
 
 \esempio{utilizzo del \texttt{B+-tree}}{
-  consideriamo un \texttt{B+-tree} con fan-out = 4 conetente:
+  Consideriamo ad esempio un B+-Tree con fan-out = 4 con contenuto:
   \[
-    \mathrm{A,B,D,E,F,G,L,M,N,P}
-  \]
+    \mathrm{A, B, D, E, F, G, L, M, N, P}
+  \] 
+  Il fan-out ci dice che per:
+  \begin{itemize}
+    \item \textbf{nodi foglia}: vincoli di riempimento sono
+      \[
+        2 \le \#chiavi \le 3
+      \] 
+
+    \item \textbf{nodi intermedi}: vincoli di riempimento sono
+      \[
+        2 \le \#puntatori \le 4
+      \]
+
+    \item \textbf{radice}: unico nodo per cui i vincoli di riempimento \textbf{minimi}
+      non si applicano
+  \end{itemize}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/b_plus_tree_esempio.png}
+    \caption{Esempio di B+-Tree con vincolo di riempimento minimo}
+  \end{figure}
+
+  La radice \( \mathrm{L} \) punta:
+  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item a sinistra: al sottoalbero con chiave \( \mathrm{K < "L"} \) 
+    \item a destra: al sottoalbero con chiave \( \mathrm{K \ge "L"} \)
+  \end{itemize}
+
+  \smallskip
+  I figli puntano alle tuple con chiave uguale a quella del nodo foglia.
+  
+  In questo caso l'albero per chiavi desiderate rispetta il vincolo di riempimento minimo.
+  
+  Per rispettare il vincolo di riempimento massimo bisogna fare un altro albero:
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/b_plus_tree_esempio2.png}
+    \caption{Esempio di B+-Tree con vincolo di riempimento massimo}
+  \end{figure}
+
+  Le etichette per la radice sono assegnate secondo:
+  \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+    \item sinistra: Chiavi comprese tra: \( \mathrm{"E" \le K < "L"} \) 
+    \item centro: Chiavi comprese tra \( \mathrm{"L" \le K < "N"} \)
+    \item destra: Chiavi \( \mathrm{K \ge "N"} \)
+  \end{itemize}
 }
 
 \paragraph{Operazione: ricerca con chiave K}
@@ -712,7 +791,7 @@ Per effettuare la ricerca di una tupla con chiave di ricerca K si effettuano i s
 \begin{enumerate}[itemsep=\medskipamount]
   \item \textbf{cercare nel nodo radice il più piccolo valore di chiave maggiore di K}
   \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
-    \item se il valore esiste ($\mathrm{value = k_i}$) $\rightarrow$ sesguire il puntatore $\mathrm{p_i}$
+    \item se il valore esiste ($\mathrm{value = k_i}$) $\rightarrow$ seguire il puntatore $\mathrm{p_i}$
     \begin{figure}[H]
       \centering
       \includegraphics[width=0.5\textwidth]{images/ricerca-chiave-k-nodoRadice1.png}
@@ -738,13 +817,13 @@ Per effettuare la ricerca di una tupla con chiave di ricerca K si effettuano i s
 }
 
 Il costo della ricerca dipende dalla profondità dell'albero in termini di \textbf{accessi alla memoria secondaria}, dove ogni metodo rappresenta un blocco.\\[0.2ex]
-Il \underline{costo in una struttura ad albero} è pari alla profondità dell'albero, che nel $\verb|B+-tree|$ è indipendente dal percorso ed è funzione del fan-out $\mathrm{n}$ e del numero di valori di chiave presente nell'albero $\mathrm{\# \ valoriChiave}$.
+Il \underline{costo in una struttura ad albero} è pari alla profondità dell'albero, che nel $\verb|B+ tree|$ è indipendente dal percorso ed è funzione del fan-out $\mathrm{n}$ e del numero di valori di chiave presente nell'albero $\mathrm{\# \ valoriChiave}$.
 \begin{equation*}
-  \mathrm{prof_{B+-tree}} \leq \underbrace{1}_{\text{radice}} + \underbrace{\log_{\left\lceil \frac{n}{2} \right\rceil} \left( \frac{\overbrace{\# \text{valoriChiave}}^{\text{nodi foglia massimi}}}{\left\lceil \frac{n - 1}{2} \right\rceil} \right)}_{\text{\# livelli}}
+  \mathrm{prof_{B+ tree}} \leq \underbrace{1}_{\text{radice}} + \underbrace{\log_{\left\lceil \frac{n}{2} \right\rceil} \left( \frac{\overbrace{\# \text{valoriChiave}}^{\text{nodi foglia massimi}}}{\left\lceil \frac{n - 1}{2} \right\rceil} \right)}_{\text{\# livelli}}
 \end{equation*}
 
 \paragraph{Operazione: inserimento}
-Per inserire una tupla in un $\verb|B+-tree|$ bisogna mantenere i vincoli di riempimento, quindi, vengono eseguiti i seguenti passi:
+Per inserire una tupla in un $\verb|B+ tree|$ bisogna mantenere i vincoli di riempimento, quindi, vengono eseguiti i seguenti passi:
 \begin{enumerate}[itemsep=\medskipamount]
   \item \textbf{ricerca del nodo foglia NF dove K va inserito}
   \item 
@@ -752,7 +831,7 @@ Per inserire una tupla in un $\verb|B+-tree|$ bisogna mantenere i vincoli di rie
     \item se K è presente in NF:
     \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
       \item se è \textbf{indice primario} $\rightarrow$ non si fa nessuna azione
-      \item se è \textbf{indice secondario} $\rightarrow$ si aggiornnao i bucket dei puntatori
+      \item se è \textbf{indice secondario} $\rightarrow$ si aggiornano i bucket dei puntatori
     \end{itemize}
     \item se k non è prensente in NF:
     \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
@@ -783,10 +862,10 @@ Per inserire una tupla in un $\verb|B+-tree|$ bisogna mantenere i vincoli di rie
 }
 
 \paragraph{Operazione: cancellazione}
-Per cancellare una tupla in un $\verb|B+-tree|$ con chiave K bisogna mantenere i vincoli di riempimento, quindi, vengono eseguiti i seguenti passi:
+Per cancellare una tupla in un $\verb|B+ tree|$ con chiave K bisogna mantenere i vincoli di riempimento, quindi, vengono eseguiti i seguenti passi:
 \begin{enumerate}[itemsep=\medskipamount]
   \item \textbf{ricercare il nodo foglio NF che contiene K}
-  \item \textbf{cancellare K e il suo puntatore}.
+  \item \textbf{cancellare K e il suo puntatore}
   
   Potrebbe violare il vincolo di riempimento minimo, in quel caso bisogna fare il merge di NF con un fratello.
 
@@ -795,8 +874,8 @@ Per cancellare una tupla in un $\verb|B+-tree|$ con chiave K bisogna mantenere i
     \item individuare il nodo fratello
     \item generare un unico nodo foglia
     \item aggiornare il padre:
-    \begin{itemize}[itemsep=\smallskipamount]
-      \item se non cè un nodo foglia fratello che unito rispetta il vincolo di riempimento massimo, si fa prima il merge e poi lo split
+    \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+      \item se non c'è un nodo foglia fratello che unito rispetta il vincolo di riempimento massimo, si fa prima il merge e poi lo split
       \item se anche il padre viola il vincolo di riempimento massimo, si propaga il merge fino ad arrivare alla radice
     \end{itemize}
   \end{enumerate} 
@@ -817,13 +896,13 @@ Per cancellare una tupla in un $\verb|B+-tree|$ con chiave K bisogna mantenere i
 Questra struttura garantisce un \textbf{accesso associativo} alle tuple, cioè la locazione fisica dei dati dipende dal valore assunto dalla chiave.\\[0.2ex]
 Si potrebbe utilizzare un array indicizzato dalla chiave, ma questo non è pratico perchè i valori della chiave sono tanti, quindi, si utilizza una \textbf{funzione di hash} che mappa i valori di chiave in indirizzi di memorizzazione delle tuple:
 \begin{equation*}
-  \mathrm{h : K \rightarrow B}
+  \mathbf{h : K \rightarrow B}
 \end{equation*}
 
 dove:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-  \item K: dominio delle chiavi
-  \item B: dominio degli indirizzi di memorizzazione
+  \item $\mathrm{K}$: dominio delle chiavi
+  \item $\mathrm{B}$: dominio degli indirizzi di memorizzazione
 \end{itemize}
 
 Il vantaggio di questa struttura è che il costo della ricerca è costante e uguale a un accesso alla memoria secodaria.\\[0.2ex]
@@ -831,14 +910,14 @@ Lo svantaggio è quello delle \textbf{collisioni}, cioè valori di chiavi divers
 Una funzione di hash \textbf{buona} minimizza il numero di collisioni.
 
 \definizione{fattore riempimento}{
-  Il \textbf{fattore riempimento} definisce la frazione di spazio fisico mediamente utilizzata da un blocco.
+  Il \textbf{fattore riempimento} definisce la frazione di spazio fisico utilizzata da un blocco.
 }
 
 Siano:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-  \item T: numero di tuple
-  \item F: fattore blocco (numero di tuple che ci stanno in un blocco)
-  \item f: fattore di riempimento
+  \item $\mathrm{T}$: numero di tuple
+  \item $\mathrm{F}$: fattore blocco (numero di tuple che ci stanno in un blocco)
+  \item $\mathrm{f}$: fattore di riempimento
 \end{itemize}
 
 si ha che il numero di blocchi è definito come:
@@ -851,9 +930,9 @@ Il DBMS alloca un numero di bucket di puntatori uguale al numero di blocchi $\ma
 Si definiscono due funzioni:
 \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
   \item \textbf{funzione di folding}: trasforma i valori di chiave in numeri interi positivi
-  \begin{eqnarray}
+  \begin{equation*}
     \mathrm{f: K \rightarrow \mathbb{Z}^+}
-  \end{eqnarray}
+  \end{equation*}
   \item \textbf{funzione di hashing}:
   \begin{equation*}
     \mathrm{h: \mathbb{Z}^+ \rightarrow B}
@@ -870,11 +949,11 @@ Si definiscono due funzioni:
 }
 
 \paragraph{Operazione: ricerca con chiave K}
-Per efettuare la ricerca di una tupla con chiave di ricerca K si efettuano i seguenti passi:
+Per efettuare la ricerca di una tupla con chiave di ricerca K si effettuano i seguenti passi:
 \begin{enumerate}[itemsep=\medskipamount]
   \item calcolare $\mathrm{b = h(f(K))}$ (costo zero)
   \item accedere al bucket $\mathrm{b}$ (costo: 1 accesso alla pagina di memoria secondaria)
-  \item accedere alle $\mathrm{n}$ tupe attraverso i puntatori del bucket (costo: $\mathrm{m}$ accessi a pagine di memoria secondaria, con $\mathrm{m \leq n}$)
+  \item accedere alle $\mathrm{n}$ tuple attraverso i puntatori del bucket (costo: $\mathrm{m}$ accessi a pagine di memoria secondaria, con $\mathrm{m \leq n}$)
 \end{enumerate}
 
 L'inserimento e la cancellazione hanno costo simile alla ricerca.
@@ -884,7 +963,7 @@ La struttura ad accesso calcolato funziona se i buckets conservano un basso coef
 Infatti, il problema delle strutture ad accesso calcolato è la gestione delle collisioni.
 
 \definizione{collisione}{
-  Una \textbf{collisione} si verifica quando, dati due valori di chiave $\mathrm{K_1}$ e $\mathrm{K_2}$ con $\mathrm{K_1} \neq \mathrm{K_2}$, risulta:
+  Una \textbf{collisione} si verifica, quando, dati due valori di chiave $\mathrm{K_1}$ e $\mathrm{K_2}$ con $\mathrm{K_1} \neq \mathrm{K_2}$, risulta:
   \begin{equation*}
     \boldsymbol{\mathrm{h(f(K_1)) = h(f(K_2))}}
   \end{equation*}
@@ -897,7 +976,7 @@ La probabilità che uno stesso bucket riceva $\mathrm{t}$ chiavi su $\mathrm{n}$
 
 dove:
 \begin{itemize}[label=$\triangleright$]
-  \item B: numero totale di bucket
+  \item $\mathrm{B}$: numero totale di bucket
 \end{itemize}
 
 La probabilità di avere più di $\mathrm{F}$ collisioni, con $\mathrm{F}$ il fattore blocco, cioè il numero di puntatori nel bucket, è:
