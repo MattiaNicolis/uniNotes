@@ -208,15 +208,13 @@ CREATE DOMAIN Voto AS SMALLINT DEFAULT NULL
 \end{codiceSQL}
 \end{esempiobox}
 
-  %----fino a qui
+\subsection{Vincoli intrarelazionali}
+I vincoli intrarelazionali sono vincoli che si applicano a livello di relazione, cioè a una singola tabella.
 
-  \subsection{Vincoli intrarelazionali}
-  I vincoli intrarelazionali sono vincoli che si applicano a livello di relazione, cioè a una singola tabella.
-
-  I principali vincoli intrarelazionali sono:
-  \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
-    \item $\verb|NOT NULL|$: valore nullo non è ammesso per l'attributo, quindi il valore deve sempre essere specificato, o si assegna un valore di default
-    \item $\verb|UNIQUE|$: definisce (super)chiavi
+I principali vincoli intrarelazionali sono:
+\begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
+  \item $\verb|NOT NULL|$: valore nullo non è ammesso per l'attributo, quindi il valore deve sempre essere specificato, o si assegna un valore di default
+  \item $\verb|UNIQUE|$: definisce (super)chiavi
 \begin{codiceSQL}
 Nome VARCHAR(20),
 Cognome VARCHAR(20),
@@ -231,7 +229,7 @@ Cognome VARCHAR(20) UNIQUE
 --impone che non ci siano due righe che abbiano lo stesso nome
 --o lo stesso cognome 
 \end{codiceSQL}
-    \item $\verb|PRIMARY KEY|$: chiave primaria (una sola, implica \texttt{NOT NULL}) 
+  \item $\verb|PRIMARY KEY|$: chiave primaria (una sola, implica \texttt{NOT NULL}) 
 \begin{codiceSQL}
 matricola CHAR(6) PRIMARY KEY;
 --se unico componente della chiave primaria
@@ -243,38 +241,40 @@ cognome VARCHAR(20),
 PRIMARY KEY(nome, cognome)
 --se la chiave primaria ha piu' attributi
 \end{codiceSQL}
-    \item $\verb|CHECK|$: specifica un vincolo generico che deve soddisfare le tuple della tabella. 
-    
-    Viene soddisfatto se la sua espressione è vera o nulla
+  \item $\verb|CHECK|$: specifica un vincolo generico che deve soddisfare le tuple della tabella. 
+  
+  Viene soddisfatto se la sua espressione è vera o nulla
 \begin{codiceSQL}
 CREATE TABLE Impiegato(
-  matricola CHAR(6) PRIMARY KEY,
-  nome VARCHAR(20) NOT NULL,
-  cognome VARCHAR(20) NOT NULL,
-  qualifica VARCHAR(20),
-  stipendio NUMERIC(8,2) DEFAULT 500.00 NOT NULL
-  CHECK(stipendio >= 0.0),    --check di attributo
-  UNIQUE(cognome, nome),
-  CHECK(nome <> cognome)      --check di tabella
+matricola CHAR(6) PRIMARY KEY,
+nome VARCHAR(20) NOT NULL,
+cognome VARCHAR(20) NOT NULL,
+qualifica VARCHAR(20),
+stipendio NUMERIC(8,2) DEFAULT 500.00 NOT NULL
+CHECK(stipendio >= 0.0),    --check di attributo
+UNIQUE(cognome, nome),
+CHECK(nome <> cognome)      --check di tabella
 )
 \end{codiceSQL}
-  \end{itemize}
+\end{itemize}
 
 \subsection{Vincoli interrelazionali}
-Un vincolo di integrità referenziale (interrelazionale) crea un legame tra i valori di un attributo (o di un insieme di attributi) A della tabella corrente (interna/slave) e i valori di un attributo (o di un insieme di attributi) B di un'altra tabella (esterna/master).\\[0.2ex]
+Un vincolo di integrità referenziale (interrelazionale) crea un legame tra i valori di un attributo (o di un insieme di attributi) A della tabella corrente (interna/slave) e i valori di un attributo (o di un insieme di attributi) B di un'altra tabella (esterna/master).
+
+\smallskip
 Il vincolo impone che:
-\begin{itemize}[itemsep=\smallskipamount]
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
   \item in ogni tupla della tabella interna, il valore di A, se diverso dal valore nullo, sia presente tra i valori di B nella tabella esterna
   \item  l'attributo B della tabella esterna deve essere soggetto a un vincolo \texttt{UNIQUE} (o \texttt{PRIMARY KEY})
 \end{itemize}
 
-\vario{Nota:}{
+\vario{Nota}{
   L'attributo (o insieme di attributi) B può anche non essere la chiave primaria, ma deve essere identificante per le tuple della tabella esterna.
 }
 
-\textbf{REFERENCES e FOREIGN KEY permettono di definire vincoli di integrità referenziale}.
+\hl{\texttt{REFERENCES} e \texttt{FOREIGN KEY} permettono di definire vincoli di integrità referenziale}.
 
-Per singoli attributi, basta utilizzare il costrutto \textcolor{purple}{\textbf{REFERENCES}}.
+Per singoli attributi basta utilizzare il costrutto \texttt{REFERENCES}.
 \begin{codiceSQL}
 CREATE TABLE Impiegato (
   Matricola CHARACTER(6) PRIMARY KEY,
@@ -288,7 +288,7 @@ CREATE TABLE Impiegato (
 )
 \end{codiceSQL}
 
-Per attributi multipli, si usa il costrutto \textcolor{purple}{\textbf{FOREIGN KEY}} alla fine della definizione degli attributi, seguito da \textcolor{purple}{\textbf{REFERENCES}}.
+Per attributi multipli, si usa il costrutto \texttt{FOREIGN KEY} alla fine della definizione degli attributi, seguito da \texttt{REFERENCES}.
 \begin{codiceSQL}
 CREATE TABLE Impiegato (
   Matricola CHARACTER(6) PRIMARY KEY,
@@ -420,48 +420,42 @@ WHERE citta = 'Verona';
 
 
 \section{Selezione}
-
-\textbf{\large Struttura base}
-
+La struttura base del comando di selezione è:
 \begin{codiceSQL}
 SELECT [ DISTINCT ]
 [ * | expression [[ AS] output_name ] [, 
 ...] ]
 FROM from_item [, ...] 
-[ WHERE condition ]
-[ GROUP BY grouping_element [, ...] ]
-[ HAVING condition [, ...] ]
-[ { UNION | INTERSECT | EXCEPT } [ DISTINCT
-] other_select ]
-[ ORDER BY expression [ ASC | DESC | USING 
-operator ]]
-
+  [ WHERE condition ]
+    [ GROUP BY grouping_element [, ...] ]
+      [ HAVING condition [, ...] ]
+      [ { UNION | INTERSECT | EXCEPT } [ DISTINCT
+      ] other_select ]
+        [ ORDER BY expression [ ASC | DESC | USING 
+        operator ]]
 \end{codiceSQL}
 
 
-\subsection{Clausola SELECT}
+\subsection{Clausola \texttt{SELECT}}
 \begin{codiceSQL}
 SELECT [ DISTINCT ]
 [{* | expression [[ AS] output_name ]} [, ...]]
 \end{codiceSQL}
-\begin{description}
-  \item [\textbf{*}] è un’abbreviazione per indicare tutti gli attributi delle tabelle.
-  \item [\textbf{expression}] è un’espressione che coinvolge gli attributi della tabella (può anche essere semplicemente il nome di un attributo).
-  \item [\textbf{output\_name}] è il nome assegnato all’attributo che conterrà il risultato della valutazione dell’espressione expression nella relazione risultato.
-  \item [\textbf{DISTINCT}:] se presente richiede l’eliminazione delle tuple duplicate.
 
-\end{description}
-
-
-L’esecuzione di una \textbf{SELECT} produce una relazione che:
-\begin{itemize}
-  \item ha come schema tutti gli attributi elencati nella clausola \textbf{SELECT};
-  \item ha come contenuto tutte le tuple ottenute proiettando sugli attributi 
-indicati nella \textbf{SELECT} provenienti dalle tabelle del \textbf{FROM} (prodotto 
-cartesiano), limitate a quelle che soddisfano le eventuali condizioni 
-specificate nelle clausole \textbf{WHERE}, \textbf{GROUP BY} e \textbf{HAVING}
+dove:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+  \item \texttt{*}: abbreviazione per indicare tutti gli attributi delle tabelle
+  \item \texttt{expression}: espressione che coinvolge gli attributi della tabella (può anche essere semplicemente il nome di un attributo)
+  \item \texttt{output\_name}: nome assegnato all’attributo che conterrà il risultato della valutazione dell’espressione expression nella relazione risultato.
+  \item \texttt{DISTINCT}: se presente richiede l’eliminazione delle tuple duplicate
 \end{itemize}
 
+\smallskip
+L’esecuzione di una \texttt{SELECT} produce una relazione che:
+\begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+  \item ha come schema tutti gli attributi elencati nella clausola \texttt{SELECT}
+  \item ha come contenuto tutte le tuple ottenute proiettando sugli attributi indicati nella \texttt{SELECT} provenienti dalle tabelle del \texttt{FROM} (prodotto cartesiano), limitate a quelle che soddisfano le eventuali condizioni specificate nelle clausole \texttt{WHERE}, \texttt{GROUP BY} e \texttt{HAVING}
+\end{itemize}
 
 \subsubsection{Target List}
 
@@ -493,61 +487,58 @@ delle tabelle indicate nella
 clausola FROM
 \end{minipage}
 
-
-\textbf{Esempio}
-
-
-
-\begin{minipage}[t]{0.39\textwidth}
- \begin{codiceSQL}
+\begin{esempiobox}{Esempio}
+\begin{codiceSQL}
 SELECT Nome, Reddito
 FROM Persone
-WHERE Eta < 30
+  WHERE Eta < 30;
 \end{codiceSQL}
-\end{minipage}
-\hfill % Questo comando inserisce uno spazio flessibile che spinge le due minipage ai lati opposti
-\begin{minipage}[t]{0.50\textwidth}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{images/nomeReddito.png}
-  \caption{selezionati solo le tuple dove è rispettata la condizione}
-\end{figure}
-\end{minipage}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/nomeReddito.png}
+    \caption{selezione solo delle tuple dove è rispettata la condizione}
+  \end{figure}
+\end{esempiobox}
 
 
 \subsubsection{Concatenazione stringhe}
-L'operatore di concatenazione || è un operatore scalare (o operatore di riga).
+L'operatore di concatenazione \texttt{||} è un operatore scalare (o operatore di riga).
 
-Lavora su una singola riga alla volta. Se la tua tabella ha 100 righe, il costrutto \texttt{SELECT titolo || ' - ' || città} calcolerà e restituirà 100 risultati testuali separati, uno per ogni riga.
+Lavora su una singola riga alla volta.\\[0.2ex]
+Se la tua tabella ha 100 righe, il costrutto \texttt{SELECT titolo || ' - ' || città} calcolerà e restituirà 100 risultati testuali separati, uno per ogni riga.
 
-\vario{nota}{Non è un'esclusiva di SELECT, può infatti essere utilizzato anche nella clausola WHERE e nella clausola ORDER BY}
+\vario{Nota}{
+  Non è un'esclusiva di \texttt{SELECT}, può infatti essere utilizzato anche nella clausola \texttt{WHERE} e nella clausola \texttt{ORDER BY}.
+}
 
-
-\textbf{\large Concatenazione in clausola WHERE (per filtrare i dati)}
+\smallskip
+La concatenazione all'interno della clausola \texttt{WHERE} serve per filtrare i dati:
 \begin{codiceSQL}
-  -- Trova la riga in cui l'unione di nome e cognome da esattamente 'Mario Rossi'
 WHERE nome || ' ' || cognome = 'Mario Rossi'
+--Trova la riga in cui l'unione di nome e cognome da esattamente 
+--'Mario Rossi'
 \end{codiceSQL}
 
-\textbf{\large Concatenazione in clausola ORDER BY (per ordinare i risultati)}
+\smallskip
+La concatenazione all'interno della clausola \texttt{ORDER BY} serve per ordinare i risultati:
 \begin{codiceSQL}
-  -- Ordina i risultati basandosi sull'unione testuale dei due campi
 ORDER BY titolo || citta
+--Ordina i risultati basandosi sull'unione testuale dei due campi
 \end{codiceSQL}
-
 
 
 \subsection{Clausola FROM}
 \begin{codiceSQL}
-  FROM from_item [, ...]
+FROM from_item [, ...]
 \end{codiceSQL}
 
-\begin{enumerate}
-  \item  table\_name [[AS] alias [(column\_alias [, ...])]]
-  \begin{itemize}
-    \item Se sono presenti due o più tabelle, si esegue il prodotto cartesiano tra tutte le  tabelle. Se ci sono attributi con lo stesso nome su tabelle diverse, nel SELECT 
-questi attributi sono identificati anteponendo il nome della tabella e un ’.’: 
-nomeTabella.nomeAttributo
+dove:
+\begin{enumerate}[itemsep=\smallskipamount]
+  \item  \texttt{table\_name [[AS] alias [(column\_alias [, ...])]]}
+  \begin{itemize}[itemsep=\smallskipamount]
+    \item se sono presenti due o più tabelle, si esegue il prodotto cartesiano tra tutte le  tabelle
+    \item se ci sono attributi con lo stesso nome su tabelle diverse, nel \texttt{SELECT} questi attributi sono identificati anteponendo il nome della tabella e un \texttt{’.’}:  \texttt{nomeTabella.nomeAttributo}
   \end{itemize}
 
   \item  (other\_select) [AS] nomeRisultato [(column\_alias [,...])
