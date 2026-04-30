@@ -22,6 +22,9 @@ Le locazioni vengono riferite attraverso identificatori chiamate variabili.
 \end{mydef}
 
 Per il momento, quindi, supponiamo che le variabili siano nomi astratti per le celle di e supponiamo di associare direttamente il valore (modificabile) a una variabile.
+\[
+    \mathbf{Ambiente : identificatore \Leftrightarrow valore}
+\]
 
 Vediamo alcuni aspetti dell'uso delle variabili che rendono questo modello poco adatto:
 \begin{itemize}[label=$\triangleright$, itemsep=\medskipamount]
@@ -32,9 +35,15 @@ Vediamo alcuni aspetti dell'uso delle variabili che rendono questo modello poco 
     Ciò significa che per un certo intervallo di tempo, una variabile potrebbe avere in altro significato, mentre il valore che aveva prima della ridefinizione non deve andare perso perchè potrebbe ritornanre valido (es. uscita da una procedura)
 \end{itemize}
 
-Introduciamo, quindi, la locazione come astrazione della memoria fisica e la variabile come astrazione della locazione.\\[0.2ex]
+\smallskip
+Introduciamo, quindi, la \textbf{locazione} come astrazione della memoria fisica e la variabile come astrazione della locazione.\\[0.2ex]
 Significa che introduciamo qualcosa di intermedio tra il nome della variabile e il nome riferito, che modelli la memoria nella sua visione ideale (illimitata).\\[0.2ex]
 In questo modo è possibile che una variabile possa avere indirizzi differenti in momenti diversi dall'esecuzione, oppure che una variabile possa avere differenti indentificatori in punti diversi del programma.
+
+%\begin{figure}[H]
+    %\centering
+    %\includegraphics[options]{name}
+%\end{figure}
 
 Si distinguono l'associazione tra nome e locazione che non cambia in modo reversibile durante l'esecuzione e l'associazione tra locazione e valore che cambia in modo irreversibile durante l'esecuzione.
 
@@ -56,3 +65,223 @@ Inoltre, la locazione ha un tempo di vita determinato dallo scope della dichiara
 \begin{mydef}{identificatore variabile}
     Un \textbf{identificatore variabile} è un identificatore il cui valore può essere aggiornato.
 \end{mydef}
+
+%\begin{figure}[H]
+    %\centering
+    %\includegraphics[options]{name}
+%\end{figure}
+
+\section{Sintassi}
+Abbiamo introdotto un nuovo tipo di identificatore (variabile) che deve essere legata a una locazione.\\[0.2ex]
+Questo significa che dobbiamo aggiungere una dichiarazione alla gramatica deòòe dichiarazioni che permetta di definire questo nuovo oggetto sintattico.
+
+\begin{bnfcode}{Sintassi delle variabili}
+    <Dec>
+    D $\rightarrow$ nil | $\rho$ | const x : $\tau$ = e | D ; D | D in D |
+        var x : $\tau$ = e
+\end{bnfcode}
+
+La nuova dichiarazione definisce un identificatore $\texttt{x}$ come una variabile di tipo $\tau$ e inizializzata la variabile al valore denotato dall'espressione $\texttt{e}$
+
+\section{Semantica}
+
+\subsection{Semantica statica}
+Abbiamo appena modificato la grammatica della dichiarazioni, quindi, per prima cosa dobbiamo aggiungere la regola di semantica statica per il nuovo costrutto di dichiarazione di variabile.
+
+\smallskip
+Prima, però, dobbiamo aggiungere un nuovo tippo che ci permetta di distinguere tra identificatori variabili e costanti.\\[0.2ex]
+Definiamo, quindi, il tipo $\tau \text{loc}$ per gli identificatori variabili di tipo $\tau$:
+\[
+    \mathbf{\tau \in \mathcal{D}\text{Typ} = \{\texttt{int, bool, intloc, booloc}\}}
+\]
+
+Le regole di semantica sono le stesse delle dichiarazioni, senza nessuna modifica.\\[0.2ex]
+Dobbiamo, però, aggiungere la regola per la nuova dichiarazione.
+\vario{Regola $\mathcal{D}_{\mathrm{S}_6}$}{
+    \[
+        \mathcal{D}_{\mathrm{S}_6}:\;
+        \begin{prooftree}
+            \hypo{\Delta \vdash \mathrm{e} : \tau}
+            \infer1{\Delta \vdash \texttt{var x:} \ \tau \texttt{ = e:} \ [\texttt{x} \gets \tau\mathrm{loc}]}
+        \end{prooftree}
+    \]
+}
+
+Ricordiamo l'assioma per gli identificatori:
+\[
+    \Delta \vdash \texttt{x:} \ \tau \quad \Leftrightarrow \quad \Delta(\texttt{x}) = \tau
+\]
+
+dove $\tau$ è il tipo associato a \texttt{x}.
+
+\smallskip
+Ora che abbiamo aggiunto le locazioni nei tipi, bisogna gestire anche i tipi delle locazioni e la nuova regola per gli identificatori diventa:
+\[
+    \Delta \vdash \texttt{x:} \ \tau \quad \Leftrightarrow \quad \Delta(\texttt{x}) \in \{\tau, \tau\mathrm{loc}\}
+\]
+
+\subsection{Memoria}
+Le locazioni sono modellate come un insieme finito, ma illimitato di elementi che rappresentano celle di memoria.
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+    \item \texttt{Loc}: insieme delle locazioni ($\texttt{l} \in \texttt{Loc}$)
+    \item $\texttt{New(L)} \in \texttt{Loc} \\ \texttt{L}$: restituisce una nuova locazione, che non appartiene a \texttt{L} ($\texttt{L} \subseteq \texttt{Loc}$)
+\end{itemize}
+
+\begin{mydef}{memoria}
+    Sia $\mathcal{M}\mathrm{Val}$ l'insieme dei valori memorizzabili (valori associabili a una locazione):
+    \[
+        \mathcal{M}\mathrm{Val} = \mathcal{N} \cup \mathcal{B}
+    \]
+
+    \smallskip
+    Una memoria è un elemento dello spazio di funzioni $\mathrm{Mem}$ definito da:
+    \[
+        \mathrm{Mem} = \bigcup\limits_{\mathrm{L} \ \subseteq_f \ \mathrm{Id}} \mathrm{Mem_L}
+    \]
+\end{mydef}
+
+dove:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+    \item $\mathrm{Mem_L : L} \to \mathcal{M}\mathrm{Val}$: ha metavariabile $\sigma$
+\end{itemize}
+
+Cambia anche il concetto di ambiente visto che ora si possono associare agli identificatori le locazioni.
+
+\begin{mydef}{ambiente}
+    Un \textbf{ambiente} è una funzione che associa ad ogni identificatore un valore o locazione:
+    \[
+        \mathrm{Env_V} : \mathrm{V} \to \mathcal{N} \cup \mathcal{B} \cup \mathcal{L} \quad V \ \subseteq_f \ \mathrm{Id}
+    \]
+
+    \smallskip
+    \[
+        \mathrm{Env} = \bigcup\limits_{\mathrm{V} \ \subseteq_f \ \mathrm{Id}} \quad \text{insieme di tutte le funzioni ambiente}
+    \]
+\end{mydef}
+
+\subsection{Aggiornamento della memoria}
+Si considerino due memorie $\sigma, \sigma' \in \mathrm{Mem}$ dove $\sigma : \mathrm{L}, \sigma' : \mathrm{L}'$ ($\sigma$ è definito sulle locazioni in $\mathrm{L}$ e $\sigma'$ è definito sulle locazioni in $\mathrm{L}'$).\\[0.2ex]
+L'aggiornamento della memoria $\sigma$ è la memoria $\sigma'' \in \mathrm{Mem}$ ($\sigma[\sigma']$) definito come:
+\[
+    \sigma''(\mathrm{l}) =
+    \begin{cases}
+        \sigma'(\mathrm{l}) \quad \text{se } \mathrm{l \in L'}\\
+        \sigma'(\mathrm{l}) \quad \text{altrimenti}
+    \end{cases}
+\]
+
+\subsection{Semantica dinamica}
+Introdurre le variabili significa poter scrivere espressioni e, quindi, dichiarazioni che contengono identificatori variabili.\\[0.2ex]
+Questo implica che per valutare queste espressioni ed elaborare queste dichiarazioni abbiamo bisogno di interagire nel sistema di transizione anche la memoria da usare per valutare gli identificatori variabili.
+
+Le regole diventano:
+\[
+    \mathcal{E}_\mathbf{i} : \rho \vdash_\Delta \langle e, \sigma \rangle \to_\mathrm{e} \langle e', \sigma \rangle
+\]
+
+L'unica regola che cambia è quella di valutazione degli identificatori, che deve considerare il caso in cui l'identificatore sia una variabile.
+
+\vario{Regola $\mathcal{E}_\mathrm{2}$}{
+    \[
+        \mathcal{E}_\mathrm{S_2} : \rho \vdash_\Delta \langle I, \sigma \rangle \to_\mathrm{e} \langle n, \sigma \rangle \quad \Leftrightarrow \quad \rho(\mathrm{I}) \text{ o } (\rho(\mathrm{I}) = \mathrm{l} e \sigma(\mathrm{I}) = \mathrm{n}) 
+    \]
+}
+
+Per tutte le altre, semplicemente aggiungiamo la memoria nella regola, ma osserviamo che tale memoria non può essere trasformata dalla valutazione, che accade in memoria sempre e solo in lettura.
+
+\medskip
+Per ciò che riguarda le dichiarazioni.
+
+\begin{mydef}{sistema di transizione}
+    \[
+        \begin{aligned}
+            \tau^\mathrm{V} &= \mathcal{D}^\mathnormal{V} \times \mathrm{Mem}\\
+            \mathrm{T}^\mathnormal{V} &= \mathrm{Env} \times \mathrm{Mem}
+        \end{aligned}
+    \]
+\end{mydef}
+
+Le regole diventano:
+\[
+    \mathcal{D}_\mathbf{i} : \rho \vdash_\Delta \langle \mathbf{d}, \sigma \rangle \to_\mathbf{e} \langle \mathbf{d'}, \sigma' \rangle
+\]
+
+In questo caso la transizione la memoria può essere diversa, questo perchè le dichiarazioni, inizializzando le variabili modificando la memoria.
+
+Le regole sono:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+    \item \textbf{regola 1}:
+    \vario{Regola $\mathcal{E}_1$}{
+        \[
+            \mathcal{E}_1: \rho \vdash_\Delta \langle \mathrm{m} \texttt{ op } \mathrm{n}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{k}, \sigma \rangle \quad \Leftrightarrow \quad \mathrm{m} \texttt{ op } \mathrm{n} = \mathrm{k}, \mathrm{n} \in \mathcal{N}, \ \mathrm{k} \in \mathcal{N} \cup \mathcal{B}
+        \]
+    }
+    \item \textbf{regola 2}:
+    \vario{Regola $\mathcal{E}_2$}{
+        \[
+            \mathcal{E}_2: \rho \vdash_\Delta \langle \mathrm{I}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{n}, \sigma \rangle \quad \Leftrightarrow \quad \rho(\mathrm{I}) \text{ o } (\rho(\mathrm{I}) = \mathrm{l} \text{ e } \sigma(\mathrm{I}) = \mathrm{n})
+        \]
+    }
+    \item \textbf{regola 3}:
+    \vario{Regola $\mathcal{E}_3$}{
+        \[
+            \mathcal{E}_3:\;
+            \begin{prooftree}
+                \hypo{\rho \vdash_\Delta \langle \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{e'}, \sigma \rangle}
+                \infer1{\rho \vdash_\Delta \langle \mathrm{e} \texttt{ op } \mathrm{e}_0, \sigma \rangle \to_\mathrm{e} \langle \mathrm{e'} \texttt{ op } \mathrm{e}_0, \sigma \rangle}
+            \end{prooftree}
+        \]
+    }
+    \item \textbf{regola 4}:
+    \vario{Regola $\mathcal{E}_4$}{
+        \[
+            \mathcal{E}_4:\;
+            \begin{prooftree}
+                \hypo{\rho \vdash_\Delta \langle \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{e'}, \sigma \rangle}
+                \infer1{\rho \vdash_\Delta \langle \mathrm{m} \texttt{ op } \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{m} \texttt{ op } \mathrm{e'}, \sigma \rangle}
+            \end{prooftree}
+        \]
+    }
+    \item \textbf{regola 5}:
+    \vario{Regola $\mathcal{E}_5$}{
+        \[
+            \mathcal{E}_5: \rho \vdash_\Delta \langle \mathrm{t}_1 \texttt{ bop } \mathrm{t}_2, \sigma \rangle \to_\mathrm{e} \langle \mathrm{t}, \sigma \rangle \quad \Leftrightarrow \quad \mathrm{t}_1 \texttt{ op } \mathrm{t}_2, \ \mathrm{t}_1, \mathrm{t}_2, \mathrm{t} \in \mathcal{B}
+        \]
+    }
+    \item \textbf{regola 3'}:
+    \vario{Regola $\mathcal{E}_3'$}{
+        \[
+            \mathcal{E}_3':\;
+            \begin{prooftree}
+                \hypo{\rho \vdash_\Delta \langle \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{e'}, \sigma \rangle}
+                \infer1{\rho \vdash_\Delta \langle \mathrm{e} \texttt{ bop } \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{e} \texttt{ bop } \mathrm{e}_0, \sigma \rangle}
+            \end{prooftree}
+        \]
+    }
+    \item \textbf{regola 6}:
+    \vario{Regola $\mathcal{E}_6$}{
+        \[
+            \mathcal{E}_6:\;
+            \begin{prooftree}
+                \hypo{\rho \vdash_\Delta \langle \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{e'}, \sigma \rangle}
+                \infer1{\rho \vdash_\Delta \langle \mathrm{m} \texttt{ bop } \mathrm{e}_0, \sigma \rangle \to_\mathrm{e} \langle \mathrm{m} \texttt{ bop } \mathrm{e'}, \sigma \rangle}
+            \end{prooftree}
+        \]
+    }
+    \item \textbf{regola 7}:
+    \vario{Regola $\mathcal{E}_7$}{
+        \[
+            \mathcal{E}_7: \rho \vdash_\Delta \langle \texttt{not } \mathrm{t}_1, \sigma \rangle \to_\mathrm{e} \langle \mathrm{t}, \sigma \rangle \quad \Leftrightarrow \quad \texttt{not } \mathrm{t}_1 = \mathrm{t}, \ \mathrm{t}, \mathrm{t}_1 \in \mathcal{B}
+        \]
+    }
+    \item \textbf{regola 8}:
+    \vario{Regola $\mathcal{E}_8$}{
+        \[
+            \mathcal{E}_8:\;
+            \begin{prooftree}
+                \hypo{\rho \vdash_\Delta \langle \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \mathrm{e'}, \sigma \rangle}
+                \infer1{\rho \vdash_\Delta \langle \texttt{not } \mathrm{e}, \sigma \rangle \to_\mathrm{e} \langle \texttt{not } \mathrm{e'}, \sigma \rangle}
+            \end{prooftree}
+        \]
+    }
+\end{itemize}
