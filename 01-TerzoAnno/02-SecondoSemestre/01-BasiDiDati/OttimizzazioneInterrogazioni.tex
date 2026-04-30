@@ -346,3 +346,64 @@ Nella valutazione delle stime di costo si tiene conto del profilo delle relazion
     \item stima della dimensione di ciascun attributo $\mathrm{A}$: $\mathrm{VAL(A,T)}$
     \item stima del numero di valori distinti per ogni attributo $\mathrm{A}$: $\mathrm{MAX(A,T)}$ e $\mathrm{MIN(A,T)}$
 \end{itemize}
+
+\begin{esempiobox}{Esercizio}
+    Consideriamo la seguente base di dati:
+    \[
+        \begin{aligned}
+            &\texttt{INGREDIENTE(\underline{codice}, nome, calorie)}\\
+            &\texttt{COMPOSIZIONE(\underline{ricetta, ingrediente}, quantità)}\\
+            &\texttt{RICETTA(\underline{codiceRicetta}, nome, regione, tempoPreparazione)}
+        \end{aligned}
+    \]
+
+    e i seguenti vincoli d'integrità:
+    \[
+        \begin{aligned}
+            &\text{Composizione.ricetta} \rightarrow \text{Ricetta}\\
+            &\text{Composizione.ingrediente} \rightarrow \text{Ingrediente}
+        \end{aligned}
+    \]
+
+    Data la seguente query:
+\begin{codiceSQL}
+SELECT R.codiceRicetta, I.nome, I.calorie
+FROM RICETTA R
+JOIN Composizione C ON R.codiceRicetta = C.ricetta
+JOIN Ingrediente I ON C.Ingrediente = I.codice
+    WHERE R.regione = 'Veneto';
+\end{codiceSQL}
+
+    \textcolor{red}{\textbf{Calcolare il costo dell'interrogazione in termini di numero di accessi alla memoria sedcondaria con le seguenti ipotesi:}}
+    \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+        \item la selezione (\texttt{R.Veneto = 'Veneto'}) su \texttt{Riccetta} richiede una scansione sequenziale della tabelle \texttt{Ricetta}.
+        
+        Inoltre, la selezione rimane nel buffer.
+        \item l'ordine di esecuzione del join è:
+        \[
+            (\text{Ricetta} \Join \text{Composizione}) \Join \text{Ingrediente}
+        \]
+        \item le operazioni di join vengono eseguite con la tecnica nested loop join con 1 pagina di buffer a disposizione per ogni tabella
+        \item il risultato del primo join ($\text{Ricetta} \Join \text{Composizione}$) viene interamente mantenuto nel buffere
+        \item il numero di pagine e righe per ogni tabella è il seguente:
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|c|}
+                \hline
+                Tabella & NP & NR & VAL(regione) & VAL(Ricetta) & VAL(Qtà)\\
+                \hline
+                Ingrediente & 30 & 270 & & & \\
+                Composizione & 780 & 19800 & & 90 & 50\\
+                Ricetta & 150 & 900 & 18 & \\
+                \hline
+            \end{tabular}
+        \end{table}
+    \end{itemize}
+
+    \textbf{Svolgimento}
+    \begin{enumerate}[itemsep=\medskipamount]
+        \item \textbf{selezione su ricetta}:
+        \item \textbf{join su Composizione}:
+        \item \textbf{join su Ingrediente}:
+    \end{enumerate}
+\end{esempiobox}

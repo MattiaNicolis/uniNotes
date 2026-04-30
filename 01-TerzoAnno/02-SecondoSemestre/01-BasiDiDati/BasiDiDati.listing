@@ -1,3 +1,5 @@
-BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;
-
-COMMIT;
+SELECT R.codiceRicetta, I.nome, I.calorie
+FROM RICETTA R
+JOIN Composizione C ON R.codiceRicetta = C.ricetta
+JOIN Ingrediente I ON C.Ingrediente = I.codice
+    WHERE R.regione = 'Veneto';

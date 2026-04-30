@@ -528,7 +528,7 @@ ORDER BY titolo || citta
 \end{codiceSQL}
 
 
-\subsection{Clausola FROM}
+\subsection{Clausola \texttt{FROM}}
 \begin{codiceSQL}
 FROM from_item [, ...]
 \end{codiceSQL}
@@ -536,39 +536,38 @@ FROM from_item [, ...]
 dove:
 \begin{enumerate}[itemsep=\smallskipamount]
   \item  \texttt{table\_name [[AS] alias [(column\_alias [, ...])]]}
-  \begin{itemize}[itemsep=\smallskipamount]
+  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
     \item se sono presenti due o più tabelle, si esegue il prodotto cartesiano tra tutte le  tabelle
     \item se ci sono attributi con lo stesso nome su tabelle diverse, nel \texttt{SELECT} questi attributi sono identificati anteponendo il nome della tabella e un \texttt{’.’}:  \texttt{nomeTabella.nomeAttributo}
   \end{itemize}
 
-  \item  (other\_select) [AS] nomeRisultato [(column\_alias [,...])
-  \begin{itemize}
-    \item  è una SELECT innestata. Il risultato della SELECT interna è lo schema con nome 
-nomeRisultato su cui fare la SELECT corrente.
+  \item  \texttt{(other\_select) [AS] nomeRisultato [(column\_alias [,...])}
+  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item  è una \texttt{SELECT} innestata. 
+    
+    Il risultato della \texttt{SELECT} interna è lo schema con nome \texttt{nomeRisultato} su cui fare la \texttt{SELECT} corrente
   \end{itemize}
 
-  \item  from\_item [NATURAL] join\_type from\_item [ON condition]
-  \begin{itemize}
-    \item  è la clausola JOIN.
-    \item Metodo più sofisticato di 1) che permette di selezionare un sottoinsieme del 
-prodotto cartesiano di due o più tabelle. join\_type specifica il tipo di join. I tipi 
-principali sono riassunti nelle slide seguenti
+  \item  \texttt{from\_item [NATURAL] join\_type from\_item [ON condition]}
+  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item  è la clausola \texttt{JOIN}
+    \item mtodo più sofisticato del primo e che permette di selezionare un sottoinsieme del  prodotto cartesiano di due o più tabelle. 
+    
+    \texttt{join\_type} specifica il tipo di \texttt{join}.
   \end{itemize}
 \end{enumerate}
-
 
 \subsubsection{Uso di alias}
 
 \begin{codiceSQL}
 SELECT P.Reddito, R.Telefono
-FROM Reparti as R, Persona ad P
-WHERE ... ;
+FROM Reparti AS R, Persona ad P
+  WHERE ...;
 \end{codiceSQL}
 
-Utile quando è necessario specificare la provenienza dell’attributo, 
-perchè nella base di dati sono presenti più attributi con lo stesso nome
+Utile quando è necessario specificare la provenienza dell’attributo perchè nella base di dati sono presenti più attributi con lo stesso nome.
 
-\subsubsection{Target List}
+\subsubsection{Target list}
 \begin{codiceSQL}
 SELECT P.Nome as NPersona, P.Reddito as RPersona
 FROM Persone as P
@@ -576,103 +575,99 @@ WHERE P.Eta < 30
 \end{codiceSQL}
 
 
-
-
-\subsection{Clausola WHERE}
+\subsection{Clausola \texttt{WHERE}}
 \begin{codiceSQL}
-  WHERE condition
+WHERE condition
 \end{codiceSQL}
 
-\textbf{\textcolor{black!50!red}{condition}} è un’espressione booleana combinando condizioni semplici $C_{i}$ con gli 
-operatori AND, OR, NOT.
-\begin{enumerate}
-  \item  $C_{i}$ := expr [ $\theta$ \{expr | const\}]
-dove
-\begin{itemize}
-  \item expr := espressione che contiene riferimenti agli attributi delle tabelle che compaiono 
-nella clausola FROM.
-\item $\theta \in$ \{=,<>,<,>,<=,>=\}
-\item const := valore dei domini di base.
+dove:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+  \item \texttt{condition}: espressione booleana combinando condizioni semplici $\mathrm{C_{i}}$ con gli operatori \texttt{AND}, \texttt{OR}, \texttt{NOT}
+  \begin{enumerate}
+    \item  $C_{i}$ \texttt{:= expr [ $\theta$ \{expr | const\}]} dove
+  \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+    \item \texttt{expr := espressione} che contiene riferimenti agli attributi delle tabelle che compaiono nella clausola \texttt{FROM}
+    \item $\theta \in$ \texttt{\{=,<>,<,>,<=,>=\}}
+    \item \texttt{const := valore} dei domini di base
+  \end{itemize}
+  \item una riga soddisfa \texttt{condition} se l’espressione è vera quando valutata con i valori della riga
+  \item una riga che non soddisfa condition è scartata dal risultato finale
+  \end{enumerate}
 \end{itemize}
-\item Una riga soddisfa \textcolor{black!50!red}{condition} se l’espressione è vera quando valutata con i valori 
-della riga.
-\item Una riga che non soddisfa condition è scartata dal risultato finale
-\end{enumerate}
-
-
-
 
 
 \begin{minipage}[t]{0.39\textwidth}
- \begin{codiceSQL}
+\begin{codiceSQL}
 SELECT Nome, Reddito
 FROM Persone
 WHERE Eta < 30;
 \end{codiceSQL}
 \end{minipage}
-\hfill % Questo comando inserisce uno spazio flessibile che spinge le due minipage ai lati opposti
-\begin{minipage}[t]{0.50\textwidth}
+\hfill
+\begin{minipage}[t]{0.39\textwidth}
+\begin{codiceSQL}
 SELECT Nome, Reddito
 FROM Persone
-WHERE Età < 30 OR Reddito > 50;
+WHERE Eta < 30 OR Reddito > 50;
+\end{codiceSQL}
 \end{minipage}
 
 
 
-
-\subsubsection{Operatore LIKE}
+\subsubsection{Operatore \texttt{LIKE}}
 \begin{codiceSQL}
 WHERE attributo [NOT] LIKE 'pattern';
 \end{codiceSQL}
 
-Nella clausola WHERE può apparire l’operatore LIKE per il confronto di stringhe. 
-LIKE è un operatore di pattern matching. I pattern si costruiscono con i 
-caratteri speciali \_ e \%:
-\begin{itemize}
-  \item \_ = 1 carattere qualsiasi.
-  \item \% = 0 o più caratteri qualsiasi.
+Nella clausola \texttt{WHERE} può apparire l’operatore \texttt{LIKE} per il confronto di stringhe.\\[0.2ex]
+\texttt{LIKE} è un operatore di pattern matching.
+
+\smallskip
+I pattern si costruiscono con i caratteri speciali:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+  \item \texttt{\_} = 1 carattere qualsiasi
+  \item \texttt{\%} = 0 o più caratteri qualsiasi
 \end{itemize}
 
-
-\begin{minipage}[t]{0.39\textwidth}
+\begin{esempiobox}{Esempio}
+  \begin{minipage}[t]{0.39\textwidth}
   \vspace{2em}
-  \begin{codiceSQL}
+\begin{codiceSQL}
 SELECT Nome,Reddito
 FROM Persona
-WHERE Nome LIKE 'A\%a'
-  \end{codiceSQL}
-\end{minipage}
-\hfill 
-\begin{minipage}[t]{0.50\textwidth}
-  \vspace{0pt}
-  % Rimosso totalmente \begin{figure}[H] e \end{figure}
-  \includegraphics[width=0.8\textwidth]{images/nomeReddito2.png}
-\end{minipage}  
+  WHERE Nome LIKE 'A\%a';
+\end{codiceSQL}
+  \end{minipage}
+  \hfill 
+  \begin{minipage}[t]{0.50\textwidth}
+    \vspace{0pt}
+    \includegraphics[width=0.8\textwidth]{images/nomeReddito2.png}
+  \end{minipage}    
+\end{esempiobox}
 
 
-\subsubsection{Operatore SIMILAR TO}
+\subsubsection{Operatore \texttt{SIMILAR TO}}
+L’operatore \texttt{SIMILAR TO} è un \texttt{LIKE} più espressivo che accetta, come pattern,  un sottoinsieme delle espressioni regolari POSIX (versione SQL).
 
-
-L’operatore \textbf{\textcolor{purple}{SIMILAR TO}} è un \textbf{\textcolor{purple}{LIKE}} più espressivo che accetta, come pattern, 
-un sottoinsieme delle espressioni regolari POSIX (versione SQL). 
+\smallskip
 Esempi di componenti di espressioni regolari:
-\begin{itemize}
-  \item \_ = 1 carattere qualsiasi. 
-  \item \% = 0 o più caratteri qualsiasi.
-  \item * = ripetizione del precedente match 0 o più volte.
-  \item + = ripetizione del precedente match UNA o più volte.
-  \item \{n,m\} = ripetizione del precedente match almeno n e non più di m volte.
-  \item {[} ... {]} = ... è un elenco di caratteri ammissibili
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+  \item \texttt{\_} = 1 carattere qualsiasi
+  \item \texttt{\%} = 0 o più caratteri qualsiasi
+  \item \texttt{*} = ripetizione del precedente match 0 o più volte
+  \item \texttt{+} = ripetizione del precedente match UNA o più volte
+  \item \texttt{\{n,m\}} = ripetizione del precedente match almeno n e non più di m volte
+  \item \texttt{{[} ... {]}} = ... è un elenco di caratteri ammissibili
 \end{itemize}
 
 
 \begin{minipage}[t]{0.50\textwidth}
   \vspace*{0pt}
-  \begin{codiceSQL}[unbreakable]
+\begin{codiceSQL}
 SELECT *
 FROM Persone
 WHERE Nome SIMILAR TO '[AFO]'
-  \end{codiceSQL}
+\end{codiceSQL}
 \end{minipage}
 \hfill 
 \begin{minipage}[t]{0.45\textwidth}
@@ -682,55 +677,53 @@ Per trovare nomi che inziano per A,F o O
 \end{minipage}  
 
 
-\subsubsection{Operatore BETWEEN}
+\subsubsection{Operatore \texttt{BETWEEN}}
 
 \begin{codiceSQL}
 WHERE attributo [NOT] BETWEEN valore_iniziale AND valore_finale;
 \end{codiceSQL}
 
-Nella clausola \textcolor{purple}{\textbf{WHERE}} può apparire l’operatore \textcolor{purple}{\textbf{BETWEEN}} per testare l’appartenenza 
-di un valore ad un intervallo (non limitato ai valori numerici, usato anche con date e 
-stringhe)
+Nella clausola \texttt{WHERE} può apparire l’operatore \textcolor{purple}{\textbf{BETWEEN}} per testare l’appartenenza di un valore a un intervallo (non limitato ai valori numerici, usato anche con date e stringhe).
 
 
-\begin{minipage}[t]{0.40\textwidth}
-  \begin{codiceSQL} 
+\begin{esempiobox}{Esempio}
+  \begin{minipage}[t]{0.40\textwidth}
+\begin{codiceSQL} 
 SELECT *
 FROM Persone
 WHERE Eta BETWEEN 20 AND 40
-  \end{codiceSQL}
-\end{minipage}
-\hfill 
-\begin{minipage}[t]{0.45\textwidth}
-  \includegraphics[width=0.8\textwidth, valign=t]{images/nomeEtaReddito.png}
-\end{minipage}
+\end{codiceSQL}
+  \end{minipage}
+  \hfill 
+  \begin{minipage}[t]{0.45\textwidth}
+    \includegraphics[width=0.8\textwidth, valign=t]{images/nomeEtaReddito.png}
+  \end{minipage}
+\end{esempiobox}
 
 
-\subsubsection{Operatore IN}
+\subsubsection{Operatore \texttt{IN}}
 \begin{codiceSQL}
   WHERE attributo [NOT] IN ( valore [, ...] );
 
 \end{codiceSQL}
-Nella clausola WHERE può apparire l’operatore [\textbf{\textcolor{purple}{NOT}}] \textbf{\textcolor{purple}{IN}} per testare 
-l’appartenenza di un valore ad un insieme.
+Nella clausola \texttt{WHERE} può apparire l’operatore \texttt{[NOT] IN} per testare  l’appartenenza di un valore ad un insieme.
 \begin{codiceSQL}
 SELECT *
 FROM Persone
 WHERE Nome NOT IN ('Andrea', 'Franco')
 \end{codiceSQL}
 
-\subsubsection{Operatore IS NULL}
+\subsubsection{Operatore \texttt{IS NULL}}
 \begin{codiceSQL}
 WHERE attributo IS [ NOT ] NULL;
 \end{codiceSQL}
-Nella clausola WHERE può apparire l’operatore \textbf{\textcolor{purple}{IS}} [\textbf{\textcolor{purple}{NOT}}] \textbf{\textcolor{purple}{NULL}} per testare se un 
-valore è \textbf{\textcolor{purple}{NOT KNOWN (NULL)}} o no.
-Il valore NULL non rappresenta lo zero o una stringa vuota, ma l'assenza di dati 
-o un valore sconosciuto.
-A partire dalle versioni SQL-2 è stata adottata una logica a tre valori (true, 
-false, unknown) e i valori nulli non sono considerati né veri, né falsi.\par
+
+Nella clausola \texttt{WHERE} può apparire l’operatore \texttt{IS [NOT] NULL} per testare se un valore è \texttt{NOT KNOWN (NULL)} o no.\\[0.2ex]
+Il valore \texttt{NULL} non rappresenta lo zero o una stringa vuota, ma l'assenza di dati 
+o un valore sconosciuto.\\[0.2ex]
+A partire dalle versioni SQL-2 è stata adottata una logica a tre valori (\texttt{true},  \texttt{false}, \texttt{unknown}) e i valori nulli non sono considerati né veri, né falsi.
 \begin{center}
-NON SI PUÒ usare ’=’ o ’<>’ con il valore NULL!  
+\textbf{NON SI PUÒ usare ’=’ o ’<>’ con il valore NULL! } 
 \end{center}
 
 \begin{codiceSQL}
@@ -739,29 +732,26 @@ FROM Persone
 WHERE Reddito IS NOT NULL
 \end{codiceSQL}
 
-\subsubsection{Operatore ORDER BY}
+\subsubsection{Operatore \texttt{ORDER BY}}
 \begin{codiceSQL}
-  ORDER BY attributo [{ ASC | DESC }] [, ... ];
+ORDER BY attributo [{ ASC | DESC }] [, ... ];
 \end{codiceSQL}
-La clausola ORDER BY ordina le tuple del risultato in ordine rispetto agli attributi 
-specificati,
-ASCendente è lo standard.
+
+La clausola \texttt{ORDER BY} ordina le tuple del risultato in ordine rispetto agli attributi  specificati (ASCendente è lo standard).
 \begin{codiceSQL}
 SELECT Nome
 FROM Persone
-ORDER BY Nome DESC
-
+ORDER BY Nome DESC;
 \end{codiceSQL}
 
 \subsubsection{Operatori di aggregazione}
+Sono operatori che permettono di determinare un valore considerando i valori ottenuti da una \texttt{SELECT}.
 
-
-Sono operatori che permettono di determinare un valore considerando i valori 
-ottenuti da una SELECT.
+\smallskip
 Due tipi principali:
-\begin{itemize}
-  \item COUNT.
-  \item MAX, MIN, AVG, SUM.
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+  \item \texttt{COUNT}
+  \item \texttt{MAX, MIN, AVG, SUM}
 \end{itemize}
 
 \begin{codiceSQL}
@@ -769,58 +759,52 @@ SELECT MAX(Reddito)
 FROM Persone;
 \end{codiceSQL}
 
-\vario{Nota}{Quando si usano gli operatori aggregati, dopo la SELECT non possono 
-comparire espressioni che usano i valori presenti nelle singole tuple perché il 
-risultato è sempre e solo una tupla
+\vario{Nota}{
+  Quando si usano gli operatori aggregati, dopo la \texttt{SELECT} non possono comparire espressioni che usano i valori presenti nelle singole tuple perché il risultato è sempre e solo una tupla.
 }
 
+\begin{enumerate}[itemsep=\medskipamount]
+  \item \texttt{COUNT}
+\begin{codiceSQL}
+COUNT({ *| expr | ALLexpr | DISTINCTexpr }])
+\end{codiceSQL}
+  Restituisce il numero di tuple significative nel risultato dell’interrogazione.
+  Tre casi comuni:\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item \texttt{COUNT(*)}: ritorna il numero di tuple nel risultato dell’interrogazione
+    \item \texttt{COUNT(expr)}: ritorna il numero di tuple in ciascuna delle quali il valore expr è non nullo
+    \item \texttt{COUNT(ALL expr)}: include duplicati e valori nulli
+    \item \texttt{COUNT(DISTINCT expr)} come con \texttt{COUNT(expr)} ma con l’ulteriore condizione che i valori di expr siano distinti
+  \end{itemize}
+  \item \texttt{SUM/MAX/MIN/AVG} 
+\begin{codiceSQL}
+op ({ expr | DISTINCT expr })
+\end{codiceSQL}
+  Determinano un valore numerico (SUM/AVG) o alfanumerico (MAX/MIN) considerando le tuple significative nel risultato dell’interrogazione.
+  \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item \texttt{op = SUM | AVG | MAX | MIN}
+    \item \texttt{expr}: espressione che usa uno o più attributi e funzioni di attributi
+    \item \texttt{DISTINCT} considero solo i valori distinti
+  \end{itemize}
+\begin{codiceSQL}
+SELECT AVG(Eta) AS Media\_Eta
+FROM Persone;
+\end{codiceSQL}
+\end{enumerate}
 
 
-  \begin{enumerate}
-    \item \textbf{Count}
-    \begin{codiceSQL}
-      COUNT({ *| expr | ALLexpr | DISTINCTexpr }])
-    \end{codiceSQL}
-    Restituisce il numero di tuple significative nel risultato dell’interrogazione.
-    Tre casi comuni:\begin{itemize}
-      \item \textcolor{purple}{COUNT(*)} ritorna il numero di tuple nel risultato dell’interrogazione.
-      \item \textcolor{purple}{COUNT(expr)} ritorna il numero di tuple in ciascuna delle quali il valore expr è non nullo
-      \item \textcolor{purple}{COUNT(ALL expr)} include duplicati e valori nulli.
-      \item \textcolor{purple}{COUNT(DISTINCT expr)} come con \textcolor{purple}{COUNT(expr)} ma con l’ulteriore condizione che i valori di expr siano distinti
-    \end{itemize}
-    \item \textbf{SUM/MAX/MIN/AVG} 
-    \begin{codiceSQL}
-      op ({ expr | DISTINCTexpr })
-    \end{codiceSQL}
-    Determinano un valore numerico (SUM/AVG) o alfanumerico (MAX/MIN) considerando le tuple significative nel risultato dell’interrogazione.
-    \begin{itemize}
-      \item op = SUM | AVG | MAX | MIN;
-      \item expr è un’espressione che usa uno o più attributi e funzioni di attributi.
-      \item DISTINCT considero solo i valori distinti.  
-    \end{itemize}
-    \begin{codiceSQL}
-      SELECT AVG(Eta) AS Media\_Eta
-      FROM Persone;
-    \end{codiceSQL}
-  \end{enumerate}
+\section{Esempi di interrogazioni}
+\subsection{Interrogazione con raggruppamento: \texttt{GROUP BY}}
+Un raggruppamento è un insieme di tuple che hanno medesimi valori su uno o più attributi caratteristici del raggruppamento.\\[0.2ex]
+La clausola \texttt{GROUP BY attr [, ...]} permette di determinare tutti i raggruppamenti delle tuple della relazione risultato (tuple selezionate con la clausola \texttt{WHERE}) in funzione degli attributi dati.\\[0.2ex]
+In una interrogazione che usa GROUP BY, la clausola \texttt{SELECT} contiene solamente gli attributi (da 0 a tutti) utilizzati per il raggruppamento ed eventuali funzioni di aggregazione sugli altri attributi.
 
-
-  \section{Esempi di interrogazioni}
-  \subsection{Interrogazione con raggruppamento: Group by}
-
-  Un raggruppamento è un insieme di tuple che hanno medesimi valori su uno o più attributi caratteristici del raggruppamento.\par
-La clausola GROUP BY attr [, ...] permette di determinare tutti i raggruppamenti delle tuple della relazione risultato (tuple selezionate con la clausola WHERE) in funzione degli attributi dati.\par
-In una interrogazione che usa GROUP BY, la clausola SELECT contiene solamente gli attributi (da 0 a tutti) utilizzati per il raggruppamento ed eventuali funzioni di aggregazione sugli altri attributi.
-
-
-\textbf{\large Visualizzare tutte le città raggruppate della tabella Studente}
+\begin{esempiobox}{Visualizzare tutte le città raggruppate della tabella \texttt{Studente}}
 \begin{codiceSQL}
 SELECT citta
 FROM studente
 GROUP BY citta
 \end{codiceSQL}
 
-\noindent
 \begin{minipage}[t]{0.6\textwidth}
    \centering
    \includegraphics[width = 0.8\textwidth]{images/TableALL.png} 
@@ -830,73 +814,55 @@ GROUP BY citta
    \centering
    \includegraphics[width = 0.4\textwidth]{images/Group_By.png} 
 \end{minipage}
+\end{esempiobox}
 
-
-
-
-\textbf{\large Visualizzare tutte le città e i cognomi raggruppati}
-
-
-
-
-\noindent
-\begin{minipage}{0.5\textwidth}
-   \begin{codiceSQL}
+\begin{esempiobox}{Visualizzare tutte le città e i cognomi raggruppati}
+  \begin{minipage}{0.5\textwidth}
+\begin{codiceSQL}
 SELECT cognome,LOWER(citta)
 FROM Studente
 GROUP BY cognome,LOWER(citta);
-   \end{codiceSQL}
+\end{codiceSQL}
 \end{minipage}
 \hfill % Questo comando inserisce uno spazio flessibile che spinge le due minipage ai lati opposti
 \begin{minipage}[t]{0.40\textwidth}
    \centering
    \includegraphics[width = 0.5\textwidth]{images/tabellaRisultante.png} 
 \end{minipage}
+\end{esempiobox}
 
+\vario{Nota}{
+  Nel \texttt{GROUP BY} non si possono usare espressioni con operatori di aggregazione.
+}
 
+\vario{Nota}{
+  Nella \texttt{SELECT} con \texttt{GROUP BY} non si possono specificare attributi che non sono raggruppati.
+}
 
-
-\vario{Nota}{Nel GROUP BY non si possono usare espressioni con operatori di aggregazione.}
-
-\vario{Nota}{Nella SELECT con GROUP BY non si possono specificare attributi che non sono raggruppati.}
-
-
-
-\begin{itemize}
-  \item La clausola WHERE permette di selezionare le righe che devono far parte del risultato.
-  \item La clausola HAVING permette di selezionare i raggruppamenti che devono far parte del risultato.
-  \item La sintassi è HAVING bool\_expr, dove bool\_expr è un’espressione booleana che può usare gli attributi usati nel GROUP BY e/o gli altri attributi mediante operatori di aggregazione.
+\begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
+  \item la clausola \texttt{WHERE} permette di selezionare le righe che devono far parte del risultato
+  \item la clausola \texttt{HAVING} permette di selezionare i raggruppamenti che devono far parte del risultato
+  \item la sintassi è \texttt{HAVING bool\_expr}, dove \texttt{bool\_expr} è un’espressione booleana che può usare gli attributi usati nel \texttt{GROUP BY} e/o gli altri attributi mediante operatori di aggregazione
 \end{itemize}
 
-
-\textbf{\large Visualizzare tutte le città raggruppate che iniziano con ’V’ della tabella Studente.}
-
-
-
-\noindent
-\begin{minipage}{0.5\textwidth}
-   \begin{codiceSQL}
+\begin{esempiobox}{Visualizzare tutte le città raggruppate che iniziano con ’V’ della tabella \texttt{Studente}}
+  \begin{minipage}{0.5\textwidth}
+\begin{codiceSQL}
 SELECT citta
 FROM Studente
 GROUP BY citta
 HAVING citta LIKE 'V%';
-   \end{codiceSQL}
+\end{codiceSQL}
 \end{minipage}
 \hfill % Questo comando inserisce uno spazio flessibile che spinge le due minipage ai lati opposti
 \begin{minipage}[t]{0.40\textwidth}
    \centering
    \includegraphics[width = 0.5\textwidth]{images/tabellaRisultante2.png} 
 \end{minipage}
+\end{esempiobox}
 
-
-
-
-\textbf{\large Visualizzare tutte le città e i cognomi raggruppati con almeno due studenti con lo stesso cognome..}
-
-
-
-\noindent
-\begin{minipage}{0.5\textwidth}
+\begin{esempiobox}{Visualizzare tutte le città e i cognomi raggruppati con almeno due studenti con lo stesso cognome..}
+  \begin{minipage}{0.5\textwidth}
    \begin{codiceSQL}
 SELECT cognome, LOWER(citta)
 FROM Studente
@@ -909,34 +875,28 @@ HAVING COUNT ( cognome) >1;
    \centering
    \includegraphics[width = 0.5\textwidth]{images/tabellaRisultante3.png} 
 \end{minipage}
+\end{esempiobox}
 
-
-
-\textbf{\large Si possono specificare espressioni con operatori di aggregazione su attributi non raggruppati anche nella clausola HAVING.}
-
-
-
-\noindent
-\begin{minipage}{0.5\textwidth}
-   \begin{codiceSQL}
+\begin{esempiobox}{Si possono specificare espressioni con operatori di aggregazione su attributi non raggruppati anche nella clausola \texttt{HAVING}}
+  \begin{minipage}{0.5\textwidth}
+\begin{codiceSQL}
 SELECT LOWER(citta) AS "Citta", AVG (media)::DECIMAL(5 ,2) AS "mediaArr."
 FROM Studente
 GROUP BY LOWER(citta)
 HAVING AVG(media) >23.47 ;
-   \end{codiceSQL}
+\end{codiceSQL}
 \end{minipage}
 \hfill % Questo comando inserisce uno spazio flessibile che spinge le due minipage ai lati opposti
 \begin{minipage}[t]{0.40\textwidth}
    \centering
    \includegraphics[width = 0.5\textwidth]{images/tabellaRisultante4.png} 
 \end{minipage}
+\end{esempiobox}
 
-
-
-\subsection{Interrogazione con JOIN}
+\subsection{Interrogazione con \texttt{JOIN}}
 
 \begin{codiceSQL}
-  TABLE1 join_type TABLE2 ON join_condition[, ...].
+TABLE1 join_type TABLE2 ON join_condition[, ...].
 \end{codiceSQL}
 
 
