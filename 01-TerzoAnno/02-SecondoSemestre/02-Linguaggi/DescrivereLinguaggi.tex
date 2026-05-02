@@ -37,13 +37,13 @@ Nell'ambito dei linguaggi di programmazione, gli stessi nomi prendono nomi diffe
 \end{itemize}
 
 \subsection{Descrivere la sintassi}
-Abbiamo bisogno di strumenti formali per descrivere parole e frasi ben formate di un linguaggio. che permettono, in modo automatico, di verificare l'appartenenza o meno al linguaggio.
+Abbiamo bisogno di strumenti formali per descrivere parole e frasi ben formate di un linguaggio che permettono, in modo automatico, di verificare l'appartenenza o meno al linguaggio.
 
 \begin{mydef}{riconoscitore}
     Il \textbf{riconoscitore} è uno strumento (formale) di riconoscimento che legge in input stringhe sull'alfabeto e decide se la stringa appartiene o meno al linguaggio.
 
     \smallskip
-    \textcolor{red}{\textbf{Es}}. automi a stati finiti (analisi sintattica)
+    \textcolor{red}{\textbf{Es}}: automi a stati finiti (analisi sintattica)
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.5\textwidth]{images/riconoscitore-ASF.png}
@@ -55,7 +55,7 @@ Abbiamo bisogno di strumenti formali per descrivere parole e frasi ben formate d
     Il \textbf{generatore} è uno strumento (formale) che genera stringhe di un linguaggio.
 
     \smallskip
-    \textcolor{red}{\textbf{Es}}. grammatiche CF (parser)
+    \textcolor{red}{\textbf{Es}}: grammatiche CF (parser)
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.5\textwidth]{images/generatore.png}
@@ -97,7 +97,7 @@ Questo gereratore di linguaggi è stato sviluppato da Chomsky per descrivere la 
     dove:
     \begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
         \item \textbf{V}: insieme dei simboli non terminali
-        \item \textbf{T}: insieme dei simboli terminali ($V \cup T = \emptyset$)
+        \item \textbf{T}: insieme dei simboli terminali ($\mathrm{V \cup T} = \emptyset$)
         \item \textbf{P}: insieme delle produzioni
         \[
             \underbrace{\underbrace{\mathrm{A}}_{\mathrm{\in \ V}} \rightarrow \alpha \in (\mathrm{V \cup T})^*}_{\text{\parbox{8cm}{\textcolor{red}{a un simbolo non terminale A possiamo sostituire (indipendente dal contesto) la sequenza $\alpha$ di simboli terminali e non}}}}
@@ -121,14 +121,35 @@ Per le produzioni, invece, viene utilizzato il simbolo \texttt{:=} al posto dell
     \caption{esempio di notazione BNF}
 \end{figure}
 
+\esempio{grammatica per espressioni booleane}{
+    Costruiamo una grammtica per le espressioni booleane:
+    \[
+        \mathrm{G} = \langle \{\mathrm{Exp}\}, \{0, 1, \texttt{or}, \texttt{and}, \texttt{not}, (, )\}, \mathrm{P}, \mathrm{Exp} \rangle
+    \]
+
+    \[
+        \begin{aligned}
+            \mathrm{P}&=\;
+            \begin{cases}
+                \mathrm{Exp} \rightarrow 0\\
+                \mathrm{Exp} \rightarrow 1\\
+                \mathrm{Exp} \rightarrow (\mathrm{Exp} \texttt{ or } \mathrm{Exp})\\
+                \mathrm{Exp} \rightarrow (\mathrm{Exp} \texttt{ and } \mathrm{Exp})\\
+                \mathrm{Exp} \rightarrow (\texttt{not } \mathrm{Exp})\\
+            \end{cases}\\
+            &= 0|1|(\mathrm{Exp} \texttt{ or } \mathrm{Exp})|(\mathrm{Exp} \texttt{ and } \mathrm{Exp})|(\texttt{not } \mathrm{Exp})
+        \end{aligned}
+    \]
+}
+
 \subsection{Descrivere un semplice linguaggio imperativo}
-Un linguaggio può essere descritto anche in modo informalel descrivendo quali caratteristiche deve avere qual è il loro significato:
+Un linguaggio può essere descritto anche in modo informale descrivendo quali caratteristiche deve avere e qual è il loro significato:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
     \item niente dichiarazioni
     \item solo variabili ed espresisoni booleane
     \item assegnamento e composizione sequenziale
     \item comando condizionale
-    \item comando imperativo (loop)
+    \item comando iterativo (loop)
 \end{itemize}
 
 Anche i lingauggi di programmazione sono descritti a livelli di astrazione, ognuno descritto da una grammatica.
@@ -139,13 +160,17 @@ Anche i lingauggi di programmazione sono descritti a livelli di astrazione, ognu
 \end{figure}
 
 \begin{bnfcode}{Notazione grammatica}
-<bExpr> B -> true | false | v | (not B) | (B and B) | (B or B)
+<bExpr>
+B -> true | false | v | (not B) | (B and B) | (B or B)
 
-<atomic com>  A -> v := B
+<atomic com>  
+A -> v := B
 
-<com> C -> A | C ; C | if B then C else C | while B do C
+<com> 
+C -> A | C ; C | if B then C else C | while B do C
 
-<program> S -> C
+<program> 
+S -> C
 \end{bnfcode}
 
 \subsubsection{Analisi semantica}
@@ -174,7 +199,7 @@ In particolare, ci sono categorie sintattiche che permettono di:
     Il concetto di \textbf{stato} è composto da due concetti:
     \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
         \item \textbf{ambiente} (environment): insieme dei legami (bindings) tra identificatori e oggetti identificati
-        \item \textbf{memoria} (store): insieme degli effetti seugli identificatori
+        \item \textbf{memoria} (store): insieme degli effetti sugli identificatori
     \end{itemize}
 \end{mydef}
 
@@ -201,10 +226,10 @@ Queste due espressioni sono semanticamente equivalenti, ma sono sintatticamente 
 
 \subsubsection{Comandi}
 \begin{mydef}{comandi}
-    Le \textbf{comandi} denotano richieste di trasformazioni/modifiche della memoria.
+    I \textbf{comandi} denotano richieste di trasformazioni/modifiche della memoria.
 \end{mydef}
 
-I comandi, quindi, rappresentano funzioni di trasformazione (da stato a stato) e devono essee eseguiti per poter attuare la trasformazione (irreversibile) della memoria.
+I comandi, quindi, rappresentano funzioni di trasformazione (da stato a stato) e devono essere eseguiti per poter attuare la trasformazione (irreversibile) della memoria.
 
 \begin{mydef}{equivalenza tra comandi}
     Due comandi si dicono equivalenti se per ogni stato (memoria) in input producono lo stesso stato (memoria) in output.
@@ -218,7 +243,7 @@ I comandi, quindi, rappresentano funzioni di trasformazione (da stato a stato) e
 Le dichiarazioni devono essere elaborate per attuare la creazione/modifica dell'ambiente, ovvero la modifica (reversibile) dei legami.
 
 \vario{Reversibile}{
-    \textbf{Reversibile} = vale eclusivamente nel raggio di azione (scope) dell'identificate.
+    \textbf{Reversibile} = vale eclusivamente nel raggio di azione (scope) dell'identificatore.
 }
 
 \begin{mydef}{equivalenza tra dichiarazioni}
@@ -234,20 +259,23 @@ Il seguente linguaggio è un esempio di sintassi per il linguaggio di programmaz
 \end{itemize}
 
 \begin{bnfcode}{Comandi del linguaggio \texttt{PL/0}}
-    <program>   P -> B
+<program>
+P -> B
 
-    <block>     B -> D S
+<block>
+B -> D S
 
-    <declar>    D -> [const I=N{,I=N};] | [var I{,I};] | 
-                     [procedure I;B]
+<declar> 
+D -> [const I=N{,I=N};] | [var I{,I};] | [procedure I;B]
 
-    <stmts>     S -> ep | I := E | call I | if C then S | 
-                     while C do S | begin S{;S} end
-    
-    <Cond>      C -> odd E | E > E | E >= E | E = E | E # E | 
-                     E < E | E <= E
+<stmts>
+S -> ep | I := E | call I | if C then S | while C do S | begin S{;S} end
 
-    <Expr>      E -> I | N | E bop E | (E)
+<Cond>
+C -> odd E | E > E | E >= E | E = E | E # E |  E < E | E <= E
+
+<Expr>
+E -> I | N | E bop E | (E)
 \end{bnfcode}
 
 \subsubsection{Sintassi}
@@ -322,7 +350,7 @@ L'induzione (matematica) è un principio usato per definire e dimostare.
         \mathrm{\forall a \in \underbrace{A}_{\Pi \ \text{vale su a} \in A} \Leftrightarrow \forall a \in A [[\forall b < a.\Pi(b)] \Rightarrow \Pi(a)]}
     \]
 
-    Per eseplicitare il vantaggio di avere $\mathrm{A}$ ben fondato, seperiamo la dimostrazione sugli elementi minimali (base):
+    Per esplicitare il vantaggio di avere $\mathrm{A}$ ben fondato, seperiamo la dimostrazione sugli elementi minimali (base):
     \[
         \text{base} = \{\mathrm{a \in A} \mid \mathrm{a} \ \text{minimale in} \ \mathrm{A}\} \quad (\text{base è finita})
     \]
@@ -364,11 +392,13 @@ Le proprietà fondamentali di qualunque semantica sono:
 \end{itemize}
 
 \subsection{Tipi di semantica}
-Un algoritmo è un'entià astratta concretizzata in un programma, ma non ci interessa sapere se il programma implementa esattamente l'algoritmo, ma ci interessa che il programma implementi la funzione descritta dall'algoritmo.\\[0.2ex]
+Un algoritmo è un'entità astratta concretizzata in un programma, ma non ci interessa sapere se il programma implementa esattamente l'algoritmo, ma ci interessa che il programma implementi la funzione descritta dall'algoritmo.
+
+\smallskip
 A seconda di quali strumenti matematici vengono usati si ottengono tipi di semantiche diverse rendendo più agevoli tipi diversi di ragionamento.
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
     \item \textbf{semantica denotazionale}: descrive funzionalità (es. studia gli effetti dell'esecuzione ecc.)
-    \item \textbf{semantica operazionale}: descrive trasformazioni di stato (guarda come i risultato finali vengono prodotti)
+    \item \textbf{semantica operazionale}: descrive trasformazioni di stato (guarda come i risultati finali vengono prodotti)
     \item \textbf{semantica assiomatica}: descrive proprietà soddisfatte dall'esecuzione del programma 
 \end{itemize}
 
@@ -385,7 +415,7 @@ Il processo di costruzione della semantica denotazionale per un linguaggio consi
 
 Formalmente, il modello usato per descrivere la semantica è quello delle funzioni matematiche (ricorsive), ovvero un programma  corrispondente ad una funzione tra stati della macchina.
 \[
-    \mathcal{E}: \mathrm{Prog} \rightarrow ((\mathrm{Var} \rightarrow \mathrm{Val}) \rightarrow (\mathrm{Var} \rightarrow \mathrm{Val})) 
+    \mathbf{\mathcal{E}: Prog \rightarrow ((Var \rightarrow Val) \rightarrow (Var \rightarrow Val))}
 \]
 
 La semantica denotazionale, quindi, è un oggetto puramente matematico che descrive gli effetti manipolando oggetti matematici.\\[0.2ex]
@@ -409,7 +439,7 @@ Questa semantica può essere usata per dimostare la correttezza dei programmi, m
 
 \subsubsection{Semantica assiomatica}
 \begin{mydef}{semantica assiomatica}
-    La \textbf{semantica assiomatica} è un modello matematico dei programmi basto sulla logica formale (calcolo dei predicati). 
+    La \textbf{semantica assiomatica} è un modello matematico dei programmi basato sulla logica formale (calcolo dei predicati). 
 \end{mydef}
 
 La semantica assiomatica nasce con l'obiettivo di fare verifica formale di programmi.\\[0.2ex]

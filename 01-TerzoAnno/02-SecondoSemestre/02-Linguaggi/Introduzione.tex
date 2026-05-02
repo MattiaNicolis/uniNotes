@@ -1,17 +1,19 @@
 %!Tex root = Linguaggi.tex
 
 \chapter{Introduzione}
-Il problema principale dell'informatica consiste nel voler far eseguire ad una macchina algoritmi che manipolano dati.
+Il problema principale dell'informatica consiste nel voler far eseguire a una macchina algoritmi che manipolano dati.
 
 \[
     \text{macchina} \xrightarrow{\textcolor{red}{\textbf{esegue}}} \text{algoritmo} \xrightarrow{\textcolor{red}{\textbf{manipolazione}}} \text{dati}
 \]
 
-Il primo meccanismo che viene associato alla storia dei computer è la \textbf{macchina di Babbage}, che può essere visto come il primo "computer" perchè nasce per eseguire calcoli matematici complessi in modo automatico.\\[0.2ex]
+Il primo meccanismo che viene associato alla storia dei computer è la \textbf{macchina di Babbage}, che può essere visto come il primo "computer" perchè nasce per eseguire calcoli matematici complessi in modo automatico.
+
+\smallskip
 Sucessivamente, c'è un'evoluzione e il computer viene riconosciuto come macchina programmabile (dare delle istruzioni alla macchina per ottenere un determinato risultato).\\[0.2ex]
 In questo contesto nasce \textbf{Enigma}, uno strumento per decodificare un codice mediante un algoritmo di forza bruta che tenta tutte le combinazioni.
 
-La prima archiettura che darà origine all'archiettura dei computer moderni è l'\textcolor{colore}{\textbf{architettura di Von Neumann}}, un'achitettura hardware che comprende solo il linguaggio binario, un linguaggio costituito esclusivamente da stringhe di bit (o e 1) e che può essere utilizzato per codificare qualunque altro linguaggio, ma non è comprensibile dall'essere umano.\\[0.2ex]
+La prima architettura che darà origine all'architettura dei computer moderni è l'\textcolor{colore}{\textbf{architettura di Von Neumann}}, un'architettura hardware che comprende solo il linguaggio binario (costituito da stringhe di bit 0 e 1) e che può essere utilizzato per codificare qualunque altro linguaggio, ma non è comprensibile dall'essere umano.\\[0.2ex]
 Questo fa si che l'uomo per poter interagire e programmare macchine, necessita di un'evoluzione dei linguaggi, ha bisogno di costruire un linguaggio comprensibile in modo più immediato.
 
 \section{Perchè studiare i PL?}
@@ -24,10 +26,10 @@ Le motivazioni sono diverse:
 \end{itemize}
 
 \section{Cosa sono i PL?}
-La nascita e l'evoluzione dei linguaggi di programmazione è, anche, dovuto, all'archiettura della macchina che bisogna programmare.
+La nascita e l'evoluzione dei linguaggi di programmazione è, anche, dovuto all'architettura della macchina che bisogna programmare.
 
 I computer moderni nascono dall'archiettura di Von Neumann.\\[0.2ex]
-Questa è una tipologia di architettura hardware con progrmma memorizzato, dove i dati e istruzioni condividono la stessa area di memoria.
+Questa è una tipologia di architettura hardware con programma memorizzato, dove \textbf{dati} e \textbf{istruzioni} condividono la stessa area di memoria.
 
 \begin{figure}[H]
     \centering
@@ -35,14 +37,14 @@ Questa è una tipologia di architettura hardware con progrmma memorizzato, dove 
 \end{figure}
 
 \section{Cosa significa programmare?}
-Il libguaggio di programmazione deve essere uno strumento che perette di descrivere algoritmi e rappresentare i dati.
+Il linguaggio di programmazione deve essere uno strumento che permette di descrivere algoritmi e rappresentare i dati.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{images/linguaggio-programmazione.png}
 \end{figure}
 
-Il linguaggio binario è un linguaggio di programmazione in quanto permette di rappresentare algoritmi e dati , ma non è umanamente utilizzabile o interpretabile, in quanto potrebbe essere usata come dato o un dato interpretato come istruzione.\\[0.2ex]
+Il linguaggio binario è un linguaggio di programmazione in quanto permette di rappresentare algoritmi e dati, ma non è umanamente utilizzabile o interpretabile, in quanto un'istruzione potrebbe essere usata come dato o un dato interpretato come istruzione.\\[0.2ex]
 Ciò significa, che un linguaggio di programmazione deve permettere di superare queste difficoltà, fornendo una chiara distinzione tra dato e istruzione.
 
 \begin{mydef}{algoritmo}
@@ -60,12 +62,13 @@ Un algoritmo è un concetto astratto che trova forma concreta in un programma (s
 \end{mydef}
 
 \begin{mydef}{linguaggio di programmazione}
-    Un \textbf{linguaggio di programmazione} è una notazione per scrivere un programma, ovvero serve a dare forma concreta agli algoritmi.
+    Un \textbf{linguaggio di programmazione} è una notazione per scrivere un programma (serve a dare forma concreta agli algoritmi).
 \end{mydef}
 
 Il programma, quindi, costituisce la \textcolor{colore}{\textbf{sintassi}}.
 
-Un programma è necessariamente un oggetto finito (sempre concreto), mentre il calcolo di una funzione richiede l'esecuzione di un insieme di passi primitivi, che, però possono essere infiniti.\\[0.2ex]
+\smallskip
+Un programma è necessariamente un oggetto finito (sempre concreto), mentre il calcolo di una funzione richiede l'esecuzione di un insieme di passi primitivi, che, però, possono essere infiniti.\\[0.2ex]
 Ciò significa che un programma è una rappresentazione finita di un insieme, potenzialmente infinito, di passi primitivi di computazione.
 
 \vario{Nota}{
@@ -78,7 +81,7 @@ Il contesto in cui il linguaggio deve operare determina le funzionalità che dev
     \item \textbf{applicazioni scentifiche} (es. $\verb|Fortran|$)
     \item \textbf{applicazioni economiche} (es. $\verb|COBOL|$)
     \item \textbf{applicazioni artificiali} (es. $\verb|LISP|$)
-    \item \textbf{programmazione di sistemmi} (es. $\verb|C|$)
+    \item \textbf{programmazione di sistemi} (es. $\verb|C|$)
     \item \textbf{web software} (es. $\verb|HTML|$ (markup), $\verb|PHP|$ (scripting), ecc.)
 \end{itemize}
 
@@ -93,9 +96,10 @@ I linguaggi ad alto livello si possono classificare in base a:
 \begin{itemize}[label=$\circ$, itemsep=\medskipamount]
     \item \textbf{paradigma di programmazione}
     \begin{itemize}[itemsep=\smallskipamount]
-        \item linguaggi procedurali: codice diviso in subrutine che eseguono compiti semplici basati su salti condizionali (goto) [es. $\verb|COBOL|$]
+        \item linguaggi procedurali: codice diviso in sub-rutine che eseguono compiti semplici basati su salti condizionali (goto) [es. $\verb|COBOL|$]
         \item linguaggi strutturati (imperativi): procedurale senza goto (es. $\verb|C|$, $\verb|Pascal|$, $\verb|ADA|$, ec..)
-        \item libguaggi orientati agli oggetti: classe elemento centrale della programmazione.
+        \item linguaggi orientati agli oggetti: classe elemento centrale della programmazione.
+        
         Un linguaggio deve avere tre proprietà:
         \begin{itemize}[itemsep=\smallskipamount]
             \item incapsulamento
@@ -104,23 +108,39 @@ I linguaggi ad alto livello si possono classificare in base a:
         \end{itemize}
         \item linguaggi dichiatirativi: basati su componenti della matematica
         \begin{itemize}[itemsep=\smallskipamount]
-            \item logici: basati sulla logica proposizionale del primo ordine, in cui si effettuano calcoli tramite dimostrazione di datti (es. $\verb|PROLOG|$)
+            \item logici: basati sulla logica proposizionale del primo ordine, in cui si effettuano calcoli tramite dimostrazione di fatti (es. $\verb|PROLOG|$)
             \item matematici: basati sul concetto di applicazione di funzione (es. $\verb|LSIP|$, $\verb|ML|$)
         \end{itemize}
     \end{itemize}
     \item \textbf{termini gerazionali}
     \begin{itemize}[itemsep=\smallskipamount]
-        \item I° generazione:
+        \item I° generazione: basso livello, linguaggi proprietari HW
+        \begin{center}
+            $\downarrow \textcolor{red}{\text{astrazione}}$
+        \end{center}
+        \item II° generazione: basso livello (\texttt{Assembly})
+        \begin{center}
+            $\downarrow \textcolor{red}{\text{avvicinamento al linguaggio naturale}}$
+        \end{center}
+        \item III° generazione: \texttt{C}
+        \begin{center}
+            $\downarrow \textcolor{red}{\text{cambio di prospettiva}}$
+        \end{center}
+        \item IV° generazione: uso della matematica (linguaggi dichiatirativi) [\texttt{SQL}]
         \begin{center}
             $\downarrow$
         \end{center}
-        \item II° generazione:
+        \item V° generazione: non semplice esecuzione di programmi scritti e fissati
+        \begin{itemize}[itemsep=\smallskipamount]
+            \item risoluzione vincoli (\texttt{IA})
+            \item linguaggi dinamici
+        \end{itemize}
     \end{itemize}
 \end{itemize}
 
 \section{Implementazione di un PL}
 Implementare un linguaggio significa eseguire un programma nel lingugaggio di programmazione in una macchina.\\[0.2ex]
-Sicuramente, il modo in cui deve essere implementato è direttamente collegato all'architettura che deve programmare, ma anche al paradigma (metodologie) che il linguaggio di programmazione utilizza per costruire programmi.
+Sicuramente, il modo in cui deve essere implementato è direttamente collegato all'architettura che deve programmare, ma anche dal paradigma (metodologie) che il linguaggio di programmazione utilizza per costruire programmi.
 
 \smallskip
 Implementare un linguaggio significa realizzare la macchina (astratta) che interpresta il linguaggio.
@@ -146,20 +166,20 @@ Il linguaggio $\mathrm{L}$, riconosciuto (interpretato) dalla macchina astratta 
 \end{mydef}
 
 \section{Realizzare una macchina astratta}
-Una qualsiasi macchina astratte per $\mathrm{L}$, per essere eseguita. deve utilizzare qualche dispositivo fisico che concretamente esegue le istruzioni di $\mathrm{L}$.\\[0.2ex]
-Questo significa che in qualunque sistema informatico esiste sempre una macchina HW, ma non significa che tutte le macchine sono realizzate a livello HW, anzi per poter controllare la complessità di un sistema informatico, la realizzazione della macchina astratta può avvenire a vari livelli:
+Una qualsiasi macchina astratte per $\mathrm{L}$, per essere eseguita deve utilizzare qualche dispositivo fisico che concretamente esegue le istruzioni di $\mathrm{L}$.\\[0.2ex]
+Questo significa che in qualunque sistema informatico esiste sempre una macchina HW, ma non significa che tutte le macchine sono realizzate a livello HW, anzi, per poter controllare la complessità di un sistema informatico, la realizzazione della macchina astratta può avvenire a vari livelli:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
-    \item \textbf{HW}: macchina realizzata in forma embedded e il linguaggio macchina è il linguaggio fisico/binario
+    \item \textbf{HW}: \hl{macchina realizzata in forma embedded} e il linguaggio macchina è il linguaggio fisico/binario
     \begin{itemize}[itemsep=\smallskipamount]
         \item massima velocità
         \item nessuna flessibilità
     \end{itemize}
-    \item \textbf{FW}: macchina realizzata mediante simulazione/emulazione, ovvero strutture dati e algoritmi sono microprogrammi
+    \item \textbf{FW}: \hl{macchina realizzata mediante simulazione/emulazione} (strutture dati e algoritmi sono microprogrammi)
     \begin{itemize}[itemsep=\smallskipamount]
         \item veloce
         \item più flessibile della realizzazione HW
     \end{itemize}
-    \item \textbf{SW}: macchina realizzata mediante sumulazione, ovvero strutture dati enalgoritmi sono a loro volta dei programmi
+    \item \textbf{SW}: \hl{macchina realizzata mediante simulazione} (strutture dati e algoritmi sono a loro volta dei programmi)
     \begin{itemize}[itemsep=\smallskipamount]
         \item minore velocità
         \item maggiore flessibilità
@@ -174,42 +194,42 @@ Ciascun livello è definito da un linguaggio $\mathrm{L}$ che è l'insieme delle
     \includegraphics[width=0.6\textwidth]{images/livelli-macchina-astratta.png}
 \end{figure}
 
-Tutte le istruzioni ad un livello $\mathrm{i}$ sono implementate da programmi a livelli $\mathrm{j} < \mathrm{i}$.
+Tutte le istruzioni a un livello $\mathrm{i}$ sono implementate da programmi a livelli $\mathrm{j} < \mathrm{i}$.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/livelli-astrazioni-PL.png}
-    \caption{lievelli di astrazione dei PL}
+    \caption{livelli di astrazione dei PL}
 \end{figure}
 
-Per Implementare un linguaggio $\mathrm{L}$, dobbiamo realizzare una macchina $\mathrm{M_L}$ in grado di esegurilo.\\[0.2ex]
-Tali macchine differisicono nel mondo in cui la macchina astratta realizzata e nelle strutture dati utilizzate.\\[0.2ex]
-La realizzazione della macchina astratta dipenderà, quindi, daòòe funzionalità che vengono messe a disposizione dei livelli sottostanti.
+Per Implementare un linguaggio $\mathrm{L}$, dobbiamo realizzare una macchina $\mathrm{M_L}$ in grado di eseguirlo.\\[0.2ex]
+Tali macchine differisicono nel mondo in cui la macchina astratta viene realizzata e nelle strutture dati utilizzate.\\[0.2ex]
+La realizzazione della macchina astratta dipenderà, quindi, dalle funzionalità che vengono messe a disposizione dei livelli sottostanti.
 
 \smallskip
-Realizzare $\mathrm{M_L}$ consiste nel realizzare una macchina che traduce $\mathrm{L}$ in $\mathrm{L_0}$, ovvero che interpreta tute le istruzioni di $\mathrm{L}$ come (sequenza di) istruzioni di $\mathrm{L_0}$.\\[0.2ex]
-Si possono distingure due modalità:
+Realizzare $\mathrm{M_L}$ consiste nel realizzare una macchina che traduce $\mathrm{L}$ in $\mathrm{L_0}$, ovvero che interpreta tutte le istruzioni di $\mathrm{L}$ come (sequenza di) istruzioni di $\mathrm{L_0}$.\\[0.2ex]
+Si possono distinguere due modalità:
 \begin{itemize}[label=$\diamond$, itemsep=\medskipamount]
     \item \textbf{traduzione esplicita} (soluzione compilativa): macchina che traduce programmi scritti in $\mathrm{L}$ in programmi scritti in $\mathrm{L}$
     \[
-        \mathrm{P_L} \xrightarrow{\textcolor{red}{\textbf{traduzione}}} \mathrm{P_{L_0}} \xrightarrow{\textcolor{red}{\textbf{esecuzione}}} \mathrm{M_{L_0}}
+        \mathbf{P_L} \xrightarrow{\textcolor{red}{\textbf{traduzione}}} \mathbf{P_{L_0}} \xrightarrow{\textcolor{red}{\textbf{esecuzione}}} \mathbf{M_{L_0}}
     \]
-    \item \textbf{traduzione implicita} (soluzione interpretativa): macchina simula ogni istruzine di programmi in $\mathrm{L}$ mediante programmi/istruzioni scritti in $\mathrm{L_0}$
+    \item \textbf{traduzione implicita} (soluzione interpretativa): macchina simula ogni istruzine di programmi in $\mathbf{L}$ mediante programmi/istruzioni scritti in $\mathbf{L_0}$
     \[
-        \mathrm{P_L} \xrightarrow{\textcolor{red}{\textbf{simulazione}}} \mathrm{M_{L_0}}
+        \mathbf{P_L} \xrightarrow{\textcolor{red}{\textbf{simulazione}}} \mathbf{M_{L_0}}
     \]
 \end{itemize}
 
 \subsection{Soluzione interpretativa}
-La soluzione interpretativa è una traduzione esplicita, ovvero consiste nella simulazione di $\mathrm{L}$ in $\mathrm{M_{L_0}}$.
+La soluzione interpretativa è una traduzione implicita, ovvero consiste nella simulazione di $\mathrm{L}$ in $\mathrm{M_{L_0}}$.
 
 \vario{Notazione}{
     \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-        \item $\mathbf{Prog^L}$: insieme programmi scritti in $L$
+        \item $\mathbf{Prog^L}$: insieme programmi scritti in $\mathrm{L}$
         \item $\mathbf{D}$: insieme dati (input e output)
-        \item $\mathrm{P^L} \in \mathrm{Prog}^L \quad \text{e} \quad \text{in}, \text{out} \in \mathrm{D}$
+        \item $\mathbf{P^L \in Prog^L} \quad \text{e} \quad \text{in}, \text{out} \in \mathrm{D}$
         % Rimosso \boldsymbol da qui sotto:
-        \item $\llbracket \mathrm{P^L} \rrbracket \colon \mathrm{D} \to \mathrm{D}$ semantica di $\mathrm{P^L}$ tale che $\llbracket \mathrm{P^L} \rrbracket(\text{in}) = \text{out}$ se $\mathrm{P^L}$ eseguito a partire da $\text{in}$ restituisce $\text{out}$
+        \item $\mathbf{\llbracket P^L \rrbracket \colon D \to D}$ semantica di $\mathrm{P^L}$ tale che $\llbracket \mathrm{P^L} \rrbracket(\text{in}) = \text{out}$ se $\mathrm{P^L}$ eseguito a partire da $\text{in}$ restituisce $\text{out}$
     \end{itemize}
 }
 
@@ -240,15 +260,15 @@ Un interprete è di fatto un ciclo che attraverso una serie di operazioni e funz
 Le operazioni principali sono:
 \begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
     \item \textbf{elaborazione dei dati primitivi} (dati rappresentati in modo diretto nella memoria)
-    \item \textbf{controllo della sequenza di esecuzione}: getsione del flusso
+    \item \textbf{controllo della sequenza di esecuzione}: gestione del flusso
     \item \textbf{controllo dei dati}: recupero dati per l'esecuzione delle istruzioni
-    \textbf{controllo della memoria}: gestione dell'allocazione dei dati e programmi
+    \item \textbf{controllo della memoria}: gestione dell'allocazione dei dati e programmi
 \end{itemize}
 
 \subsubsection{Struttura}
 Stabilite le operazioni di cui un interprete ha bisogno, vediamo come opera concretamente.\\[0.2ex]
 Il ciclo di esecuzione comune a tutti gli interpreti è:
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{0.45\textwidth}
         \centering
@@ -264,15 +284,15 @@ Il ciclo di esecuzione comune a tutti gli interpreti è:
 \end{figure}
 
 \subsection{Soluzione compilativa}
-La soluzione compilativa è una traduzione implicita.
+La soluzione compilativa è una traduzione esplicita.
 
 \vario{Notazione}{
     \begin{itemize}[label=$\circ$, itemsep=\smallskipamount]
-        \item $\mathbf{Prog^L}$: insieme programmi scritti in $L$
+        \item $\mathbf{Prog^L}$: insieme programmi scritti in $\mathrm{L}$
         \item $\mathbf{D}$: insieme dati (input e output)
-        \item $\mathrm{P^L} \in \mathrm{Prog}^L \quad \text{e} \quad \text{in}, \text{out} \in \mathrm{D}$
+        \item $\mathbf{P^L \in Prog^L} \quad \text{e} \quad \text{in}, \text{out} \in \mathrm{D}$
         % Rimosso \boldsymbol da qui sotto:
-        \item $\llbracket \mathrm{P^L} \rrbracket \colon \mathrm{D} \to \mathrm{D}$ semantica di $\mathrm{P^L}$ tale che $\llbracket \mathrm{P^L} \rrbracket(\text{in}) = \text{out}$ se $\mathrm{P^L}$ eseguito a partire da $\text{in}$ restituisce $\text{out}$
+        \item $\mathbf{\llbracket P^L \rrbracket \colon D \to D}$ semantica di $\mathrm{P^L}$ tale che $\llbracket \mathrm{P^L} \rrbracket(\text{in}) = \text{out}$ se $\mathrm{P^L}$ eseguito a partire da $\text{in}$ restituisce $\text{out}$
     \end{itemize}
 }
 
@@ -281,7 +301,7 @@ Costruiamo $\mathrm{C^{L_0,L}}$ dove $\mathrm{L}$ è il linguaggio da implementa
 \begin{mydef}{compilatore}
     Un \textbf{compilatore} da $\mathrm{L}$ a $\mathrm{L_0}$ è un programma che realizza la funzione:
     \[
-        \underbrace{\mathrm{C}^{L_0,L} \colon \mathrm{Prog}^L \to \mathrm{Prog}^L, \, p^L \in \mathrm{Prog}^L}_{
+        \underbrace{\mathrm{C}^{\mathrm{L_0,L}} \colon \mathrm{Prog}^\mathrm{L} \to \mathrm{Prog}^\mathrm{L}, \, \mathrm{p}^\mathrm{L} \in \mathrm{Prog}^\mathrm{L}}_{
             \mathrm{C^{L_0,L}(P^L)=P^{L_0} \ \mid \ \forall in: P^L(in)=P^{L_0}(in)} 
             \, \text{ o } \, 
             \llbracket \mathrm{C^{L_0,L} \rrbracket(P^L)=P^{L_0} \ \mid \ \forall in: \llbracket P^L \rrbracket(in)=\llbracket P^{L_0} \rrbracket(in)}
@@ -313,7 +333,7 @@ L'esecuzione di un compilatore passa attraverso varie fasi:
 \end{figure}
 
 \subsection{Soluzione ibrida}
-Esiste un compromesso tra compilatore e interprete, ovvero una soluzione ibrida dove il linguaggio ad alto livello viene compilato in un linguaggio a più basso livello che poi viene interpreto.
+Esiste un compromesso tra compilatore e interprete, ovvero una soluzione ibrida dove il linguaggio ad alto livello viene compilato in un linguaggio a più basso livello che poi viene interpretato.
 
 \begin{figure}[H]
     \centering
