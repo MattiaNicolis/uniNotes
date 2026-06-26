@@ -176,3 +176,48 @@ Una dichiarazione può essere visibile:
     \end{lstlisting}
     \item \textbf{all'interno del blocco visibile sempre}
 \end{itemize}
+
+\section{Allocazione della memoria}
+
+
+\section{Implementazione dello scoping statico}
+Si basa sulla concetrazione della \textcolor{colore}{\textbf{catena statica}}, ovvero sulla determinazione dei \textbf{link statici} (puntatore all'RdA che immediatamente contiene il testo del blocco in esecuzione).
+
+\begin{mydef}{Profondità statica (Sd)}
+    La profondità statica di un blocco A è la profondità di annidamento di B.
+\end{mydef}
+
+La profondità statica è un'informazione che si può estrarre a tempo di compilazione.
+
+%foto
+
+Considerando questa informazione e considerando la seguente sequenza di chiamate: $\mathrm{A} \to \mathrm{B} \to \mathrm{C} \to \mathrm{D} \to \mathrm{E} \to \mathrm{C}$ costruiamo i link statici:
+
+%foto
+
+Questo è stato possibile perchè abbiamo davanti il codice.\\[0.2ex]
+vediamo come farlo in modo automatico.
+
+\vario{Notazione}{
+    $\mathrm{Ch} \to $ funzione chiamante
+}
+
+Quando $\mathrm{Ch}$ chiama una procedura $\mathrm{P}$, $\mathrm{Ch}$ sa se la definizione di $\mathrm{P}$:
+\begin{itemize}[label=$\diamond$, itemsep=\smallskipamount]
+    \item è immediatamente contenuto in $\mathrm{Ch}$ ($\mathrm{k = 0}$)
+    \item è contenuto in un blocco che si trova $\mathrm{k}$ passi di annidamenti statici fuori da $\mathrm{Ch}$
+\end{itemize}
+
+\[
+    \mathbf{k = Sd(Ch) - Sd(P) + 1}
+\]
+
+dove:
+\begin{itemize}[label=$\triangleright$, itemsep=\smallskipamount]
+    \item $\mathbf{k = 0}$: $\mathrm{Ch}$ passa a $\mathrm{P}$ il suo indirizzo il link statico
+    \item $\mathbf{k > 0}$: $\mathrm{Ch}$ risale di $\mathrm{k}$ passi la catena statica e restituisce l'indirizzo dell'RdA raggiunto come link statico
+\end{itemize}
+
+%foto
+
+\subsection{Risolvere i riferimenti}
